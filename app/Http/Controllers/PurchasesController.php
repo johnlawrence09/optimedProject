@@ -676,6 +676,8 @@ class PurchasesController extends BaseController
             }
             
             $data['quantity'] = $detail->quantity;
+            $data['quantity_receive'] = $detail->quantity_receive;
+            $data['is_receive'] = $detail->is_receive;
             $data['total'] = $detail->total;
             $data['name'] = $detail['product']['name'];
             $data['cost'] = $detail->cost;

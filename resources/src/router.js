@@ -329,6 +329,52 @@ const routes = [
                 ]
             },
 
+            //Purchase_Receive
+            {
+                path: "/app/purchase_receives",
+                component: () =>
+                    import(
+                        /* webpackChunkName: "purchases" */ "./views/app/pages/purchase_receives"
+                    ),
+                redirect: "/app/purchase_receives/list",
+                children: [
+                    {
+                        name: "index_purchase_receives",
+                        path: "list",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "index_purchases" */ "./views/app/pages/purchase_receives/index_purchase_receive"
+                            )
+                    },
+                    {
+                        name: "store_purchase_receives",
+                        path: "store",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "store_purchase" */
+                                "./views/app/pages/purchase_receives/create_purchase_receive"
+                            )
+                    },
+                    {
+                        name: "edit_purchase_receives",
+                        path: "edit/:id",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "edit_purchase" */ "./views/app/pages/purchase_receives/edit_purchase_receive"
+                            )
+                    },
+                    {
+                        name: "detail_purchase_receives",
+                        path: "detail/:id",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "detail_purchase" */
+                                "./views/app/pages/purchase_receives/detail_purchase_receive"
+                            )
+                    }
+                ]
+            },
+
             //Sale
             {
                 path: "/app/sales",
