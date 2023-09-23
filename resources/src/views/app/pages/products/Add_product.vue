@@ -255,6 +255,10 @@
                                                     $t('Enter_Product_Cost')
                                                 "
                                                 v-model="product.cost"
+                                                :style="{
+                                                    borderColor:
+                                                        inputBorderColor,
+                                                }"
                                             ></b-form-input>
                                             <span style="color: #fa5252">{{
                                                 message
@@ -716,6 +720,7 @@ export default {
             roles: {},
             variants: [],
             message: "",
+            inputBorderColor: " ",
             product: {
                 name: "",
                 code: "",
@@ -747,7 +752,6 @@ export default {
     methods: {
         //------------- Submit Validation Create Product
         Submit_Product() {
-            console.log("test");
             this.$refs.Create_Product.validate().then((success) => {
                 if (!success) {
                     this.makeToast(
@@ -755,16 +759,11 @@ export default {
                         this.$t("Please_fill_the_form_correctly"),
                         this.$t("Failed")
                     );
-                } else if (this.product.cost > this.product.price) {
+                }
+                if (Number(this.product.cost) > Number(this.product.price)) {
                     this.message =
                         "Product cost cannot be higher than Product price";
-                    // this.makeToast(
-                    //     "danger",
-                    //     this.$t(
-                    //         "Product cost cannot be higher than Product price"
-                    //     ),
-                    //     this.$t("Failed")
-                    // );
+                    this.inputBorderColor = "red";
                 } else {
                     this.Create_Product();
                 }
