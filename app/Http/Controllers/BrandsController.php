@@ -6,9 +6,8 @@ use App\Models\Brand;
 use App\utils\helpers;
 use Carbon\Carbon;
 use DB;
-use Image;
 use Illuminate\Http\Request;
-// use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class BrandsController extends Controller
 {
@@ -56,27 +55,23 @@ class BrandsController extends Controller
 
     public function store(Request $request)
     {
-    //    dd($request->files);
         $this->authorizeForUser($request->user('api'), 'create', Brand::class);
 
         request()->validate([
             'name' => 'required',
         ]);
 
-        DB::transaction(function () use ($request) {
+        \DB::transaction(function () use ($request) {
 
-           
             if ($request->hasFile('image')) {
 
-                //*************Original Code********/////
                 $image = $request->file('image');
                 $filename = rand(11111111, 99999999) . $image->getClientOriginalName();
-                $image = Image::make($image->getPathname());
-                $image ->resize(200, 200);
-                $image ->save(public_path('/images/brands/' . $filename));
 
-            
-               
+                $image_resize = Image::make($image->getRealPath());
+                $image_resize->resize(200, 200);
+                $image_resize->save(public_path('/images/brands/' . $filename));
+
             } else {
                 $filename = 'no-image.png';
             }
@@ -120,7 +115,7 @@ class BrandsController extends Controller
                  $path = public_path() . '/images/brands';
                  $filename = rand(11111111, 99999999) . $image->getClientOriginalName();
  
-                 $image_resize = Image::make($image->getPathname());
+                 $image_resize = Image::make($image->getRealPath());
                  $image_resize->resize(200, 200);
                  $image_resize->save(public_path('/images/brands/' . $filename));
  
@@ -135,7 +130,7 @@ class BrandsController extends Controller
                  $path = public_path() . '/images/brands';
                  $filename = rand(11111111, 99999999) . $image->getClientOriginalName();
  
-                 $image_resize = Image::make($image->getPathname());
+                 $image_resize = Image::make($image->getRealPath());
                  $image_resize->resize(200, 200);
                  $image_resize->save(public_path('/images/brands/' . $filename));
              }

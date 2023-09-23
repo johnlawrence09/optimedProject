@@ -164,6 +164,7 @@ class ProductsController extends BaseController
                 $Product->stock_alert = $request['stock_alert'] ? $request['stock_alert'] : 0;
                 $Product->is_variant = $request['is_variant'] == 'true' ? 1 : 0;
                 $Product->is_imei = $request['is_imei'] == 'true' ? 1 : 0;
+                $Product->is_expire = $request['is_expire'] == 'true' ? 1 : 0;
 
                 if ($request['images']) {
                     $files = $request['images'];
@@ -280,6 +281,7 @@ class ProductsController extends BaseController
                 $Product->stock_alert = $request['stock_alert'];
                 $Product->is_variant = $request['is_variant'] == 'true' ? 1 : 0;
                 $Product->is_imei = $request['is_imei'] == 'true' ? 1 : 0;
+                $Product->is_expire = $request['is_expire'] == 'true' ? 1 : 0;
 
                 // Store Variants Product
                 $oldVariants = ProductVariant::where('product_id', $id)
@@ -742,6 +744,7 @@ class ProductsController extends BaseController
         $item['tax_percent'] = $Product_data['TaxNet'];
 
         $item['is_imei'] = $Product_data['is_imei'];
+        $item['is_expire'] = $Product_data['is_expire'];
 
         if ($Product_data['unitSale']->operator == '/') {
             $price = $Product_data['price'] / $Product_data['unitSale']->operator_value;
@@ -1000,6 +1003,7 @@ class ProductsController extends BaseController
         }
 
         $item['is_imei'] = $Product->is_imei?true:false;
+        $item['is_expire'] = $Product->is_expire?true:false;
 
         $data = $item;
         $categories = Category::where('deleted_at', null)->get(['id', 'name']);
