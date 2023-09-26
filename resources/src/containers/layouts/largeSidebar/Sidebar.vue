@@ -95,6 +95,21 @@
             <div class="triangle"></div>
           </li>
           <li
+            v-show="currentUserPermissions && (currentUserPermissions.includes('Purchase_Receives_view') 
+                        || currentUserPermissions.includes('Purchase_Receives_add'))"
+            @mouseenter="toggleSubMenu"
+            class="nav-item"
+            :class="{ active: selectedParentMenu == 'purchase_receives' }"
+            data-item="purchase_receives"
+            :data-submenu="true"
+          >
+            <a class="nav-item-hold" href="#">
+              <i class="nav-icon i-Receipt"></i>
+              <span class="nav-text">Purchase Receive</span>
+            </a>
+            <div class="triangle"></div>
+          </li>
+          <li
             v-show="currentUserPermissions && (currentUserPermissions.includes('Sales_view') 
                         || currentUserPermissions.includes('Sales_add')
                         || currentUserPermissions.includes('shipment'))"
@@ -462,6 +477,31 @@
             <router-link tag="a" class to="/app/purchases/list">
               <i class="nav-icon i-Files"></i>
               <span class="item-name">{{$t('ListPurchases')}}</span>
+            </router-link>
+          </li>
+        </ul>
+
+        <ul
+          class="childNav d-none"
+          data-parent="purchase_receives"
+          :class="{ 'd-block': selectedParentMenu == 'purchase_receives'}"
+        >
+          <li
+            class="nav-item"
+            v-if="currentUserPermissions && currentUserPermissions.includes('Purchase_Receives_add')"
+          >
+            <router-link tag="a" class to="/app/purchase_receives/store">
+              <i class="nav-icon i-Add-File"></i>
+              <span class="item-name">Add Purchase Receive</span>
+            </router-link>
+          </li>
+          <li
+            class="nav-item"
+            v-if="currentUserPermissions && currentUserPermissions.includes('Purchase_Receives_view')"
+          >
+            <router-link tag="a" class to="/app/purchase_receives/list">
+              <i class="nav-icon i-Files"></i>
+              <span class="item-name">List Purchase Receive</span>
             </router-link>
           </li>
         </ul>

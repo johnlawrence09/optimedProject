@@ -318,13 +318,26 @@
                     />
                   </b-col>
 
-                   <!-- Product_Has_Imei_Serial_number -->
-                   <b-col md="12 mb-2">
+                  <!-- Product_Has_Imei_Serial_number -->
+                  <b-col md="12 mb-2">
                     <ValidationProvider rules vid="product" v-slot="x">
                       <div class="form-check">
                         <label class="checkbox checkbox-outline-primary">
                           <input type="checkbox" v-model="product.is_imei">
                           <h5>{{$t('Product_Has_Imei_Serial_number')}}</h5>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </ValidationProvider>
+                  </b-col>
+
+                  <!-- Product_Has_Expiry -->
+                  <b-col md="12 mb-2">
+                    <ValidationProvider rules vid="product" v-slot="x">
+                      <div class="form-check">
+                        <label class="checkbox checkbox-outline-primary">
+                          <input type="checkbox" v-model="product.is_expire">
+                          <h5>Is Expire</h5>
                           <span class="checkmark"></span>
                         </label>
                       </div>

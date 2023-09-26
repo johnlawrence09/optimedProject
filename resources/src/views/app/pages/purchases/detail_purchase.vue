@@ -101,6 +101,8 @@
                       <th scope="col">{{$t('ProductName')}}</th>
                       <th scope="col">{{$t('Net_Unit_Cost')}}</th>
                       <th scope="col">{{$t('Quantity')}}</th>
+                      <th scope="col">Qty Received</th>
+                      <th scope="col">Balance</th>
                       <th scope="col">{{$t('Unitcost')}}</th>
                       <th scope="col">{{$t('Discount')}}</th>
                       <th scope="col">{{$t('Tax')}}</th>
@@ -114,6 +116,8 @@
                       </td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.Net_cost,3)}}</td>
                       <td>{{formatNumber(detail.quantity,2)}} {{detail.unit_purchase}}</td>
+                      <td>{{formatNumber(detail.quantity_receive,2)}} {{detail.unit_purchase}}</td>
+                      <td>{{formatNumber((detail.quantity - detail.quantity_receive) ,2)}} {{detail.unit_purchase}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.cost,2)}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.DiscountNet,2)}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.taxe,2)}}</td>
