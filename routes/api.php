@@ -28,6 +28,8 @@ Route::group([
     Route::post('reset', 'PasswordResetController@reset');
 });
 
+
+
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     //-------------------------- Clear Cache ---------------------------
@@ -228,6 +230,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('Products/Stock/Alerts', 'ProductsController@Products_Alert');
     Route::get('Products/Get_element/barcode', 'ProductsController@Get_element_barcode');
     Route::post('Products/delete/by_selection', 'ProductsController@delete_by_selection');
+    Route::get('Products/Purchase/{id}', 'ProductsController@Products_by_Purchase');
 
     // Route::get('Products/filter/{id}/{input}', 'ProductsController@Filter_Products');
 
@@ -273,6 +276,12 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('purchases/send/sms', 'PurchasesController@Send_SMS');
     Route::get('purchases/export/Excel', 'PurchasesController@exportExcel');
     Route::post('purchases/delete/by_selection', 'PurchasesController@delete_by_selection');
+
+
+    //------------------------------- PURCHASES --------------------------\\
+    //------------------------------------------------------------------\\
+
+    Route::resource('purchase_receives', 'PurchaseReceiveController');
 
 
     //------------------------------- Payments  Purchases --------------------------\\

@@ -9,6 +9,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\product_warehouse;
+use App\Models\Purchase;
+use App\Models\PurchaseDetail;
 use App\Models\Unit;
 use App\Models\Warehouse;
 use App\utils\helpers;
@@ -719,6 +721,97 @@ class ProductsController extends BaseController
 
         return response()->json($data);
     }
+
+     //------------ Get products By Warehouse -----------------\\
+
+     public function Products_by_Purchase(Request $request, $id)
+     {
+         $data = [];
+         $purchase = Purchase::find($id);
+         $product_ids = PurchaseDetail::where('is_receive', 0)->where('purchase_id', $id)->pluck('product_id');
+         
+         $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
+             ->whereIn('product_id', $product_ids)
+             ->where('deleted_at', '=', null)
+             ->where(function ($query) use ($request) {
+                 if ($request->stock == '1') {
+                     return $query->where('qte', '>', 0);
+                 }
+             })->get();
+ 
+         foreach ($product_warehouse_data as $product_warehouse) {
+ 
+             if ($product_warehouse->product_variant_id) {
+                 $item['product_variant_id'] = $product_warehouse->product_variant_id;
+                 $item['code'] = $product_warehouse['productVariant']->name . '-' . $product_warehouse['product']->code;
+                 $item['Variant'] = $product_warehouse['productVariant']->name;
+
+                 $purchase_detail = PurchaseDetail::where('purchase_id', $id)
+                    ->where('product_id', $product_warehouse->product_id)
+                    ->where('product_variant_id', $product_warehouse->product_variant_id)
+                    ->first();
+                 $item['quantity_balance'] = $purchase_detail->quantity - $purchase_detail->quantity_receive; 
+                 $item['order_quantity'] = $purchase_detail->quantity; 
+             } else {
+                 $item['product_variant_id'] = null;
+                 $item['Variant'] = null;
+                 $item['code'] = $product_warehouse['product']->code;
+
+                 $purchase_detail = PurchaseDetail::where('purchase_id', $id)
+                 ->where('product_id', $product_warehouse->product_id)
+                 ->first();
+                 $item['quantity_balance'] = $purchase_detail->quantity - $purchase_detail->quantity_receive; 
+                 $item['order_quantity'] = $purchase_detail->quantity; 
+             }
+ 
+             $item['id'] = $product_warehouse->product_id;
+             $item['name'] = $product_warehouse['product']->name;
+             $item['barcode'] = $product_warehouse['product']->code;
+             $item['is_expire'] = $product_warehouse['product']->is_expire;
+             $item['Type_barcode'] = $product_warehouse['product']->Type_barcode;
+             $firstimage = explode(',', $product_warehouse['product']->image);
+             $item['image'] = $firstimage[0];
+ 
+             if ($product_warehouse['product']['unitSale']->operator == '/') {
+                 $item['qte_sale'] = $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
+                 $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
+             } else {
+                 $item['qte_sale'] = $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
+                 $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
+             }
+ 
+             if ($product_warehouse['product']['unitPurchase']->operator == '/') {
+                 $item['qte_purchase'] = round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
+             } else {
+                 $item['qte_purchase'] = round($product_warehouse->qte / $product_warehouse['product']['unitPurchase']->operator_value, 5);
+             }
+ 
+             $item['qte'] = $product_warehouse->qte;
+             $item['unitSale'] = $product_warehouse['product']['unitSale']->ShortName;
+             $item['unitPurchase'] = $product_warehouse['product']['unitPurchase']->ShortName;
+ 
+             if ($product_warehouse['product']->TaxNet !== 0.0) {
+                 //Exclusive
+                 if ($product_warehouse['product']->tax_method == '1') {
+                     $tax_price = $price * $product_warehouse['product']->TaxNet / 100;
+                     $item['Net_price'] = $price + $tax_price;
+                     // Inxclusive
+                 } else {
+                     $item['Net_price'] = $price;
+                 }
+             } else {
+                 $item['Net_price'] = $price;
+             }
+ 
+             $data[] = $item;
+         }
+ 
+         return response()->json([
+            'warehouse_id'  => $purchase->warehouse_id,
+            'provider_id'   => $purchase->provider_id,
+            'products'      => $data
+         ]);
+     }
 
     //------------ Get product By ID -----------------\\
 

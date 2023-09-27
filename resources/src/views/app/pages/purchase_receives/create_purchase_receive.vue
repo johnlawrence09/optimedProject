@@ -10,7 +10,7 @@
             <b-card>
               <b-row>
                  <!-- date  -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="3" md="3" sm="12" class="mb-3">
                   <validation-provider
                     name="date"
                     :rules="{ required: true}"
@@ -29,8 +29,27 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col>
+
+                <!-- Purchase Order -->
+                <b-col lg="3" md="3" sm="12" class="mb-3">
+                  <validation-provider name="PO_Refecence" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" label="PO Refecence *">
+                      <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        v-model="purchase.purchase_id"
+                        :reduce="label => label.value"
+                        placeholder="Choose PO Refecence"
+                        :options="purchases.map(purchases => ({label: purchases.Ref, value: purchases.id}))"
+                        @input="Selected_PO_Reference"
+                      />
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
                 <!-- Supplier -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="3" md="3" sm="12" class="mb-3">
                   <validation-provider name="Supplier" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('Supplier') + ' ' + '*'">
                       <v-select
@@ -40,6 +59,7 @@
                         :reduce="label => label.value"
                         :placeholder="$t('Choose_Supplier')"
                         :options="suppliers.map(suppliers => ({label: suppliers.name, value: suppliers.id}))"
+                        disabled
                       />
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                     </b-form-group>
@@ -47,14 +67,13 @@
                 </b-col>
 
                 <!-- warehouse -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="3" md="3" sm="12" class="mb-3">
                   <validation-provider name="warehouse" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('warehouse') + ' ' + '*'">
                       <v-select
                         :class="{'is-invalid': !!errors.length}"
                         :state="errors[0] ? false : (valid ? true : null)"
-                        :disabled="details.length > 0"
-                        @input="Selected_Warehouse"
+                        disabled
                         v-model="purchase.warehouse_id"
                         :reduce="label => label.value"
                         :placeholder="$t('Choose_Warehouse')"
@@ -94,8 +113,11 @@
                           <th scope="col">#</th>
                           <th scope="col">{{$t('ProductName')}}</th>
                           <th scope="col">{{$t('Net_Unit_Cost')}}</th>
-                          <th scope="col">{{$t('CurrentStock')}}</th>
-                          <th scope="col">{{$t('Qty')}}</th>
+                          <th scope="col">Ordered Qty</th>
+                          <th scope="col">Remaining Qty</th>
+                          <th scope="col">Receive Qty</th>
+                          <th scope="col">Lot Number</th>
+                          <th scope="col">Expiration Date</th>
                           <th scope="col">{{$t('Discount')}}</th>
                           <th scope="col">{{$t('Tax')}}</th>
                           <th scope="col">{{$t('SubTotal')}}</th>
@@ -121,7 +143,12 @@
                           <td>
                             <span
                               class="badge badge-outline-warning"
-                            >{{detail.stock}} {{detail.unitPurchase}}</span>
+                            >{{detail.order_quantity}} {{detail.unitPurchase}}</span>
+                          </td>
+                          <td>
+                            <span
+                              class="badge badge-outline-warning"
+                            >{{detail.quantity_balance}} {{detail.unitPurchase}}</span>
                           </td>
                           <td>
                             <div class="quantity">
@@ -145,6 +172,47 @@
                                   >+</span>
                                 </b-input-group-append>
                               </b-input-group>
+                            </div>
+                          </td>
+                          <td>
+                            <div v-if="detail.is_expire === 1">
+                              <validation-provider
+                                name="lot_number"
+                                v-slot="validationContext"
+                              >
+                                <b-form-input
+                                  aria-describedby="lot-feedback"
+                                  v-model="detail.lot_number"
+                                ></b-form-input>
+                                <b-form-invalid-feedback
+                                  id="lot-feedback"
+                                >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                              </validation-provider>
+                            </div>
+                            <div v-else>
+                              <span>N/A</span>
+                            </div>
+                          </td>
+                          <td>
+                            <div v-if="detail.is_expire === 1">
+                              <validation-provider
+                                name="expiration_date"
+                                :rules="{ required: true}"
+                                v-slot="validationContext"
+                              >
+                                <b-form-input
+                                  :state="getValidationState(validationContext)"
+                                  aria-describedby="date-feedback"
+                                  type="date"
+                                  v-model="detail.expiration_date"
+                                ></b-form-input>
+                                <b-form-invalid-feedback
+                                  id="date-feedback"
+                                >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                              </validation-provider>
+                            </div>
+                            <div v-else>
+                              <span>N/A</span>
                             </div>
                           </td>
                           <td>{{currentUser.currency}} {{formatNumber(detail.DiscountNet * detail.quantity, 2)}}</td>
@@ -497,6 +565,8 @@ export default {
         tax_percent: "",
         tax_method: "",
         imei_number:"",
+        expiration_date: "",
+        lot_number: '',
       },
       purchases: [],
       purchase: {
@@ -509,7 +579,8 @@ export default {
         tax_rate: 0,
         TaxNet: 0,
         shipping: 0,
-        discount: 0
+        discount: 0,
+        purchase_id: "",
       },
       total: 0,
       GrandTotal: 0,
@@ -538,7 +609,11 @@ export default {
         product_variant_id: "",
         is_imei: "",
         imei_number:"",
-      }
+        quantity_balance: '',
+        is_expire: '',
+        order_quantity: ''
+      },
+      purchases: []
     };
   },
   computed: {
@@ -738,7 +813,7 @@ export default {
       } else {
         this.makeToast(
           "warning",
-          this.$t("SelectWarehouse"),
+          'Select PO Reference',
           this.$t("Warning")
         );
       }
@@ -757,7 +832,10 @@ export default {
 
     SearchProduct(result) {
       this.product = {};
-      if (
+      if(result.quantity_balance === 0){
+        this.makeToast("warning", 'This Product has already been received', this.$t("Warning"));
+      }
+      else if (
         this.details.length > 0 &&
         this.details.some(detail => detail.code === result.code)
       ) {
@@ -769,6 +847,9 @@ export default {
         this.product.stock = result.qte_purchase;
         this.product.fix_stock = result.qte;
         this.product.product_variant_id = result.product_variant_id;
+        this.product.quantity_balance = result.quantity_balance;
+        this.product.is_expire = result.is_expire;
+        this.product.order_quantity = result.order_quantity;
         this.Get_Product_Details(result.id);
       }
 
@@ -781,7 +862,34 @@ export default {
     Selected_Warehouse(value) {
       this.search_input= '';
       this.product_filter = [];
-      this.Get_Products_By_Warehouse(value);
+      // this.Get_Products_By_Warehouse(value);
+    },
+
+    //---------------------- Event Select PO Reference ------------------------------\\
+    Selected_PO_Reference(value) {
+      this.search_input= '';
+      this.product_filter = [];
+      this.Get_Products_By_Purchase(value);
+    },
+
+    //------------------------------------ Get Products By Purchase -------------------------\\
+
+    Get_Products_By_Purchase(id) {
+      // Start the progress bar.
+        NProgress.start();
+        NProgress.set(0.1);
+      axios
+        .get("Products/Purchase/" + id + "?stock=" + 0)
+         .then(response => {
+            this.products = response.data.products;
+            this.purchase.warehouse_id = response.data.warehouse_id;
+            this.purchase.supplier_id = response.data.provider_id;
+            console.log(this.purchase);
+             NProgress.done();
+
+            })
+          .catch(error => {
+          });
     },
 
     //------------------------------------ Get Products By Warehouse -------------------------\\
@@ -834,7 +942,11 @@ export default {
     increment(detail, id) {
       for (var i = 0; i < this.details.length; i++) {
         if (this.details[i].detail_id == id) {
-          this.formatNumber(this.details[i].quantity++, 2);
+          if (detail.quantity_balance > this.details[i].quantity ) {
+            this.formatNumber(this.details[i].quantity++, 2);
+          } else {
+            this.makeToast("warning", 'Quantity must not exceed to remaining quantity ', this.$t("Warning"));
+          }
         }
       }
       this.$forceUpdate();
@@ -979,8 +1091,9 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
         axios
-          .post("purchases", {
+          .post("purchase_receive", {
             date: this.purchase.date,
+            purchase_id: this.purchase.purchase_id,
             supplier_id: this.purchase.supplier_id,
             warehouse_id: this.purchase.warehouse_id,
             statut: this.purchase.statut,
@@ -1048,10 +1161,11 @@ export default {
     //---------------------------------------Get Elements Purchase ------------------------------\\
     GetElements() {
       axios
-        .get("purchases/create")
+        .get("purchase_receives/create")
         .then(response => {
           this.suppliers = response.data.suppliers;
           this.warehouses = response.data.warehouses;
+          this.purchases = response.data.purchases;
           this.isLoading = false;
         })
         .catch(response => {

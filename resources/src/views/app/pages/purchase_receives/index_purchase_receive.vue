@@ -559,6 +559,12 @@ export default {
           thClass: "text-left"
         },
         {
+          label: this.$t("PO Reference"),
+          field: "purchase_ref",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
           label: this.$t("Reference"),
           field: "Ref",
           tdClass: "text-left",
@@ -893,7 +899,7 @@ export default {
       this.setToStrings();
       axios
         .get(
-          "purchases?page=" +
+          "purchase_receives?page=" +
             page +
             "&Ref=" +
             this.Filter_Ref +

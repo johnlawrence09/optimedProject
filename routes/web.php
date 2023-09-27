@@ -20,6 +20,8 @@ Route::post('/login', [
     'middleware' => 'Is_Active',
 ]);
 
+Route::get('Products/Purchase/{id}', 'ProductsController@Products_by_Purchase');
+
 Route::get('password/find/{token}', 'PasswordResetController@find');
 
 //------------------------------------------------------------------\\
