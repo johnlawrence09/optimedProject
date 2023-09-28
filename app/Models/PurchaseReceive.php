@@ -40,7 +40,7 @@ class PurchaseReceive extends Model
 
     public function facture()
     {
-        return $this->hasMany('App\Models\PaymentPurchase');
+        return $this->hasMany('App\Models\PaymentPurchase','purchase_id', 'purchase_id');
     }
 
     public function warehouse()

@@ -129,10 +129,6 @@ class ProductsController extends BaseController
 
         try {
             $this->validate($request, [
-                'code' => 'required|unique:products',
-                'code' => Rule::unique('products')->where(function ($query) {
-                    return $query->where('deleted_at', '=', null);
-                }),
                 'name' => 'required',
                 'Type_barcode' => 'required',
                 'price' => 'required',
@@ -151,7 +147,6 @@ class ProductsController extends BaseController
 
                 //-- Field Required
                 $Product->name = $request['name'];
-                $Product->code = $request['code'];
                 $Product->Type_barcode = $request['Type_barcode'];
                 $Product->price = $request['price'];
                 $Product->category_id = $request['category_id'];
@@ -245,10 +240,6 @@ class ProductsController extends BaseController
         $this->authorizeForUser($request->user('api'), 'update', Product::class);
         try {
             $this->validate($request, [
-                'code' => 'required|unique:products',
-                'code' => Rule::unique('products')->ignore($id)->where(function ($query) {
-                    return $query->where('deleted_at', '=', null);
-                }),
                 'name' => 'required',
                 'Type_barcode' => 'required',
                 'price' => 'required',
@@ -268,7 +259,6 @@ class ProductsController extends BaseController
 
                 //-- Update Product
                 $Product->name = $request['name'];
-                $Product->code = $request['code'];
                 $Product->Type_barcode = $request['Type_barcode'];
                 $Product->price = $request['price'];
                 $Product->category_id = $request['category_id'];
@@ -726,91 +716,84 @@ class ProductsController extends BaseController
 
      public function Products_by_Purchase(Request $request, $id)
      {
-         $data = [];
-         $purchase = Purchase::find($id);
-         $product_ids = PurchaseDetail::where('is_receive', 0)->where('purchase_id', $id)->pluck('product_id');
+        $data = [];
+        $purchase = Purchase::find($id);
+        $product_ids = PurchaseDetail::where('is_receive', 0)->where('purchase_id', $id)->pluck('product_id');
          
-         $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
-             ->whereIn('product_id', $product_ids)
-             ->where('deleted_at', '=', null)
-             ->where(function ($query) use ($request) {
+        $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
+            ->whereIn('product_id', $product_ids)
+            ->where('deleted_at', '=', null)
+            ->where(function ($query) use ($request) {
                  if ($request->stock == '1') {
                      return $query->where('qte', '>', 0);
                  }
              })->get();
- 
-         foreach ($product_warehouse_data as $product_warehouse) {
- 
-             if ($product_warehouse->product_variant_id) {
-                 $item['product_variant_id'] = $product_warehouse->product_variant_id;
-                 $item['code'] = $product_warehouse['productVariant']->name . '-' . $product_warehouse['product']->code;
-                 $item['Variant'] = $product_warehouse['productVariant']->name;
+        
+        $purchase_details = PurchaseDetail::where('is_receive', 0)
+            ->where('purchase_id', $purchase->id)
+            ->with('product', 'productVariant')
+            ->get();
+        
+        foreach ($purchase_details as $purchase_detail) {
+            if($purchase_detail->product_variant_id) {
+                $item['product_variant_id'] = $purchase_detail->product_variant_id;
+                $item['code'] = $purchase_detail['productVariant']->name . '-' . $purchase_detail['product']->code;
+                $item['Variant'] = $purchase_detail['productVariant']->name;
+            }else{
+                $item['product_variant_id'] = null;
+                $item['code'] = $purchase_detail['product']->code;
+                $item['Variant'] = null;
+            }
+            $item['purchase_detail_id'] = $purchase_detail->id;
+            $item['id'] = $purchase_detail->product_id;
+            $item['name'] = $purchase_detail['product']->name;
+            $item['barcode'] = $purchase_detail['product']->code;
+            $item['is_expire'] = $purchase_detail['product']->is_expire;
+            $item['Type_barcode'] = $purchase_detail['product']->Type_barcode;
+            $item['quantity_balance'] = $purchase_detail->quantity - $purchase_detail->quantity_receive; 
+            $item['order_quantity'] = $purchase_detail->quantity; 
+            $firstimage = explode(',', $purchase_detail['product']->image);
+            $item['image'] = $firstimage[0];
 
-                 $purchase_detail = PurchaseDetail::where('purchase_id', $id)
-                    ->where('product_id', $product_warehouse->product_id)
-                    ->where('product_variant_id', $product_warehouse->product_variant_id)
-                    ->first();
-                 $item['quantity_balance'] = $purchase_detail->quantity - $purchase_detail->quantity_receive; 
-                 $item['order_quantity'] = $purchase_detail->quantity; 
-             } else {
-                 $item['product_variant_id'] = null;
-                 $item['Variant'] = null;
-                 $item['code'] = $product_warehouse['product']->code;
+            if ($purchase_detail['product']['unitSale']->operator == '/') {
+                $item['qte_sale'] = $purchase_detail->quantity_receive * $purchase_detail['product']['unitSale']->operator_value;
+                $price = $purchase_detail['product']->price / $purchase_detail['product']['unitSale']->operator_value;
+            } else {
+                $item['qte_sale'] = $purchase_detail->quantity_receive / $purchase_detail['product']['unitSale']->operator_value;
+                $price = $purchase_detail['product']->price * $purchase_detail['product']['unitSale']->operator_value;
+            }
 
-                 $purchase_detail = PurchaseDetail::where('purchase_id', $id)
-                 ->where('product_id', $product_warehouse->product_id)
-                 ->first();
-                 $item['quantity_balance'] = $purchase_detail->quantity - $purchase_detail->quantity_receive; 
-                 $item['order_quantity'] = $purchase_detail->quantity; 
-             }
+            if ($purchase_detail['product']['unitPurchase']->operator == '/') {
+                $item['qte_purchase'] = round($purchase_detail->quantity_receive * $purchase_detail['product']['unitPurchase']->operator_value, 5);
+            } else {
+                $item['qte_purchase'] = round($purchase_detail->quantity_receive / $purchase_detail['product']['unitPurchase']->operator_value, 5);
+            }
+
+            $item['qte'] = $purchase_detail->quantity_receive;
+            $item['unitSale'] = $purchase_detail['product']['unitSale']->ShortName;
+            $item['unitPurchase'] = $purchase_detail['product']['unitPurchase']->ShortName;
+
+            if ($purchase_detail['product']->TaxNet !== 0.0) {
+                //Exclusive
+                if ($purchase_detail['product']->tax_method == '1') {
+                    $tax_price = $price * $purchase_detail['product']->TaxNet / 100;
+                    $item['Net_price'] = $price + $tax_price;
+                    // Inxclusive
+                } else {
+                    $item['Net_price'] = $price;
+                }
+            } else {
+                $item['Net_price'] = $price;
+            }
+
+            $data[] = $item;
+        }
  
-             $item['id'] = $product_warehouse->product_id;
-             $item['name'] = $product_warehouse['product']->name;
-             $item['barcode'] = $product_warehouse['product']->code;
-             $item['is_expire'] = $product_warehouse['product']->is_expire;
-             $item['Type_barcode'] = $product_warehouse['product']->Type_barcode;
-             $firstimage = explode(',', $product_warehouse['product']->image);
-             $item['image'] = $firstimage[0];
- 
-             if ($product_warehouse['product']['unitSale']->operator == '/') {
-                 $item['qte_sale'] = $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
-                 $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
-             } else {
-                 $item['qte_sale'] = $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
-                 $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
-             }
- 
-             if ($product_warehouse['product']['unitPurchase']->operator == '/') {
-                 $item['qte_purchase'] = round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
-             } else {
-                 $item['qte_purchase'] = round($product_warehouse->qte / $product_warehouse['product']['unitPurchase']->operator_value, 5);
-             }
- 
-             $item['qte'] = $product_warehouse->qte;
-             $item['unitSale'] = $product_warehouse['product']['unitSale']->ShortName;
-             $item['unitPurchase'] = $product_warehouse['product']['unitPurchase']->ShortName;
- 
-             if ($product_warehouse['product']->TaxNet !== 0.0) {
-                 //Exclusive
-                 if ($product_warehouse['product']->tax_method == '1') {
-                     $tax_price = $price * $product_warehouse['product']->TaxNet / 100;
-                     $item['Net_price'] = $price + $tax_price;
-                     // Inxclusive
-                 } else {
-                     $item['Net_price'] = $price;
-                 }
-             } else {
-                 $item['Net_price'] = $price;
-             }
- 
-             $data[] = $item;
-         }
- 
-         return response()->json([
+        return response()->json([
             'warehouse_id'  => $purchase->warehouse_id,
             'provider_id'   => $purchase->provider_id,
             'products'      => $data
-         ]);
+        ]);
      }
 
     //------------ Get product By ID -----------------\\

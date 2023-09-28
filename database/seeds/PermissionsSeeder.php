@@ -432,6 +432,14 @@ class PermissionsSeeder extends Seeder
 			'id'    => 105,
 			'name'  => 'stock_report',
 		],
+		[
+			'id'    => 106,
+			'name'  => 'Purchase_Receives_view'
+		],
+		[
+			'id'    => 107,
+			'name'  => 'Purchase_Receives_add'
+		]
 		
 		)
 	);

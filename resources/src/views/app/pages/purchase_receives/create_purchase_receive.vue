@@ -611,7 +611,10 @@ export default {
         imei_number:"",
         quantity_balance: '',
         is_expire: '',
-        order_quantity: ''
+        order_quantity: '',
+        purchase_detail_id: '',
+        expiration_date: "",
+        lot_number: '',
       },
       purchases: []
     };
@@ -850,6 +853,7 @@ export default {
         this.product.quantity_balance = result.quantity_balance;
         this.product.is_expire = result.is_expire;
         this.product.order_quantity = result.order_quantity;
+        this.product.purchase_detail_id = result.purchase_detail_id;
         this.Get_Product_Details(result.id);
       }
 
@@ -1091,7 +1095,7 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
         axios
-          .post("purchase_receive", {
+          .post("purchase_receives", {
             date: this.purchase.date,
             purchase_id: this.purchase.purchase_id,
             supplier_id: this.purchase.supplier_id,
@@ -1153,6 +1157,8 @@ export default {
         this.product.purchase_unit_id = response.data.purchase_unit_id;
         this.product.is_imei = response.data.is_imei;
         this.product.imei_number = '';
+        this.product.expiration_date = '';
+        this.product.lot_number = '';
         this.add_product();
         this.Calcul_Total();
       });
