@@ -33,7 +33,7 @@
                   </b-col>
 
                   <!-- Code Product"-->
-                  <b-col md="6" class="mb-2">
+                  <!-- <b-col md="6" class="mb-2">
                     <validation-provider
                       name="Code Product"
                       :rules="{ required: true}"
@@ -62,7 +62,7 @@
                           >{{code_exist}}</b-alert>
                       </b-form-group>
                     </validation-provider>
-                  </b-col>
+                  </b-col> -->
 
                   <!-- Category -->
                   <b-col md="6" class="mb-2">

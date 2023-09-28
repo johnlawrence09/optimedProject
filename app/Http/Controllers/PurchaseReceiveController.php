@@ -172,6 +172,8 @@ class PurchaseReceiveController extends Controller
              'supplier_id' => 'required',
              'warehouse_id' => 'required',
          ]);
+
+         
  
          \DB::transaction(function () use ($request) {
              $order = new PurchaseReceive;
@@ -191,12 +193,12 @@ class PurchaseReceiveController extends Controller
              $order->user_id = Auth::user()->id;
  
              $order->save();
- 
+    
              $data = $request['details'];
              foreach ($data as $key => $value) {
                  $unit = Unit::where('id', $value['purchase_unit_id'])->first();
                  $orderDetails[] = [
-                    'purchase_id' => $order->id,
+                    'purchase_receive_id' => $order->id,
                     'quantity' => $value['quantity'],
                     'cost' => $value['Unit_cost'],
                     'purchase_unit_id' =>  $value['purchase_unit_id'],
@@ -209,15 +211,16 @@ class PurchaseReceiveController extends Controller
                     'total' => $value['subtotal'],
                     'imei_number' => $value['imei_number'],
                     'expiration_date' => $value['expiration_date'],
-                    'lot_number' => $value['lot_number'],
+                    'lot_number' =>  $value['lot_number'],
                 ];
                  if ($order->statut == "received") {
-                     $purchase_detail = PurchaseDetail::where('purchase_id', $request->purchase_id)
-                        ->where('product_id', $value['product_id'])
-                        ->where('product_id', $value['product_variant_id'])
-                        ->first();
+                     $purchase_detail = PurchaseDetail::find($value['purchase_detail_id']);
+
                      if($purchase_detail->quantity > $purchase_detail->quantity_receive) {
                         $purchase_detail->quantity_receive = $purchase_detail->quantity_receive + $value['quantity'];
+                        if($purchase_detail->quantity_receive == $purchase_detail->quantity) {
+                            $purchase_detail->is_receive = 1;
+                        }
                         $purchase_detail->save();
                      }
                      if ($value['product_variant_id'] !== null) {

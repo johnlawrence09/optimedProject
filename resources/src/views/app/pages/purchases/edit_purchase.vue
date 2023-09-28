@@ -273,7 +273,7 @@
                 </b-col>
 
                  <!-- Status  -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <!-- <b-col lg="4" md="4" sm="12" class="mb-3">
                   <validation-provider name="Status" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('Status') + ' ' + '*'">
                       <v-select
@@ -292,7 +292,7 @@
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                     </b-form-group>
                   </validation-provider>
-                </b-col>
+                </b-col> -->
 
 
                 <b-col md="12">

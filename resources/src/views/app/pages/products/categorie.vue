@@ -62,7 +62,7 @@
         <b-form @submit.prevent="Submit_Category">
           <b-row>
             <!-- Code category -->
-            <b-col md="12">
+            <!-- <b-col md="12">
               <validation-provider
                 name="Code category"
                 :rules="{ required: true}"
@@ -79,7 +79,7 @@
                   <b-form-invalid-feedback id="Code-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                 </b-form-group>
               </validation-provider>
-            </b-col>
+            </b-col> -->
 
             <!-- Name category -->
             <b-col md="12">

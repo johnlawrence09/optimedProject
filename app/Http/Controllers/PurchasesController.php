@@ -170,7 +170,7 @@ class PurchasesController extends BaseController
             $order->TaxNet = $request->TaxNet;
             $order->discount = $request->discount;
             $order->shipping = $request->shipping;
-            $order->statut = $request->statut;
+            $order->statut = 'pending';
             $order->payment_statut = 'unpaid';
             $order->notes = $request->notes;
             $order->user_id = Auth::user()->id;
@@ -412,7 +412,6 @@ class PurchasesController extends BaseController
                 'TaxNet' => $request['TaxNet'],
                 'discount' => $request['discount'],
                 'shipping' => $request['shipping'],
-                'statut' => $request['statut'],
                 'GrandTotal' => $request['GrandTotal'],
                 'payment_statut' => $payment_statut,
             ]);
