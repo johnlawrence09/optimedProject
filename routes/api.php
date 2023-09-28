@@ -455,6 +455,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('payment_Return_Purchase_PDF/{id}', 'PaymentPurchaseReturnsController@payment_return');
     Route::get('payment_Sale_PDF/{id}', 'PaymentSalesController@payment_sale');
     Route::get('Sales/Print_Invoice/{id}', 'SalesController@Print_Invoice_POS');
+    Route::get('print_picklist/{id}', 'SalesController@print_picklist');
 
     
     Route::get('Products/filter/{id}/{input}', 'ProductsController@Filter_Products');

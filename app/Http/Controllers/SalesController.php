@@ -966,7 +966,6 @@ class SalesController extends BaseController
 
     public function Sale_PDF(Request $request, $id)
     {
-
         $details = array();
         $helpers = new helpers();
         $sale_data = Sale::with('details.product.unitSale')
@@ -1053,6 +1052,37 @@ class SalesController extends BaseController
 
         return $pdf->download('Sale.pdf');
 
+    }
+
+    public function print_picklist (Request $request, $id) {
+        
+        
+        $products = DB::table('products as a')
+            ->select("*",'a.name')
+            ->leftJoin('sale_details','a.id','=','sale_details.product_id')
+            ->join('units as u','a.unit_id','=','u.id')
+            ->join('sales','sale_details.sale_id','=','sales.id')
+            ->where('sales.id','=', $id)->get();
+
+        $date = date_create($products[0]->date);
+        $date_formated = date_format($date, "m/d/Y");
+
+        $sales = DB::table('sales')->where('id','=', $request->id)->get();
+
+        return view('pdf.picklist', [ 
+            'so_number' => $sales[0]->Ref,
+            'products' => $products,
+            'date' =>  $date_formated
+        ]);
+
+        // $pdf = PDF::loadView('pdf.picklist', [ 
+        //     'so_number' => $sales[0]->Ref,
+        //     'products' => $products,
+        //     'date' =>  $date_formated
+        // ])->setOptions(['defaultFont' => 'Roboto']);
+        
+        // return $pdf->download('picklist.pdf');
+        
     }
 
     //----------------Show Form Create Sale ---------------\\

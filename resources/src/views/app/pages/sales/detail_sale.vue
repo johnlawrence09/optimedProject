@@ -63,6 +63,13 @@
                         <i class="i-Close-Window"></i>
                         {{ $t("Del") }}
                     </button>
+                    <button
+                        @click="printPicklist()"
+                        class="btn btn-warning btn-icon ripple btn-sm"
+                    >
+                        <i class="i-Billing"></i>
+                        {{ $t("Print Picklist") }}
+                    </button>
                 </b-col>
             </b-row>
             <div class="invoice" id="print_Invoice">
@@ -413,6 +420,12 @@ export default {
         //------------------------------ Print -------------------------\\
         print() {
             this.$htmlToPaper("print_Invoice");
+        },
+
+        //--------------------------------- Print Picklist ------------------------------\\
+        printPicklist() {
+            let id = this.$route.params.id;
+            axios.get(`print_picklist/${id}`).then((response) => {});
         },
 
         //--------------------------------- Send Sale in Email ------------------------------\\
