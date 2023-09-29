@@ -25,6 +25,31 @@ class Purchase extends Model
         'paid_amount' => 'double',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->Ref = static::generateReference(); // Generate and assign reference
+        });
+    }
+
+    private static function generateReference()
+    {
+        $code = 'PO';
+        $year = date('y');
+        $dayOfYear = date('z') + 1;
+
+        $prefix = $code.$year.$dayOfYear;
+
+        $latest = static::orderBy('created_at', 'desc')->first();
+
+        $number = $latest ? intval(substr($latest->code, strlen($prefix))) + 1 : '000001';
+        $paddedNumber = str_pad($number, 6, '0', STR_PAD_LEFT);
+
+        return $prefix . $paddedNumber;
+    }
+
     public function details()
     {
         return $this->hasMany('App\Models\PurchaseDetail');
@@ -49,5 +74,9 @@ class Purchase extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    
+
+
 
 }

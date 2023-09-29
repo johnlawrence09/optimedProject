@@ -240,6 +240,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     Route::resource('categories', 'CategorieController');
     Route::post('categories/delete/by_selection', 'CategorieController@delete_by_selection');
+    
 
     //------------------------------- Units --------------------------\\
     //------------------------------------------------------------------\\
@@ -267,6 +268,12 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('Get_Warehouses/All', 'WarehouseController@Get_Warehouses');
     Route::post('warehouses/delete/by_selection', 'WarehouseController@delete_by_selection');
 
+     //------------------------------- WAREHOUSES LOCATION --------------------------\\
+    //------------------------------------------------------------------\\
+
+    Route::resource('warehouse_locations', 'WarehouseLocationController');
+    Route::post('warehouse_locations/delete/by_selection', 'WarehouseLocationController@delete_by_selection');
+
     //------------------------------- PURCHASES --------------------------\\
     //------------------------------------------------------------------\\
 
@@ -276,7 +283,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('purchases/send/sms', 'PurchasesController@Send_SMS');
     Route::get('purchases/export/Excel', 'PurchasesController@exportExcel');
     Route::post('purchases/delete/by_selection', 'PurchasesController@delete_by_selection');
-
+    Route::put('purchases/edit/status/{purchase}', 'PurchasesController@Edit_Status');
 
     //------------------------------- PURCHASES --------------------------\\
     //------------------------------------------------------------------\\

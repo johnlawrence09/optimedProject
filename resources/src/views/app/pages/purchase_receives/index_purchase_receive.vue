@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <breadcumb page="List Purchase Receive" folder="Purchase Receive"/>
+    <breadcumb page="List Purchase Receipt" folder="Purchase Receipt"/>
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
     <div v-else>
       <vue-good-table
@@ -124,7 +124,7 @@
               </b-dropdown>
             </div>
           </span>
-          <div v-else-if="props.column.field == 'statut'">
+          <!-- <div v-else-if="props.column.field == 'statut'">
             <span
               v-if="props.row.statut == 'received'"
               class="badge badge-outline-success"
@@ -146,7 +146,7 @@
               class="badge badge-outline-primary"
             >{{$t('partial')}}</span>
             <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
-          </div>
+          </div> -->
            <div v-else-if="props.column.field == 'Ref'">
               <router-link
                 :to="'/app/purchases/detail/'+props.row.id"
@@ -583,37 +583,9 @@ export default {
           thClass: "text-left"
         },
         {
-          label: this.$t("Status"),
-          field: "statut",
-          html: true,
-          tdClass: "text-left",
-          thClass: "text-left"
-        },
-        {
-          label: this.$t("Total"),
+          label: 'Total',
           field: "GrandTotal",
           // type: "decimal",
-          tdClass: "text-left",
-          thClass: "text-left"
-        },
-        {
-          label: this.$t("Paid"),
-          field: "paid_amount",
-          // type: "decimal",
-          tdClass: "text-left",
-          thClass: "text-left"
-        },
-        {
-          label: this.$t("Due"),
-          field: "due",
-          // type: "decimal",
-          tdClass: "text-left",
-          thClass: "text-left"
-        },
-        {
-          label: this.$t("PaymentStatus"),
-          field: "payment_status",
-          html: true,
           tdClass: "text-left",
           thClass: "text-left"
         },

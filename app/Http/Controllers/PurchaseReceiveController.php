@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\Unit;
 use App\Models\UserWarehouse;
 use App\Models\Warehouse;
+use App\Models\WarehouseLocation;
 use App\utils\helpers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -151,14 +152,17 @@ class PurchaseReceiveController extends Controller
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          } 
 
-        $purchases = Purchase::where('statut', 'ordered')->get(['id', 'Ref']);
+        $purchases = Purchase::whereIn('statut', ['ordered', 'partial'])->get(['id', 'Ref']);
 
         $suppliers = Provider::where('deleted_at', '=', null)->get(['id', 'name']);
+
+        $warehouse_locations = WarehouseLocation::where('deleted_at', '=', null)->get(['id', 'name']);
 
         return response()->json([
             'warehouses' => $warehouses,
             'suppliers' => $suppliers,
-            'purchases' => $purchases
+            'purchases' => $purchases,
+            'warehouse_locations' => $warehouse_locations
         ]);
     }
 
@@ -297,6 +301,21 @@ class PurchaseReceiveController extends Controller
                  }
              }
              PurchaseReceiveDetail::insert($orderDetails);
+
+             $purchase = Purchase::where('id', $order->provider_id)
+                ->with(['details' => function ($query) {
+                    // Add a query for the 'details' relationship here
+                    $query->where('is_receive', 0);
+                }])
+                ->first();
+             if(count($purchase->details)) {
+                $purchase->statut = 'partial';
+                $purchase->save();
+             }else{
+                $purchase->statut = 'received';
+                $purchase->save();
+             }
+            
          }, 10);
  
          return response()->json(['success' => true, 'message' => 'Purchase Created !!']);

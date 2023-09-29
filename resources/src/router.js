@@ -781,6 +781,16 @@ const routes = [
                             )
                     },
 
+                    // Warehouses
+                    {
+                        name: "Warehouse_Locations",
+                        path: "Warehouse_Locations",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "Warehouses" */ "./views/app/pages/settings/warehouse_locations"
+                            )
+                    },
+
                     // System Settings
                     {
                         name: "system_settings",

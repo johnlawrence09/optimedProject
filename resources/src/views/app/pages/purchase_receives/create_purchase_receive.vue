@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <breadcumb :page="$t('AddPurchase')" :folder="$t('ListPurchases')"/>
+    <breadcumb page="Add Purchase Receipt" folder="Purchase Receipt List"/>
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
 
     <validation-observer ref="create_purchase" v-if="!isLoading">
@@ -337,7 +337,7 @@
                 </b-col>
 
                  <!-- Status  -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <!-- <b-col lg="4" md="4" sm="12" class="mb-3">
                   <validation-provider name="Status" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('Status') + ' ' + '*'">
                       <v-select
@@ -356,7 +356,7 @@
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                     </b-form-group>
                   </validation-provider>
-                </b-col>
+                </b-col> -->
 
 
                 <b-col md="12">
@@ -616,7 +616,8 @@ export default {
         expiration_date: "",
         lot_number: '',
       },
-      purchases: []
+      purchases: [],
+      warehouse_locations: []
     };
   },
   computed: {
@@ -1090,6 +1091,7 @@ export default {
     //--------------------------------- Create Purchase -------------------------\\
     Create_Purchase() {
       if (this.verifiedForm()) {
+       
         this.SubmitProcessing = true;
         // Start the progress bar.
         NProgress.start();
@@ -1172,6 +1174,7 @@ export default {
           this.suppliers = response.data.suppliers;
           this.warehouses = response.data.warehouses;
           this.purchases = response.data.purchases;
+          this.warehouse_locations = response.data.warehouse_locations;
           this.isLoading = false;
         })
         .catch(response => {
@@ -1188,3 +1191,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+#vs4__listbox {
+  z-index: 5000;
+}
+</style>

@@ -162,7 +162,6 @@ class PurchasesController extends BaseController
             $order = new Purchase;
 
             $order->date = $request->date;
-            $order->Ref = $this->getNumberOrder();
             $order->provider_id = $request->supplier_id;
             $order->GrandTotal = $request->GrandTotal;
             $order->warehouse_id = $request->warehouse_id;
@@ -195,39 +194,39 @@ class PurchasesController extends BaseController
                     'imei_number' => $value['imei_number'],
                 ];
 
-                if ($order->statut == "received") {
-                    if ($value['product_variant_id'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                // if ($order->statut == "received") {
+                //     if ($value['product_variant_id'] !== null) {
+                //         $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                //             ->where('warehouse_id', $order->warehouse_id)
+                //             ->where('product_id', $value['product_id'])
+                //             ->where('product_variant_id', $value['product_variant_id'])
+                //             ->first();
 
-                        if ($unit && $product_warehouse) {
-                            if ($unit->operator == '/') {
-                                $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
-                            } else {
-                                $product_warehouse->qte += $value['quantity'] * $unit->operator_value;
-                            }
-                            $product_warehouse->save();
-                        }
+                //         if ($unit && $product_warehouse) {
+                //             if ($unit->operator == '/') {
+                //                 $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
+                //             } else {
+                //                 $product_warehouse->qte += $value['quantity'] * $unit->operator_value;
+                //             }
+                //             $product_warehouse->save();
+                //         }
 
-                    } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                //     } else {
+                //         $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                //             ->where('warehouse_id', $order->warehouse_id)
+                //             ->where('product_id', $value['product_id'])
+                //             ->first();
 
-                        if ($unit && $product_warehouse) {
-                            if ($unit->operator == '/') {
-                                $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
-                            } else {
-                                $product_warehouse->qte += $value['quantity'] * $unit->operator_value;
-                            }
-                            $product_warehouse->save();
-                        }
-                    }
-                }
+                //         if ($unit && $product_warehouse) {
+                //             if ($unit->operator == '/') {
+                //                 $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
+                //             } else {
+                //                 $product_warehouse->qte += $value['quantity'] * $unit->operator_value;
+                //             }
+                //             $product_warehouse->save();
+                //         }
+                //     }
+                // }
             }
             PurchaseDetail::insert($orderDetails);
         }, 10);
@@ -283,42 +282,42 @@ class PurchasesController extends BaseController
                 }
 
                 if($value['purchase_unit_id'] !== null){
-                    if ($current_Purchase->statut == "received") {
+                    // if ($current_Purchase->statut == "received") {
 
-                        if ($value['product_variant_id'] !== null) {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Purchase->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
+                    //     if ($value['product_variant_id'] !== null) {
+                    //         $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                    //             ->where('warehouse_id', $current_Purchase->warehouse_id)
+                    //             ->where('product_id', $value['product_id'])
+                    //             ->where('product_variant_id', $value['product_variant_id'])
+                    //             ->first();
 
-                            if ($unit && $product_warehouse) {
-                                if ($unit->operator == '/') {
-                                    $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
-                                } else {
-                                    $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
-                                }
+                    //         if ($unit && $product_warehouse) {
+                    //             if ($unit->operator == '/') {
+                    //                 $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
+                    //             } else {
+                    //                 $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
+                    //             }
 
-                                $product_warehouse->save();
-                            }
+                    //             $product_warehouse->save();
+                    //         }
 
-                        } else {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Purchase->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->first();
+                    //     } else {
+                    //         $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                    //             ->where('warehouse_id', $current_Purchase->warehouse_id)
+                    //             ->where('product_id', $value['product_id'])
+                    //             ->first();
 
-                            if ($unit && $product_warehouse) {
-                                if ($unit->operator == '/') {
-                                    $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
-                                } else {
-                                    $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
-                                }
+                    //         if ($unit && $product_warehouse) {
+                    //             if ($unit->operator == '/') {
+                    //                 $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
+                    //             } else {
+                    //                 $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
+                    //             }
 
-                                $product_warehouse->save();
-                            }
-                        }
-                    }
+                    //             $product_warehouse->save();
+                    //         }
+                    //     }
+                    // }
 
                     // Delete Detail
                     if (!in_array($old_products_id[$key], $new_products_id)) {
@@ -1063,6 +1062,13 @@ class PurchasesController extends BaseController
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
+    }
+
+    public function Edit_Status(Request $request, Purchase $purchase) {
+        $purchase->statut = $request->statut;
+        $purchase->update();
+
+        return $purchase;
     }
 
 }

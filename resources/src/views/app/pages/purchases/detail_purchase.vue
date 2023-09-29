@@ -7,7 +7,7 @@
       <b-row>
         <b-col md="12" class="mb-2">
           <router-link
-            v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_edit')"
+            v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_edit') && purchase.statut === 'pending'"
             title="Edit"
             class="btn btn-success btn-icon ripple btn-sm"
             :to="{ name:'edit_purchase', params: { id: $route.params.id } }"
@@ -15,28 +15,32 @@
             <i class="i-Edit"></i>
             <span>{{$t('EditPurchase')}}</span>
           </router-link>
-          <button @click="purchase_Email()" class="btn btn-info btn-icon ripple btn-sm">
+          <button @click="purchase_Email()" class="btn btn-info btn-icon ripple btn-sm" v-if="purchase.statut !== 'pending'">
             <i class="i-Envelope-2"></i>
             {{$t('Email')}}
           </button>
-           <button @click="Purchase_SMS()" class="btn btn-secondary btn-icon ripple btn-sm">
+           <button @click="Purchase_SMS()" class="btn btn-secondary btn-icon ripple btn-sm" v-if="purchase.statut !== 'pending'">
             <i class="i-Speach-Bubble"></i>
             SMS
           </button>
-          <button @click="Print_Purchase_PDF()" class="btn btn-primary btn-icon ripple btn-sm">
+          <button @click="Print_Purchase_PDF()" class="btn btn-primary btn-icon ripple btn-sm" v-if="purchase.statut !== 'pending'">
             <i class="i-File-TXT"></i> PDF
           </button>
-          <button @click="print()" class="btn btn-warning btn-icon ripple btn-sm">
+          <button @click="print()" class="btn btn-warning btn-icon ripple btn-sm" v-if="purchase.statut !== 'pending'">
             <i class="i-Billing"></i>
             {{$t('print')}}
           </button>
           <button
-            v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_delete')"
+            v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_delete') && purchase.statut === 'pending'"
             @click="Delete_Purchase()"
             class="btn btn-danger btn-icon ripple btn-sm"
           >
             <i class="i-Close-Window"></i>
             {{$t('Del')}}
+          </button>
+          <button @click="purchase_Email()" class="btn btn-info btn-icon ripple btn-sm" v-if="purchase.statut === 'pending'">
+            <i class="i-Edit"></i>
+            Set status to ordered
           </button>
         </b-col>
       </b-row>

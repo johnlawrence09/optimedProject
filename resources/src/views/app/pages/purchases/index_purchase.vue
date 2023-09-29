@@ -80,7 +80,7 @@
 
                 <b-dropdown-item
                   title="Edit"
-                  v-if="currentUserPermissions.includes('Purchases_edit')"
+                  v-if="currentUserPermissions.includes('Purchases_edit') && props.row.statut === 'pending'"
                   :to="'/app/purchases/edit/'+props.row.id"
                 >
                   <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
@@ -88,7 +88,7 @@
                 </b-dropdown-item>
 
                 <b-dropdown-item
-                  v-if="currentUserPermissions.includes('payment_purchases_view')"
+                  v-if="currentUserPermissions.includes('payment_purchases_view') && props.row.statut !== 'pending'"
                   @click="Show_Payments(props.row.id , props.row)"
                 >
                   <i class="nav-icon i-Money-Bag font-weight-bold mr-2"></i>
@@ -96,26 +96,42 @@
                 </b-dropdown-item>
 
                 <b-dropdown-item
-                  v-if="currentUserPermissions.includes('payment_purchases_add')"
+                  v-if="currentUserPermissions.includes('payment_purchases_add') && props.row.statut !== 'pending'"
                   @click="New_Payment(props.row)"
                 >
                   <i class="nav-icon i-Add font-weight-bold mr-2"></i>
                   {{$t('AddPayment')}}
                 </b-dropdown-item>
 
-                <b-dropdown-item title="PDF" @click="Invoice_PDF(props.row , props.row.id)">
+                <b-dropdown-item 
+                 v-if="props.row.statut !== 'pending'"
+                  title="PDF"
+                  @click="Invoice_PDF(props.row , props.row.id)">
                   <i class="nav-icon i-File-TXT font-weight-bold mr-2"></i>
                   {{$t('DownloadPdf')}}
                 </b-dropdown-item>
 
-                <b-dropdown-item title="Email" @click="Purchase_Email(props.row , props.row.id)">
+                <b-dropdown-item 
+                  v-if="props.row.statut === 'ordered'"
+                  title="Email" 
+                  @click="Purchase_Email(props.row , props.row.id)
+                ">
                   <i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i>
                   {{$t('EmailPurchase')}}
                 </b-dropdown-item>
 
+                <b-dropdown-item 
+                  v-if="props.row.statut === 'pending'"
+                  title="Ordered" 
+                  @click="Edit_Status('ordered', props.row.id)"
+                >
+                  <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
+                  Set status to ordered
+                </b-dropdown-item>
+
                 <b-dropdown-item
                   title="Delete"
-                  v-if="currentUserPermissions.includes('Purchases_delete')"
+                  v-if="currentUserPermissions.includes('Purchases_delete') && props.row.statut === 'pending'"
                   @click="Remove_Purchase(props.row.id)"
                 >
                   <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
@@ -133,7 +149,14 @@
               v-else-if="props.row.statut == 'pending'"
               class="badge badge-outline-info"
             >{{$t('Pending')}}</span>
-            <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
+            <span 
+              v-else-if="props.row.statut == 'ordered'" 
+              class="badge badge-outline-warning">
+            {{$t('Ordered')}}</span>
+            <span 
+              v-else-if="props.row.statut == 'partial'" 
+              class="badge badge-outline-warning">
+            Partial</span>
           </div>
 
           <div v-else-if="props.column.field == 'payment_status'">
@@ -1331,8 +1354,31 @@ export default {
           // Complete the animation of the  progress bar.
           setTimeout(() => NProgress.done(), 500);
         });
+    },
+
+    Edit_Status(status, id) {
+      axios
+        .put("purchases/edit/status/" + id, {
+          statut: status
+        })
+        .then(response => {
+          // Complete the animation of the  progress bar.
+          setTimeout(() => NProgress.done(), 500);
+          this.makeToast(
+            "success",
+            'Purchase status edited successfully',
+            'Success'
+          );
+        })
+        .catch(error => {
+          // Complete the animation of the  progress bar.
+          setTimeout(() => NProgress.done(), 500);
+          this.makeToast("danger", this.$t("SMTPIncorrect"), this.$t("Failed"));
+        });
     }
+
   },
+
 
   //-----------------------------Created function-------------------
   created: function() {

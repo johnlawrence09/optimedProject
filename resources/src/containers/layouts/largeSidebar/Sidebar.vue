@@ -143,7 +143,7 @@
                     >
                         <a class="nav-item-hold" href="#">
                             <i class="nav-icon i-Receipt"></i>
-                            <span class="nav-text">Purchase Receive</span>
+                            <span class="nav-text">Purchase Receipt</span>
                         </a>
                         <div class="triangle"></div>
                     </li>
@@ -319,6 +319,7 @@
                                 'setting_system'
                             ) ||
                                 currentUserPermissions.includes('warehouse') ||
+                                currentUserPermissions.includes('warehouse_location') ||
                                 currentUserPermissions.includes('backup') ||
                                 currentUserPermissions.includes('currency') ||
                                 currentUserPermissions.includes(
@@ -707,7 +708,7 @@
                             to="/app/purchase_receives/store"
                         >
                             <i class="nav-icon i-Add-File"></i>
-                            <span class="item-name">Add Purchase Receive</span>
+                            <span class="item-name">Add Purchase Receipt</span>
                         </router-link>
                     </li>
                     <li
@@ -725,7 +726,7 @@
                             to="/app/purchase_receives/list"
                         >
                             <i class="nav-icon i-Files"></i>
-                            <span class="item-name">List Purchase Receive</span>
+                            <span class="item-name">List Purchase Receipt</span>
                         </router-link>
                     </li>
                 </ul>
@@ -1097,6 +1098,22 @@
                             <span class="item-name">{{
                                 $t("Warehouses")
                             }}</span>
+                        </router-link>
+                    </li>
+                    <li
+                        class="nav-item"
+                        v-if="
+                            currentUserPermissions &&
+                            currentUserPermissions.includes('warehouse_location')
+                        "
+                    >
+                        <router-link
+                            tag="a"
+                            class
+                            to="/app/settings/Warehouse_Locations"
+                        >
+                            <i class="nav-icon i-Clothing-Store"></i>
+                            <span class="item-name">Warehouse Locations</span>
                         </router-link>
                     </li>
                     <li
