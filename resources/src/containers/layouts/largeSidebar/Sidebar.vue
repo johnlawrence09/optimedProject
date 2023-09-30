@@ -167,6 +167,33 @@
                         <div class="triangle"></div>
                     </li>
 
+                    <!-- Sales Receipt -->
+
+                    <li
+                        v-show="
+                            currentUserPermissions &&
+                            (currentUserPermissions.includes(
+                                'Sales_Receipt_view'
+                            ) ||
+                                currentUserPermissions.includes(
+                                    'Sales_Receipt_add'
+                                ))
+                        "
+                        @mouseenter="toggleSubMenu"
+                        class="nav-item"
+                        :class="{
+                            active: selectedParentMenu == 'sales_receipt',
+                        }"
+                        data-item="sales_receipt"
+                        :data-submenu="true"
+                    >
+                        <a class="nav-item-hold" href="#">
+                            <i class="nav-icon i-Receipt"></i>
+                            <span class="nav-text">Sales Receipt</span>
+                        </a>
+                        <div class="triangle"></div>
+                    </li>
+                    <!-- ****************** -->
                     <li
                         v-show="
                             currentUserPermissions &&
@@ -770,6 +797,45 @@
                         <router-link tag="a" class to="/app/sales/shipment">
                             <i class="nav-icon i-Files"></i>
                             <span class="item-name">{{ $t("Shipments") }}</span>
+                        </router-link>
+                    </li>
+                </ul>
+                <!-- Sales Receipt -->
+                <ul
+                    class="childNav d-none"
+                    data-parent="sales_receipt"
+                    :class="{
+                        'd-block': selectedParentMenu == 'sales_receipt',
+                    }"
+                >
+                    <li
+                        class="nav-item"
+                        v-if="
+                            currentUserPermissions &&
+                            currentUserPermissions.includes('Sales_Receipt_add')
+                        "
+                    >
+                        <router-link
+                            tag="a"
+                            class
+                            to="/app/sales_receipt/store"
+                        >
+                            <i class="nav-icon i-Add-File"></i>
+                            <span class="item-name">Add Sales Receipt</span>
+                        </router-link>
+                    </li>
+                    <li
+                        class="nav-item"
+                        v-if="
+                            currentUserPermissions &&
+                            currentUserPermissions.includes(
+                                'Sales_Receipt_view'
+                            )
+                        "
+                    >
+                        <router-link tag="a" class to="/app/sales_receipt/list">
+                            <i class="nav-icon i-Files"></i>
+                            <span class="item-name">List Sales Receipt</span>
                         </router-link>
                     </li>
                 </ul>

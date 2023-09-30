@@ -179,15 +179,17 @@
           <th>Qty</th>
           <th>UoM</th>
           <th>Product Name</th>
+          <th>Expiration Date</th>
           <th>Location</th>
         </tr>
         <tr>
           <tbody>
-            
+          
             <td></td>
             <td>3</td>
             <td>pcs</td>
             <td>Dialysis Machine</td>
+            <td>09/23/2023</td>
             <td>Germany</td>
           </tbody>
         </tr>

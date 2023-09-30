@@ -24,7 +24,7 @@ const routes = [
                 component: () =>
                     import(
                         /* webpackChunkName: "dashboard" */ "./views/app/dashboard/dashboard"
-                    )
+                    ),
             },
 
             //Products
@@ -42,7 +42,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "index_products" */ "./views/app/pages/products/index_products"
-                            )
+                            ),
                     },
                     {
                         path: "store",
@@ -50,7 +50,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "store_product" */ "./views/app/pages/products/Add_product"
-                            )
+                            ),
                     },
                     {
                         path: "edit/:id",
@@ -58,7 +58,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "edit_product" */ "./views/app/pages/products/Edit_product"
-                            )
+                            ),
                     },
                     {
                         path: "detail/:id",
@@ -66,7 +66,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "detail_product" */ "./views/app/pages/products/Detail_Product"
-                            )
+                            ),
                     },
                     {
                         path: "barcode",
@@ -74,16 +74,16 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "barcode" */ "./views/app/pages/products/barcode"
-                            )
+                            ),
                     },
-                     // categories
-                     {
+                    // categories
+                    {
                         name: "categories",
                         path: "Categories",
                         component: () =>
                             import(
                                 /* webpackChunkName: "Categories" */ "./views/app/pages/products/categorie"
-                            )
+                            ),
                     },
 
                     // brands
@@ -93,7 +93,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Brands" */ "./views/app/pages/products/brands"
-                            )
+                            ),
                     },
 
                     // units
@@ -103,9 +103,9 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "units" */ "./views/app/pages/products/units"
-                            )
+                            ),
                     },
-                ]
+                ],
             },
 
             //Adjustement
@@ -124,7 +124,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "index_adjustment" */
                                 "./views/app/pages/adjustment/index_Adjustment"
-                            )
+                            ),
                     },
                     {
                         name: "store_adjustment",
@@ -133,7 +133,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "store_adjustment" */
                                 "./views/app/pages/adjustment/Create_Adjustment"
-                            )
+                            ),
                     },
                     {
                         name: "edit_adjustment",
@@ -142,9 +142,9 @@ const routes = [
                             import(
                                 /* webpackChunkName: "edit_adjustment" */
                                 "./views/app/pages/adjustment/Edit_Adjustment"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             //Transfer
@@ -162,7 +162,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "index_transfer" */ "./views/app/pages/transfers/index_transfer"
-                            )
+                            ),
                     },
                     {
                         name: "store_transfer",
@@ -171,7 +171,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "store_transfer" */
                                 "./views/app/pages/transfers/create_transfer"
-                            )
+                            ),
                     },
                     {
                         name: "edit_transfer",
@@ -179,9 +179,9 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "edit_transfer" */ "./views/app/pages/transfers/edit_transfer"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             //Expense
@@ -199,7 +199,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "index_expense" */ "./views/app/pages/expense/index_expense"
-                            )
+                            ),
                     },
                     {
                         name: "store_expense",
@@ -207,7 +207,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "store_expense" */ "./views/app/pages/expense/create_expense"
-                            )
+                            ),
                     },
                     {
                         name: "edit_expense",
@@ -215,7 +215,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "edit_expense" */ "./views/app/pages/expense/edit_expense"
-                            )
+                            ),
                     },
                     {
                         name: "expense_category",
@@ -223,9 +223,9 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "expense_category" */ "./views/app/pages/expense/category_expense"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             //Quotation
@@ -243,7 +243,7 @@ const routes = [
                         component: () =>
                             import(
                                 "./views/app/pages/quotations/index_quotation"
-                            )
+                            ),
                     },
                     {
                         name: "store_quotation",
@@ -252,7 +252,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "store_quotation" */
                                 "./views/app/pages/quotations/create_quotation"
-                            )
+                            ),
                     },
                     {
                         name: "edit_quotation",
@@ -261,7 +261,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "edit_quotation" */
                                 "./views/app/pages/quotations/edit_quotation"
-                            )
+                            ),
                     },
                     {
                         name: "detail_quotation",
@@ -270,7 +270,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_quotation" */
                                 "./views/app/pages/quotations/detail_quotation"
-                            )
+                            ),
                     },
                     {
                         name: "change_to_sale",
@@ -278,10 +278,57 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "change_to_sale" */ "./views/app/pages/sales/change_to_sale.vue"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
+
+            //Sales Receipt
+
+            // {
+            //     path: "/app/sales_receipt",
+            //     component: () =>
+            //         import(
+            //             /* webpackChunkName: "sales_receipt" */ "./views/app/pages/sales_receipt"
+            //         ),
+            //     redirect: "/app/sales_receipt/list",
+            //     children: [
+            //         {
+            //             name: "index_sales_receipt",
+            //             path: "list",
+            //             component: () =>
+            //                 import(
+            //                     /* webpackChunkName: "index_sales_receipt" */ "./views/app/pages/sales_receipt/index_sales_receipt"
+            //                 ),
+            //         },
+            //         {
+            //             name: "store_sales_receipt",
+            //             path: "store",
+            //             component: () =>
+            //                 import(
+            //                     /* webpackChunkName: "store_sales_receipt" */
+            //                     "./views/app/pages/purchase_receives/create_sales_receipt"
+            //                 ),
+            //         },
+            //         {
+            //             name: "edit_sales_receipt",
+            //             path: "edit/:id",
+            //             component: () =>
+            //                 import(
+            //                     /* webpackChunkName: "edit_sales_receipt" */ "./views/app/pages/sales_receipt/edit_sales_receipt"
+            //                 ),
+            //         },
+            //         {
+            //             name: "detail_sales_receipt",
+            //             path: "detail/:id",
+            //             component: () =>
+            //                 import(
+            //                     /* webpackChunkName: "detail_sales_receipt" */
+            //                     "./views/app/pages/sales_receipt/detail_sales_receipt"
+            //                 ),
+            //         },
+            //     ],
+            // },
 
             //Purchase
             {
@@ -298,7 +345,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "index_purchases" */ "./views/app/pages/purchases/index_purchase"
-                            )
+                            ),
                     },
                     {
                         name: "store_purchase",
@@ -307,7 +354,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "store_purchase" */
                                 "./views/app/pages/purchases/create_purchase"
-                            )
+                            ),
                     },
                     {
                         name: "edit_purchase",
@@ -315,7 +362,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "edit_purchase" */ "./views/app/pages/purchases/edit_purchase"
-                            )
+                            ),
                     },
                     {
                         name: "detail_purchase",
@@ -324,9 +371,9 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_purchase" */
                                 "./views/app/pages/purchases/detail_purchase"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             //Purchase_Receive
@@ -344,7 +391,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "index_purchases" */ "./views/app/pages/purchase_receives/index_purchase_receive"
-                            )
+                            ),
                     },
                     {
                         name: "store_purchase_receives",
@@ -353,7 +400,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "store_purchase" */
                                 "./views/app/pages/purchase_receives/create_purchase_receive"
-                            )
+                            ),
                     },
                     {
                         name: "edit_purchase_receives",
@@ -361,7 +408,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "edit_purchase" */ "./views/app/pages/purchase_receives/edit_purchase_receive"
-                            )
+                            ),
                     },
                     {
                         name: "detail_purchase_receives",
@@ -370,9 +417,9 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_purchase" */
                                 "./views/app/pages/purchase_receives/detail_purchase_receive"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             //Sale
@@ -390,7 +437,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "index_sales" */ "./views/app/pages/sales/index_sale"
-                            )
+                            ),
                     },
                     {
                         name: "store_sale",
@@ -398,7 +445,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "store_sale" */ "./views/app/pages/sales/create_sale"
-                            )
+                            ),
                     },
                     {
                         name: "edit_sale",
@@ -406,7 +453,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "edit_sale" */ "./views/app/pages/sales/edit_sale"
-                            )
+                            ),
                     },
                     {
                         name: "detail_sale",
@@ -414,7 +461,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "detail_sale" */ "./views/app/pages/sales/detail_sale"
-                            )
+                            ),
                     },
                     {
                         name: "shipment",
@@ -422,9 +469,9 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "shipment" */ "./views/app/pages/sales/shipments"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             // Sales Return
@@ -443,7 +490,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "index_sale_return" */
                                 "./views/app/pages/sale_return/index_sale_return"
-                            )
+                            ),
                     },
                     {
                         name: "store_sale_return",
@@ -452,7 +499,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "store_sale_return" */
                                 "./views/app/pages/sale_return/create_sale_return"
-                            )
+                            ),
                     },
                     {
                         name: "edit_sale_return",
@@ -461,7 +508,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "edit_sale_return" */
                                 "./views/app/pages/sale_return/edit_sale_return"
-                            )
+                            ),
                     },
                     {
                         name: "detail_sale_return",
@@ -470,9 +517,9 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_sale_return" */
                                 "./views/app/pages/sale_return/detail_sale_return"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             // purchase Return
@@ -491,7 +538,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "index_purchase_return" */
                                 "./views/app/pages/purchase_return/index_purchase_return"
-                            )
+                            ),
                     },
                     {
                         name: "store_purchase_return",
@@ -500,7 +547,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "store_purchase_return" */
                                 "./views/app/pages/purchase_return/create_purchase_return"
-                            )
+                            ),
                     },
                     {
                         name: "edit_purchase_return",
@@ -509,7 +556,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "edit_purchase_return" */
                                 "./views/app/pages/purchase_return/edit_purchase_return"
-                            )
+                            ),
                     },
                     {
                         name: "detail_purchase_return",
@@ -518,9 +565,9 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_purchase_return" */
                                 "./views/app/pages/purchase_return/detail_purchase_return"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             // Hrm
@@ -548,7 +595,7 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "index_employee" */
                                         "./views/app/pages/hrm/employees/index_employee"
-                                    )
+                                    ),
                             },
                             {
                                 name: "store_employee",
@@ -557,7 +604,7 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "store_employee" */
                                         "./views/app/pages/hrm/employees/employee_create"
-                                    )
+                                    ),
                             },
                             {
                                 name: "edit_employee",
@@ -566,7 +613,7 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "edit_employee" */
                                         "./views/app/pages/hrm/employees/employee_edit"
-                                    )
+                                    ),
                             },
                             {
                                 name: "detail_employee",
@@ -575,16 +622,18 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "detail_employee" */
                                         "./views/app/pages/hrm/employees/employee_details"
-                                    )
+                                    ),
                             },
-                        ]
+                        ],
                     },
                     // company
                     {
                         name: "company",
                         path: "company",
                         component: () =>
-                            import(/* webpackChunkName: "company" */"./views/app/pages/hrm/company")
+                            import(
+                                /* webpackChunkName: "company" */ "./views/app/pages/hrm/company"
+                            ),
                     },
 
                     // departments
@@ -592,15 +641,19 @@ const routes = [
                         name: "departments",
                         path: "departments",
                         component: () =>
-                            import(/* webpackChunkName: "departments" */"./views/app/pages/hrm/department")
+                            import(
+                                /* webpackChunkName: "departments" */ "./views/app/pages/hrm/department"
+                            ),
                     },
 
-                      // designations
-                      {
+                    // designations
+                    {
                         name: "designations",
                         path: "designations",
                         component: () =>
-                            import(/* webpackChunkName: "designations" */"./views/app/pages/hrm/designation")
+                            import(
+                                /* webpackChunkName: "designations" */ "./views/app/pages/hrm/designation"
+                            ),
                     },
 
                     // office_shift
@@ -608,25 +661,30 @@ const routes = [
                         name: "office_shift",
                         path: "office_shift",
                         component: () =>
-                            import(/* webpackChunkName: "office_shift" */"./views/app/pages/hrm/office_shift")
+                            import(
+                                /* webpackChunkName: "office_shift" */ "./views/app/pages/hrm/office_shift"
+                            ),
                     },
 
-                     // attendance
-                     {
+                    // attendance
+                    {
                         name: "attendance",
                         path: "attendance",
                         component: () =>
-                            import(/* webpackChunkName: "attendance" */"./views/app/pages/hrm/attendance")
+                            import(
+                                /* webpackChunkName: "attendance" */ "./views/app/pages/hrm/attendance"
+                            ),
                     },
 
-                      // holidays
-                      {
+                    // holidays
+                    {
                         name: "holidays",
                         path: "holidays",
                         component: () =>
-                            import(/* webpackChunkName: "holidays" */"./views/app/pages/hrm/holidays")
+                            import(
+                                /* webpackChunkName: "holidays" */ "./views/app/pages/hrm/holidays"
+                            ),
                     },
-
 
                     {
                         path: "leaves",
@@ -643,7 +701,7 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "leave_list" */
                                         "./views/app/pages/hrm/leaves/leave_list"
-                                    )
+                                    ),
                             },
                             {
                                 name: "leave_type",
@@ -652,14 +710,11 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "leave_type" */
                                         "./views/app/pages/hrm/leaves/leave_type"
-                                    )
+                                    ),
                             },
-                           
-                        ]
+                        ],
                     },
-
-                    
-                ]
+                ],
             },
 
             // People
@@ -678,7 +733,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Customers" */ "./views/app/pages/people/customers"
-                            )
+                            ),
                     },
 
                     // Suppliers
@@ -688,7 +743,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Suppliers" */ "./views/app/pages/people/providers"
-                            )
+                            ),
                     },
 
                     // Users
@@ -698,9 +753,9 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Users" */ "./views/app/pages/people/users"
-                            )
-                    }
-                ]
+                            ),
+                    },
+                ],
             },
 
             // Settings
@@ -728,7 +783,7 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "groupPermission" */
                                         "./views/app/pages/settings/permissions/Permissions"
-                                    )
+                                    ),
                             },
                             {
                                 name: "store_permission",
@@ -737,7 +792,7 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "store_permission" */
                                         "./views/app/pages/settings/permissions/Create_permission"
-                                    )
+                                    ),
                             },
                             {
                                 name: "edit_permission",
@@ -746,9 +801,9 @@ const routes = [
                                     import(
                                         /* webpackChunkName: "edit_permission" */
                                         "./views/app/pages/settings/permissions/Edit_permission"
-                                    )
-                            }
-                        ]
+                                    ),
+                            },
+                        ],
                     },
 
                     // currencies
@@ -758,7 +813,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Currencies" */ "./views/app/pages/settings/currencies"
-                            )
+                            ),
                     },
 
                     // Backup
@@ -768,7 +823,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Backup" */ "./views/app/pages/settings/backup"
-                            )
+                            ),
                     },
 
                     // Warehouses
@@ -778,7 +833,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Warehouses" */ "./views/app/pages/settings/warehouses"
-                            )
+                            ),
                     },
 
                     // Warehouses
@@ -788,7 +843,7 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "Warehouses" */ "./views/app/pages/settings/warehouse_locations"
-                            )
+                            ),
                     },
 
                     // System Settings
@@ -798,10 +853,9 @@ const routes = [
                         component: () =>
                             import(
                                 /* webpackChunkName: "System_settings" */ "./views/app/pages/settings/system_settings"
-                            )
-                    }
-                  
-                ]
+                            ),
+                    },
+                ],
             },
 
             // Reports
@@ -817,7 +871,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "payments_purchases" */
                                 "./views/app/pages/reports/payments/payments_purchases"
-                            )
+                            ),
                     },
                     {
                         name: "payments_sales",
@@ -826,7 +880,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "payments_sales" */
                                 "./views/app/pages/reports/payments/payments_sales"
-                            )
+                            ),
                     },
                     {
                         name: "payments_purchases_returns",
@@ -835,7 +889,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "payments_purchases_returns" */
                                 "./views/app/pages/reports/payments/payments_purchases_returns"
-                            )
+                            ),
                     },
                     {
                         name: "payments_sales_returns",
@@ -844,7 +898,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "payments_sales_returns" */
                                 "./views/app/pages/reports/payments/payments_sales_returns"
-                            )
+                            ),
                     },
 
                     {
@@ -854,7 +908,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "profit_and_loss" */
                                 "./views/app/pages/reports/profit_and_loss"
-                            )
+                            ),
                     },
 
                     {
@@ -864,7 +918,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "quantity_alerts" */
                                 "./views/app/pages/reports/quantity_alerts"
-                            )
+                            ),
                     },
                     {
                         name: "warehouse_report",
@@ -873,7 +927,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "warehouse_report" */
                                 "./views/app/pages/reports/warehouse_report"
-                            )
+                            ),
                     },
 
                     {
@@ -883,7 +937,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "sales_report" */
                                 "./views/app/pages/reports/sales_report"
-                            )
+                            ),
                     },
                     {
                         name: "purchase_report",
@@ -892,7 +946,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "purchase_report" */
                                 "./views/app/pages/reports/purchase_report"
-                            )
+                            ),
                     },
 
                     {
@@ -902,7 +956,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "customers_report" */
                                 "./views/app/pages/reports/customers_report"
-                            )
+                            ),
                     },
                     {
                         name: "detail_customer_report",
@@ -911,7 +965,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_customer_report" */
                                 "./views/app/pages/reports/detail_Customer_Report"
-                            )
+                            ),
                     },
 
                     {
@@ -921,7 +975,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "providers_report" */
                                 "./views/app/pages/reports/providers_report"
-                            )
+                            ),
                     },
                     {
                         name: "detail_supplier_report",
@@ -930,7 +984,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_supplier_report" */
                                 "./views/app/pages/reports/detail_Supplier_Report"
-                            )
+                            ),
                     },
 
                     {
@@ -940,7 +994,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "top_selling_products" */
                                 "./views/app/pages/reports/top_selling_products"
-                            )
+                            ),
                     },
 
                     {
@@ -950,7 +1004,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "top_customers" */
                                 "./views/app/pages/reports/top_customers"
-                            )
+                            ),
                     },
 
                     {
@@ -960,7 +1014,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "stock_report" */
                                 "./views/app/pages/reports/stock_report"
-                            )
+                            ),
                     },
                     {
                         name: "detail_stock_report",
@@ -969,7 +1023,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_stock_report" */
                                 "./views/app/pages/reports/detail_stock_report"
-                            )
+                            ),
                     },
 
                     {
@@ -979,7 +1033,7 @@ const routes = [
                             import(
                                 /* webpackChunkName: "users_report" */
                                 "./views/app/pages/reports/users_report"
-                            )
+                            ),
                     },
                     {
                         name: "detail_user_report",
@@ -988,9 +1042,9 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_user_report" */
                                 "./views/app/pages/reports/detail_user_report"
-                            )
+                            ),
                     },
-                ]
+                ],
             },
 
             {
@@ -999,9 +1053,9 @@ const routes = [
                 component: () =>
                     import(
                         /* webpackChunkName: "profile" */ "./views/app/pages/profile"
-                    )
-            }
-        ]
+                    ),
+            },
+        ],
     },
 
     {
@@ -1009,7 +1063,7 @@ const routes = [
         path: "/app/pos",
         // beforeEnter: authenticate,
         component: () =>
-            import(/* webpackChunkName: "pos" */ "./views/app/pages/pos")
+            import(/* webpackChunkName: "pos" */ "./views/app/pages/pos"),
     },
 
     {
@@ -1018,7 +1072,7 @@ const routes = [
         component: () =>
             import(
                 /* webpackChunkName: "NotFound" */ "./views/app/pages/notFound"
-            )
+            ),
     },
 
     {
@@ -1027,8 +1081,8 @@ const routes = [
         component: () =>
             import(
                 /* webpackChunkName: "not_authorize" */ "./views/app/pages/NotAuthorize"
-            )
-    }
+            ),
+    },
 ];
 
 const router = new Router({
@@ -1037,14 +1091,14 @@ const router = new Router({
     routes,
     scrollBehavior(to, from, savedPosition) {
         return { x: 0, y: 0 };
-    }
+    },
 });
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location, onResolve, onReject) {
     if (onResolve || onReject)
         return originalPush.call(this, location, onResolve, onReject);
-    return originalPush.call(this, location).catch(err => err);
+    return originalPush.call(this, location).catch((err) => err);
 };
 
 router.beforeEach((to, from, next) => {
@@ -1102,7 +1156,7 @@ async function Check_Token(to, from, next) {
     let token = to.params.token;
     const res = await axios
         .get("password/find/" + token)
-        .then(response => response.data);
+        .then((response) => response.data);
 
     if (!res.success) {
         next("/app/sessions/signIn");
