@@ -84,16 +84,19 @@ class PurchaseReceiveController extends Controller
                         });
                 });
             });
+        
+       
 
         $totalRows = $Filtred->count();
         if($perPage == "-1"){
             $perPage = $totalRows;
         }
+      
         $Purchases = $Filtred->offset($offSet)
             ->limit($perPage)
             ->orderBy($order, $dir)
             ->get();
-
+        
         foreach ($Purchases as $Purchase) {
 
             $item['id'] = $Purchase->id;
@@ -129,7 +132,7 @@ class PurchaseReceiveController extends Controller
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          } 
-
+       
         return response()->json([
             'totalRows' => $totalRows,
             'purchases' => $data,
@@ -145,6 +148,7 @@ class PurchaseReceiveController extends Controller
 
          //get warehouses assigned to user
          $user_auth = auth()->user();
+       
          if($user_auth->is_all_warehouses){
              $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
          }else{

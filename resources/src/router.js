@@ -283,53 +283,6 @@ const routes = [
                 ],
             },
 
-            //Sales Receipt
-
-            // {
-            //     path: "/app/sales_receipt",
-            //     component: () =>
-            //         import(
-            //             /* webpackChunkName: "sales_receipt" */ "./views/app/pages/sales_receipt"
-            //         ),
-            //     redirect: "/app/sales_receipt/list",
-            //     children: [
-            //         {
-            //             name: "index_sales_receipt",
-            //             path: "list",
-            //             component: () =>
-            //                 import(
-            //                     /* webpackChunkName: "index_sales_receipt" */ "./views/app/pages/sales_receipt/index_sales_receipt"
-            //                 ),
-            //         },
-            //         {
-            //             name: "store_sales_receipt",
-            //             path: "store",
-            //             component: () =>
-            //                 import(
-            //                     /* webpackChunkName: "store_sales_receipt" */
-            //                     "./views/app/pages/purchase_receives/create_sales_receipt"
-            //                 ),
-            //         },
-            //         {
-            //             name: "edit_sales_receipt",
-            //             path: "edit/:id",
-            //             component: () =>
-            //                 import(
-            //                     /* webpackChunkName: "edit_sales_receipt" */ "./views/app/pages/sales_receipt/edit_sales_receipt"
-            //                 ),
-            //         },
-            //         {
-            //             name: "detail_sales_receipt",
-            //             path: "detail/:id",
-            //             component: () =>
-            //                 import(
-            //                     /* webpackChunkName: "detail_sales_receipt" */
-            //                     "./views/app/pages/sales_receipt/detail_sales_receipt"
-            //                 ),
-            //         },
-            //     ],
-            // },
-
             //Purchase
             {
                 path: "/app/purchases",
@@ -417,6 +370,53 @@ const routes = [
                             import(
                                 /* webpackChunkName: "detail_purchase" */
                                 "./views/app/pages/purchase_receives/detail_purchase_receive"
+                            ),
+                    },
+                ],
+            },
+
+            //Sales Receipt
+
+            {
+                path: "/app/sales_receipt",
+                component: () =>
+                    import(
+                        /* webpackChunkName: "sales_receipt" */ "./views/app/pages/sales_receipt"
+                    ),
+                redirect: "/app/sales_receipt/list",
+                children: [
+                    {
+                        name: "index_sales_receipt",
+                        path: "list",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "index_sales_receipt" */ "./views/app/pages/sales_receipt/index_sales_receipt.vue"
+                            ),
+                    },
+                    {
+                        name: "store_sales_receipt",
+                        path: "store",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "store_sales_receipt" */
+                                "./views/app/pages/sales_receipt/create_sales_receipt.vue"
+                            ),
+                    },
+                    {
+                        name: "edit_sales_receipt",
+                        path: "edit/:id",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "edit_sales_receipt" */ "./views/app/pages/sales_receipt/edit_sales_receipt.vue"
+                            ),
+                    },
+                    {
+                        name: "detail_sales_receipt",
+                        path: "detail/:id",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "detail_sales_receipt" */
+                                "./views/app/pages/sales_receipt/detail_sales_receipt.vue"
                             ),
                     },
                 ],
