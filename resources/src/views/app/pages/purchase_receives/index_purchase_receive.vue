@@ -72,20 +72,20 @@
                   <span class="_dot _r_block-dot bg-dark"></span>
                 </template>
                 <b-navbar-nav>
-                  <b-dropdown-item title="Show" :to="'/app/purchases/detail/'+props.row.id">
+                  <b-dropdown-item title="Show" :to="'/app/purchase_receives/detail/'+props.row.id">
                     <i class="nav-icon i-Eye font-weight-bold mr-2"></i>
                     {{$t('PurchaseDetail')}}
                   </b-dropdown-item>
                 </b-navbar-nav>
 
-                <b-dropdown-item
+                <!-- <b-dropdown-item
                   title="Edit"
                   v-if="currentUserPermissions.includes('Purchases_edit')"
-                  :to="'/app/purchases/edit/'+props.row.id"
+                  :to="'/app/purchase_receives/edit/'+props.row.id"
                 >
                   <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
                   {{$t('EditPurchase')}}
-                </b-dropdown-item>
+                </b-dropdown-item> -->
 
                 <b-dropdown-item
                   v-if="currentUserPermissions.includes('payment_purchases_view')"
@@ -149,7 +149,7 @@
           </div> -->
            <div v-else-if="props.column.field == 'Ref'">
               <router-link
-                :to="'/app/purchases/detail/'+props.row.id"
+                :to="'/app/purchase_receives/detail/'+props.row.id"
               >
                 <span class="ul-btn__text ml-1">{{props.row.Ref}}</span>
               </router-link>

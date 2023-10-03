@@ -1,12 +1,12 @@
 <template>
   <div class="main-content">
-    <breadcumb :page="$t('PurchaseDetail')" :folder="$t('ListPurchases')"/>
+    <breadcumb page="Purchase Receipt Details" folder="All Purchase Receipts"/>
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
 
     <b-card v-if="!isLoading">
       <b-row>
         <b-col md="12" class="mb-2">
-          <router-link
+          <!-- <router-link
             v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_edit')"
             title="Edit"
             class="btn btn-success btn-icon ripple btn-sm"
@@ -14,15 +14,15 @@
           >
             <i class="i-Edit"></i>
             <span>{{$t('EditPurchase')}}</span>
-          </router-link>
-          <button @click="purchase_Email()" class="btn btn-info btn-icon ripple btn-sm">
+          </router-link> -->
+          <!-- <button @click="purchase_Email()" class="btn btn-info btn-icon ripple btn-sm">
             <i class="i-Envelope-2"></i>
             {{$t('Email')}}
           </button>
            <button @click="Purchase_SMS()" class="btn btn-secondary btn-icon ripple btn-sm">
             <i class="i-Speach-Bubble"></i>
             SMS
-          </button>
+          </button> -->
           <button @click="Print_Purchase_PDF()" class="btn btn-primary btn-icon ripple btn-sm">
             <i class="i-File-TXT"></i> PDF
           </button>
@@ -30,20 +30,20 @@
             <i class="i-Billing"></i>
             {{$t('print')}}
           </button>
-          <button
+          <!-- <button
             v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_delete')"
             @click="Delete_Purchase()"
             class="btn btn-danger btn-icon ripple btn-sm"
           >
             <i class="i-Close-Window"></i>
             {{$t('Del')}}
-          </button>
+          </button> -->
         </b-col>
       </b-row>
       <div class="invoice mt-5" id="print_Invoice">
         <div class="invoice-print">
           <b-row class="justify-content-md-center">
-            <h4 class="font-weight-bold">{{$t('PurchaseDetail')}} : {{purchase.Ref}}</h4>
+            <h4 class="font-weight-bold">Purchase Receipt Detail : {{purchase.Ref}}</h4>
           </b-row>
           <hr>
           <b-row class="mt-5">
@@ -62,7 +62,15 @@
               <div>{{company.CompanyAdress}}</div>
             </b-col>
             <b-col lg="4" md="4" sm="12" class="mb-4">
-              <h5 class="font-weight-bold">{{$t('Purchase_Info')}}</h5>
+              <h5 class="font-weight-bold">Purchase Receipt Info</h5>
+              <div>
+                PO Reference
+                <router-link
+                  :to="'/app/purchases/detail/'+purchase.purchase_id"
+                >
+                <span> : {{purchase.purchase.Ref}}</span>
+              </router-link>
+              </div>
               <div>{{$t('Reference')}} : {{purchase.Ref}}</div>
               <div>
                 {{$t('Status')}} :
@@ -101,8 +109,6 @@
                       <th scope="col">{{$t('ProductName')}}</th>
                       <th scope="col">{{$t('Net_Unit_Cost')}}</th>
                       <th scope="col">{{$t('Quantity')}}</th>
-                      <th scope="col">Qty Received</th>
-                      <th scope="col">Balance</th>
                       <th scope="col">{{$t('Unitcost')}}</th>
                       <th scope="col">{{$t('Discount')}}</th>
                       <th scope="col">{{$t('Tax')}}</th>
@@ -116,8 +122,6 @@
                       </td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.Net_cost,3)}}</td>
                       <td>{{formatNumber(detail.quantity,2)}} {{detail.unit_purchase}}</td>
-                      <td>{{formatNumber(detail.quantity_receive,2)}} {{detail.unit_purchase}}</td>
-                      <td>{{formatNumber((detail.quantity - detail.quantity_receive) ,2)}} {{detail.unit_purchase}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.cost,2)}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.DiscountNet,2)}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.taxe,2)}}</td>
@@ -275,7 +279,7 @@ export default {
     Get_Details() {
       let id = this.$route.params.id;
       axios
-        .get(`purchases/${id}`)
+        .get(`purchase_receives/${id}`)
         .then(response => {
           this.purchase = response.data.purchase;
           this.details = response.data.details;

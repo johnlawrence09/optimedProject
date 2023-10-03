@@ -75,6 +75,11 @@ class Purchase extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    public function receipts()
+    {
+        return $this->hasMany('App\Models\PurchaseReceive');
+    }
+
     
 
 

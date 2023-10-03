@@ -10,7 +10,7 @@
             <b-card>
               <b-row>
                   <!-- date  -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="3" md="3" sm="12" class="mb-3">
                   <validation-provider
                     name="date"
                     :rules="{ required: true}"
@@ -29,8 +29,28 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col>
+
+                <!-- Purchase Order -->
+                <b-col lg="3" md="3" sm="12" class="mb-3">
+                  <validation-provider name="PO_Refecence" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" label="PO Refecence *">
+                      <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        v-model="purchase.purchase_id"
+                        :reduce="label => label.value"
+                        placeholder="Choose PO Refecence"
+                        :options="purchases.map(purchases => ({label: purchases.Ref, value: purchases.id}))"
+                        @input="Selected_PO_Reference"
+                        disabled
+                      />
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
                 <!-- Supplier -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="3" md="3" sm="12" class="mb-3">
                   <validation-provider name="Supplier" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('Supplier') + ' ' + '*'">
                       <v-select
@@ -40,6 +60,7 @@
                         :reduce="label => label.value"
                         :placeholder="$t('Choose_Supplier')"
                         :options="suppliers.map(suppliers => ({label: suppliers.name, value: suppliers.id}))"
+                        disabled
                       />
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                     </b-form-group>
@@ -47,14 +68,13 @@
                 </b-col>
 
                 <!-- warehouse -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="3" md="3" sm="12" class="mb-3">
                   <validation-provider name="warehouse" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('warehouse') + ' ' + '*'">
                       <v-select
                         :class="{'is-invalid': !!errors.length}"
                         :state="errors[0] ? false : (valid ? true : null)"
-                        :disabled="details.length > 0"
-                        @input="Selected_Warehouse"
+                        disabled
                         v-model="purchase.warehouse_id"
                         :reduce="label => label.value"
                         :placeholder="$t('Choose_Warehouse')"
@@ -514,7 +534,8 @@ export default {
         del: "",
         is_imei: "",
         imei_number:"",
-      }
+      },
+      purchases:[]
     };
   },
   computed: {
@@ -728,6 +749,12 @@ export default {
       this.Get_Products_By_Warehouse(value);
     },
 
+    Selected_PO_Reference(value) {
+      this.search_input= '';
+      this.product_filter = [];
+      this.Get_Products_By_Purchase(value);
+    },
+
      //------------------------------------ Get Products By Warehouse -------------------------\\
 
     Get_Products_By_Warehouse(id) {
@@ -738,6 +765,24 @@ export default {
         .get("Products/Warehouse/" + id + "?stock=" + 0)
          .then(response => {
             this.products = response.data;
+             NProgress.done();
+
+            })
+          .catch(error => {
+          });
+    },
+
+    Get_Products_By_Purchase(id) {
+      // Start the progress bar.
+        NProgress.start();
+        NProgress.set(0.1);
+      axios
+        .get("Products/Purchase/" + id + "?stock=" + 0)
+         .then(response => {
+            this.products = response.data.products;
+            this.purchase.warehouse_id = response.data.warehouse_id;
+            this.purchase.supplier_id = response.data.provider_id;
+            console.log(this.purchase);
              NProgress.done();
 
             })
@@ -994,12 +1039,13 @@ export default {
     GetElements() {
       let id = this.$route.params.id;
       axios
-        .get(`purchases/${id}/edit`)
+        .get(`purchase_receives/${id}/edit`)
         .then(response => {
           this.purchase = response.data.purchase;
           this.details = response.data.details;
           this.suppliers = response.data.suppliers;
           this.warehouses = response.data.warehouses;
+          this.purchases = response.data.purchases;
           this.Get_Products_By_Warehouse(this.purchase.warehouse_id);
           this.Calcul_Total();
           this.isLoading = false;

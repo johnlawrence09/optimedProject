@@ -620,7 +620,7 @@ class PurchasesController extends BaseController
         $this->authorizeForUser($request->user('api'), 'view', Purchase::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
-        $purchase = Purchase::with('details.product.unitPurchase')
+        $purchase = Purchase::with('details.product.unitPurchase', 'receipts')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
 
@@ -649,6 +649,7 @@ class PurchasesController extends BaseController
         $purchase_data['paid_amount'] = number_format($purchase->paid_amount, 2, '.', '');
         $purchase_data['due'] = number_format($purchase_data['GrandTotal'] - $purchase_data['paid_amount'], 2, '.', '');
         $purchase_data['payment_status'] = $purchase->payment_statut;
+        $purchase_data['receipts'] = $purchase->receipts;
 
         foreach ($purchase['details'] as $detail) {
 

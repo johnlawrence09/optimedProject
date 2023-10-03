@@ -93,6 +93,16 @@
                 >{{$t('partial')}}</span>
                 <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
               </div>
+              <div 
+                v-for="(item, i) in purchase.receipts"
+                :key="item.id"
+              >
+                <div>PR Reference#{{ i + 1 }} : 
+                  <router-link :to="'/app/purchase_receives/detail/'+item.id">
+                    {{ item.Ref }}
+                  </router-link>
+                </div>
+              </div>
             </b-col>
           </b-row>
           <b-row class="mt-3">
