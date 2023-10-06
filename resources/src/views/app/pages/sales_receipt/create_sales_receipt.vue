@@ -7,7 +7,7 @@
         ></div>
 
         <validation-observer ref="create_purchase" v-if="!isLoading">
-            <b-form @submit.prevent="Submit_Purchase">
+            <b-form @submit.prevent="Submit_Sales">
                 <b-row>
                     <b-col lg="12" md="12" sm="12">
                         <b-card>
@@ -50,7 +50,7 @@
                                     >
                                         <b-form-group
                                             slot-scope="{ valid, errors }"
-                                            label="PO Refecence *"
+                                            label="SO Refecence *"
                                         >
                                             <v-select
                                                 :class="{
@@ -714,7 +714,7 @@
                                     <b-form-group>
                                         <b-button
                                             variant="primary"
-                                            @click="Submit_Purchase"
+                                            @click="Submit_Sales"
                                             :disabled="SubmitProcessing"
                                             >{{ $t("submit") }}</b-button
                                         >
@@ -1093,7 +1093,7 @@ export default {
 
     methods: {
         //--- Submit Validate Create Purchase
-        Submit_Purchase() {
+        Submit_Sales() {
             this.$refs.create_purchase.validate().then((success) => {
                 if (!success) {
                     this.makeToast(
@@ -1102,7 +1102,7 @@ export default {
                         this.$t("Failed")
                     );
                 } else {
-                    this.Create_Purchase();
+                    this.Create_Sales();
                 }
             });
         },
@@ -1591,7 +1591,7 @@ export default {
         },
 
         //--------------------------------- Create Purchase -------------------------\\
-        Create_Purchase() {
+        Create_Sales() {
             if (this.verifiedForm()) {
                 this.SubmitProcessing = true;
                 // Start the progress bar.
@@ -1685,7 +1685,6 @@ export default {
                     this.suppliers = response.data.suppliers;
                     this.warehouses = response.data.warehouses;
                     this.purchases = response.data.purchases;
-                    console.log(this.purchases);
                     this.warehouse_locations =
                         response.data.warehouse_locations;
                     this.isLoading = false;
