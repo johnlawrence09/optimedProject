@@ -87,7 +87,7 @@ class PurchaseReceiveController extends Controller
                         });
                 });
             });
-        
+
        
 
         $totalRows = $Filtred->count();
@@ -99,7 +99,7 @@ class PurchaseReceiveController extends Controller
             ->limit($perPage)
             ->orderBy($order, $dir)
             ->get();
-        
+
         foreach ($Purchases as $Purchase) {
 
             $item['id'] = $Purchase->id;
@@ -135,7 +135,7 @@ class PurchaseReceiveController extends Controller
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          } 
-       
+
         return response()->json([
             'totalRows' => $totalRows,
             'purchases' => $data,
@@ -236,28 +236,28 @@ class PurchaseReceiveController extends Controller
                     }
                     if ($value['product_variant_id'] !== null) {
                         if($value['expiration_date'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
-                            ->first();
-                        if(!$product_warehouse) {
-                            $product_warehouse = product_warehouse::create([
-                                'product_id' => $value['product_id'],
-                                'warehouse_id' => $order->warehouse_id,
-                                'product_variant_id' => $value['product_variant_id'],
-                                'qte' => 0,
-                                'expiration_date' => $value['expiration_date'],
-                                'lot_number' => $value['lot_number'],
-                            ]);
-                        }
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                            if(!$product_warehouse) {
+                                $product_warehouse = product_warehouse::create([
+                                    'product_id' => $value['product_id'],
+                                    'warehouse_id' => $order->warehouse_id,
+                                    'product_variant_id' => $value['product_variant_id'],
+                                    'qte' => 0,
+                                    'expiration_date' => $value['expiration_date'],
+                                    'lot_number' => $value['lot_number'],
+                                ]);
+                            }
                         } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
                         }
                         
 
@@ -316,13 +316,13 @@ class PurchaseReceiveController extends Controller
             }])
             ->first();
             if(count($purchase->details)) {
-            $purchase->statut = 'partial';
-            $purchase->save();
+                $purchase->statut = 'partial';
+                $purchase->save();
             }else{
-            $purchase->statut = 'received';
-            $purchase->save();
+                $purchase->statut = 'received';
+                $purchase->save();
             }
-        
+
         }, 10);
 
         return response()->json(['success' => true, 'message' => 'Purchase Created !!']);
