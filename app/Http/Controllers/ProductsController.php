@@ -75,6 +75,8 @@ class ProductsController extends BaseController
             ->limit($perPage)
             ->orderBy($order, $dir)
             ->get();
+        
+        dd($products);
 
         foreach ($products as $product) {
             $item['id'] = $product->id;
@@ -655,7 +657,7 @@ class ProductsController extends BaseController
                     return $query->where('qte', '>', 0);
                 }
             })->get();
-
+    //    dd($product_warehouse_data);
         foreach ($product_warehouse_data as $product_warehouse) {
 
             if ($product_warehouse->product_variant_id) {
@@ -674,6 +676,7 @@ class ProductsController extends BaseController
             $item['Type_barcode'] = $product_warehouse['product']->Type_barcode;
             $firstimage = explode(',', $product_warehouse['product']->image);
             $item['image'] = $firstimage[0];
+            $item['expiration_date'] = $product_warehouse->expiration_date;
 
             if ($product_warehouse['product']['unitSale']->operator == '/') {
                 $item['qte_sale'] = $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
@@ -707,6 +710,8 @@ class ProductsController extends BaseController
             }
 
             $data[] = $item;
+            // dd($data);
+           
         }
 
         return response()->json($data);
