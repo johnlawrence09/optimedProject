@@ -76,7 +76,6 @@ class ProductsController extends BaseController
             ->orderBy($order, $dir)
             ->get();
         
-        dd($products);
 
         foreach ($products as $product) {
             $item['id'] = $product->id;

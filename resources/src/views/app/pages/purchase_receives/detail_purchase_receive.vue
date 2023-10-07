@@ -85,7 +85,7 @@
                 <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
               </div>
               <div>{{$t('warehouse')}} : {{purchase.warehouse}}</div>
-              <div>
+              <!-- <div>
                 {{$t('PaymentStatus')}} :
                 <span
                   v-if="purchase.payment_status == 'paid'"
@@ -96,7 +96,7 @@
                   class="badge badge-outline-primary"
                 >{{$t('partial')}}</span>
                 <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
-              </div>
+              </div> -->
             </b-col>
           </b-row>
           <b-row class="mt-3">

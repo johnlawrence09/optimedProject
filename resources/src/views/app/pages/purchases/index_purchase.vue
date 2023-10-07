@@ -129,6 +129,15 @@
                   Set status to ordered
                 </b-dropdown-item>
 
+                <b-dropdown-item 
+                  v-if="props.row.statut === 'partial'"
+                  title="Cancel" 
+                  @click="Edit_Status('revoke', props.row.id)"
+                >
+                  <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
+                  Cancel Remaining
+                </b-dropdown-item>
+
                 <b-dropdown-item
                   title="Delete"
                   v-if="currentUserPermissions.includes('Purchases_delete') && props.row.statut === 'pending'"
@@ -155,8 +164,12 @@
             {{$t('Ordered')}}</span>
             <span 
               v-else-if="props.row.statut == 'partial'" 
-              class="badge badge-outline-warning">
+              class="badge badge-outline-primary">
             Partial</span>
+            <span 
+              v-else-if="props.row.statut == 'revoked'" 
+              class="badge badge-outline-danger">
+            Revoked</span>
           </div>
 
           <div v-else-if="props.column.field == 'payment_status'">
@@ -853,7 +866,7 @@ export default {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
-          link.setAttribute("download", "Purchase-" + purchase.Ref + ".pdf");
+          link.setAttribute("download", "PO-" + purchase.Ref + ".pdf");
           document.body.appendChild(link);
           link.click();
           // Complete the animation of the  progress bar.
@@ -1349,6 +1362,7 @@ export default {
             NProgress.done();
             this.$bvModal.show("Show_payment");
           }, 500);
+          
         })
         .catch(() => {
           // Complete the animation of the  progress bar.
@@ -1357,21 +1371,27 @@ export default {
     },
 
     Edit_Status(status, id) {
+      this.paymentProcessing = true;
+      NProgress.start();
+      NProgress.set(0.1);
       axios
         .put("purchases/edit/status/" + id, {
           statut: status
         })
         .then(response => {
           // Complete the animation of the  progress bar.
+          this.paymentProcessing = false;
           setTimeout(() => NProgress.done(), 500);
           this.makeToast(
             "success",
             'Purchase status edited successfully',
             'Success'
           );
+          Fire.$emit("Edit_Status_Purchase");
         })
         .catch(error => {
           // Complete the animation of the  progress bar.
+          this.paymentProcessing = false;
           setTimeout(() => NProgress.done(), 500);
           this.makeToast("danger", this.$t("SMTPIncorrect"), this.$t("Failed"));
         });
@@ -1383,6 +1403,14 @@ export default {
   //-----------------------------Created function-------------------
   created: function() {
     this.Get_Purchases(1);
+
+    Fire.$on("Edit_Status_Purchase", () => {
+      setTimeout(() => {
+        this.Get_Purchases(this.serverParams.page);
+        // Complete the animation of the  progress bar.
+        NProgress.done();
+      }, 500);
+    });
 
     Fire.$on("Delete_Purchase", () => {
       setTimeout(() => {

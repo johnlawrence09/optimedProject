@@ -37,7 +37,7 @@
             <i class="i-Filter-2"></i>
             {{ $t("Filter") }}
           </b-button>
-          <b-button @click="Purchase_PDF()" size="sm" variant="outline-success ripple m-1">
+          <b-button @click="Purchase_Receive_PDF()" size="sm" variant="outline-success ripple m-1">
             <i class="i-File-Copy"></i> PDF
           </b-button>
           <b-button @click="Purchase_Excel()" size="sm" variant="outline-danger ripple m-1">
@@ -45,8 +45,8 @@
           </b-button>
           <router-link
             class="btn-sm btn btn-primary ripple btn-icon m-1"
-            v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_add')"
-            to="/app/purchases/store"
+            v-if="currentUserPermissions && currentUserPermissions.includes('Purchase_Receives_add')"
+            to="/app/purchase_receives/store"
           >
             <span class="ul-btn__icon">
               <i class="i-Add"></i>
@@ -74,7 +74,7 @@
                 <b-navbar-nav>
                   <b-dropdown-item title="Show" :to="'/app/purchase_receives/detail/'+props.row.id">
                     <i class="nav-icon i-Eye font-weight-bold mr-2"></i>
-                    {{$t('PurchaseDetail')}}
+                    Purchase Receive Details
                   </b-dropdown-item>
                 </b-navbar-nav>
 
@@ -87,40 +87,40 @@
                   {{$t('EditPurchase')}}
                 </b-dropdown-item> -->
 
-                <b-dropdown-item
+                <!-- <b-dropdown-item
                   v-if="currentUserPermissions.includes('payment_purchases_view')"
                   @click="Show_Payments(props.row.id , props.row)"
                 >
                   <i class="nav-icon i-Money-Bag font-weight-bold mr-2"></i>
                   {{$t('ShowPayment')}}
-                </b-dropdown-item>
+                </b-dropdown-item> -->
 
-                <b-dropdown-item
+                <!-- <b-dropdown-item
                   v-if="currentUserPermissions.includes('payment_purchases_add')"
                   @click="New_Payment(props.row)"
                 >
                   <i class="nav-icon i-Add font-weight-bold mr-2"></i>
                   {{$t('AddPayment')}}
-                </b-dropdown-item>
+                </b-dropdown-item> -->
 
                 <b-dropdown-item title="PDF" @click="Invoice_PDF(props.row , props.row.id)">
                   <i class="nav-icon i-File-TXT font-weight-bold mr-2"></i>
                   {{$t('DownloadPdf')}}
                 </b-dropdown-item>
 
-                <b-dropdown-item title="Email" @click="Purchase_Email(props.row , props.row.id)">
+                <!-- <b-dropdown-item title="Email" @click="Purchase_Email(props.row , props.row.id)">
                   <i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i>
                   {{$t('EmailPurchase')}}
-                </b-dropdown-item>
+                </b-dropdown-item> -->
 
-                <b-dropdown-item
+                <!-- <b-dropdown-item
                   title="Delete"
                   v-if="currentUserPermissions.includes('Purchases_delete')"
                   @click="Remove_Purchase(props.row.id)"
                 >
                   <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
                   {{$t('DeletePurchase')}}
-                </b-dropdown-item>
+                </b-dropdown-item> -->
               </b-dropdown>
             </div>
           </span>
@@ -147,13 +147,20 @@
             >{{$t('partial')}}</span>
             <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
           </div> -->
-           <div v-else-if="props.column.field == 'Ref'">
-              <router-link
-                :to="'/app/purchase_receives/detail/'+props.row.id"
-              >
-                <span class="ul-btn__text ml-1">{{props.row.Ref}}</span>
-              </router-link>
-            </div>
+          <div v-else-if="props.column.field == 'Ref'">
+            <router-link
+              :to="'/app/purchase_receives/detail/'+props.row.id"
+            >
+              <span class="ul-btn__text ml-1">{{props.row.Ref}}</span>
+            </router-link>
+          </div>
+          <div v-else-if="props.column.field == 'purchase_ref'">
+            <router-link
+              :to="'/app/purchases/detail/'+props.row.purchase_id"
+            >
+              <span class="ul-btn__text ml-1">{{props.row.purchase_ref}}</span>
+            </router-link>
+          </div>
         </template>
       </vue-good-table>
     </div>
@@ -559,14 +566,14 @@ export default {
           thClass: "text-left"
         },
         {
-          label: this.$t("PO Reference"),
-          field: "purchase_ref",
+          label: this.$t("Reference"),
+          field: "Ref",
           tdClass: "text-left",
           thClass: "text-left"
         },
         {
-          label: this.$t("Reference"),
-          field: "Ref",
+          label: this.$t("PO Reference"),
+          field: "purchase_ref",
           tdClass: "text-left",
           thClass: "text-left"
         },
@@ -744,7 +751,7 @@ export default {
     },
 
     //---------------------- Purchases PDF -------------------------------\\
-    Purchase_PDF() {
+    Purchase_Receive_PDF() {
       var self = this;
 
       let pdf = new jsPDF("p", "pt");
@@ -760,7 +767,7 @@ export default {
       ];
       pdf.autoTable(columns, self.purchases);
       pdf.text("Purchase List", 40, 25);
-      pdf.save("Purchase_List.pdf");
+      pdf.save("Purchase_Receipt_List.pdf");
     },
 
     //----------------------- Purchases Excel -------------------------------\\
@@ -798,7 +805,7 @@ export default {
       NProgress.set(0.1);
      
        axios
-        .get("Purchase_PDF/" + id, {
+        .get("Purchase_Receive_PDF/" + id, {
           responseType: "blob", // important
           headers: {
             "Content-Type": "application/json"

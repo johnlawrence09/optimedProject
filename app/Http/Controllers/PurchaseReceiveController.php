@@ -309,7 +309,7 @@ class PurchaseReceiveController extends Controller
             }
             PurchaseReceiveDetail::insert($orderDetails);
 
-            $purchase = Purchase::where('id', $order->provider_id)
+            $purchase = Purchase::where('id', $order->purchase_id)
             ->with(['details' => function ($query) {
                 // Add a query for the 'details' relationship here
                 $query->where('is_receive', 0);
@@ -325,7 +325,7 @@ class PurchaseReceiveController extends Controller
 
         }, 10);
 
-        return response()->json(['success' => true, 'message' => 'Purchase Created !!']);
+        return response()->json(['success' => true, 'message' => 'Purchase Receipt Created !!']);
     }
 
     public function edit(Request $request, $id)
@@ -601,6 +601,97 @@ class PurchaseReceiveController extends Controller
             'purchase' => $purchase_data,
             'company' => $company,
         ]);
+
+    }
+
+    public function Purchase_Receive_pdf(Request $request, $id)
+    {
+        $details = array();
+        $helpers = new helpers();
+        $Purchase_data = PurchaseReceive::with('details.product.unitPurchase')
+            ->where('deleted_at', '=', null)
+            ->findOrFail($id);
+
+        $purchase['supplier_name'] = $Purchase_data['provider']->name;
+        $purchase['supplier_phone'] = $Purchase_data['provider']->phone;
+        $purchase['supplier_adr'] = $Purchase_data['provider']->adresse;
+        $purchase['supplier_email'] = $Purchase_data['provider']->email;
+        $purchase['TaxNet'] = number_format($Purchase_data->TaxNet, 2, '.', '');
+        $purchase['discount'] = number_format($Purchase_data->discount, 2, '.', '');
+        $purchase['shipping'] = number_format($Purchase_data->shipping, 2, '.', '');
+        $purchase['statut'] = $Purchase_data->statut;
+        $purchase['Ref'] = $Purchase_data->Ref;
+        $purchase['date'] = $Purchase_data->date;
+        $purchase['GrandTotal'] = number_format($Purchase_data->GrandTotal, 2, '.', '');
+        $purchase['paid_amount'] = number_format($Purchase_data->paid_amount, 2, '.', '');
+        $purchase['due'] = number_format($purchase['GrandTotal'] - $purchase['paid_amount'], 2, '.', '');
+        $purchase['payment_status'] = $Purchase_data->payment_statut;
+
+        $detail_id = 0;
+        foreach ($Purchase_data['details'] as $detail) {
+
+            //-------check if detail has purchase_unit_id Or Null
+            if($detail->purchase_unit_id !== null){
+                $unit = Unit::where('id', $detail->purchase_unit_id)->first();
+            }else{
+                $product_unit_purchase_id = Product::with('unitPurchase')
+                ->where('id', $detail->product_id)
+                ->first();
+                $unit = Unit::where('id', $product_unit_purchase_id['unitPurchase']->id)->first();
+            }
+
+            if ($detail->product_variant_id) {
+
+                $productsVariants = ProductVariant::where('product_id', $detail->product_id)
+                    ->where('id', $detail->product_variant_id)->first();
+
+                $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
+            } else {
+                $data['code'] = $detail['product']['code'];
+            }
+
+                $data['detail_id'] = $detail_id += 1;
+                $data['quantity'] = number_format($detail->quantity, 2, '.', '');
+                $data['total'] = number_format($detail->total, 2, '.', '');
+                $data['name'] = $detail['product']['name'];
+                $data['unit_purchase'] = $unit->ShortName;
+                $data['cost'] = number_format($detail->cost, 2, '.', '');
+
+            if ($detail->discount_method == '2') {
+                $data['DiscountNet'] = number_format($detail->discount, 2, '.', '');
+            } else {
+                $data['DiscountNet'] = number_format($detail->cost * $detail->discount / 100, 2, '.', '');
+            }
+
+            $tax_cost = $detail->TaxNet * (($detail->cost - $data['DiscountNet']) / 100);
+            $data['Unit_cost'] = number_format($detail->cost, 2, '.', '');
+            $data['discount'] = number_format($detail->discount, 2, '.', '');
+
+            if ($detail->tax_method == '1') {
+
+                $data['Net_cost'] = $detail->cost - $data['DiscountNet'];
+                $data['taxe'] = number_format($tax_cost, 2, '.', '');
+            } else {
+                $data['Net_cost'] = ($detail->cost - $data['DiscountNet']) / (($detail->TaxNet / 100) + 1);
+                $data['taxe'] = number_format($detail->cost - $data['Net_cost'] - $data['DiscountNet'], 2, '.', '');
+            }
+
+            $data['is_imei'] = $detail['product']['is_imei'];
+            $data['imei_number'] = $detail->imei_number;
+
+            $details[] = $data;
+        }
+
+        $settings = Setting::where('deleted_at', '=', null)->first();
+        $symbol = $helpers->Get_Currency_Code();
+
+        $pdf = \PDF::loadView('pdf.purchase_pdf', [
+            'symbol' => $symbol,
+            'setting' => $settings,
+            'purchase' => $purchase,
+            'details' => $details,
+        ]);
+        return $pdf->download('Purchase.pdf');
 
     }
 }

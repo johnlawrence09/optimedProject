@@ -38,9 +38,13 @@
             <i class="i-Close-Window"></i>
             {{$t('Del')}}
           </button>
-          <button @click="purchase_Email()" class="btn btn-info btn-icon ripple btn-sm" v-if="purchase.statut === 'pending'">
+          <button @click="Edit_Status('ordered', $route.params.id)" class="btn btn-warning btn-icon ripple btn-sm" v-if="purchase.statut === 'pending'">
             <i class="i-Edit"></i>
             Set status to ordered
+          </button>
+          <button @click="Edit_Status('revoked', $route.params.id)" class="btn btn-danger btn-icon ripple btn-sm" v-if="purchase.statut === 'partial'">
+            <i class="i-Edit"></i>
+            Cancel remaining
           </button>
         </b-col>
       </b-row>
@@ -78,6 +82,14 @@
                   v-else-if="purchase.statut == 'pending'"
                   class="badge badge-outline-info"
                 >{{$t('Pending')}}</span>
+                <span
+                  v-else-if="purchase.statut == 'partial'"
+                  class="badge badge-outline-primary"
+                >{{$t('partial')}}</span>
+                <span
+                  v-else-if="purchase.statut == 'revoked'"
+                  class="badge badge-outline-danger"
+                >Revoked</span>
                 <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
               </div>
               <div>{{$t('warehouse')}} : {{purchase.warehouse}}</div>
@@ -114,8 +126,8 @@
                     <tr>
                       <th scope="col">{{$t('ProductName')}}</th>
                       <th scope="col">{{$t('Net_Unit_Cost')}}</th>
-                      <th scope="col">{{$t('Quantity')}}</th>
-                      <th scope="col">Qty Received</th>
+                      <th scope="col">Received</th>
+                      <th scope="col">Ordered</th>
                       <th scope="col">Balance</th>
                       <th scope="col">{{$t('Unitcost')}}</th>
                       <th scope="col">{{$t('Discount')}}</th>
@@ -129,9 +141,16 @@
                         <p v-show="detail.is_imei && detail.imei_number !==null ">{{$t('IMEI_SN')}} : {{detail.imei_number}}</p>
                       </td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.Net_cost,3)}}</td>
-                      <td>{{formatNumber(detail.quantity,2)}} {{detail.unit_purchase}}</td>
                       <td>{{formatNumber(detail.quantity_receive,2)}} {{detail.unit_purchase}}</td>
-                      <td>{{formatNumber((detail.quantity - detail.quantity_receive) ,2)}} {{detail.unit_purchase}}</td>
+                      <td>{{formatNumber(detail.quantity,2)}} {{detail.unit_purchase}}</td>
+                      <td>
+                        <span v-if="parseFloat((detail.quantity - detail.quantity_receive) ,2) ===  0" class="badge badge-outline-success">
+                          {{formatNumber((detail.quantity - detail.quantity_receive) ,2)}} {{detail.unit_purchase}}
+                        </span>
+                        <span v-else class="badge badge-outline-danger">
+                          {{formatNumber((detail.quantity - detail.quantity_receive) ,2)}} {{detail.unit_purchase}}
+                        </span>
+                      </td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.cost,2)}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.DiscountNet,2)}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.taxe,2)}}</td>
@@ -411,6 +430,30 @@ export default {
             });
         }
       });
+    },
+    Edit_Status(status, id) {
+      NProgress.start();
+      NProgress.set(0.1);
+      axios
+        .put("purchases/edit/status/" + id, {
+          statut: status
+        })
+        .then(response => {
+          // Complete the animation of the  progress bar.
+          this.paymentProcessing = false;
+          setTimeout(() => NProgress.done(), 500);
+          this.makeToast(
+            "success",
+            'Purchase status edited successfully',
+            'Success'
+          );
+          this.$router.push({ name: "index_purchases" });
+        })
+        .catch(error => {
+          // Complete the animation of the  progress bar.
+          setTimeout(() => NProgress.done(), 500);
+          this.makeToast("danger", this.$t("InvalidData"), this.$t("Failed"));
+        });
     }
   }, //end Methods
 

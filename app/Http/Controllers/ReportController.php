@@ -418,11 +418,13 @@ class ReportController extends BaseController
             ->get();
 
         // Stock Alerts
-        $product_warehouse_data = product_warehouse::with('warehouse', 'product' ,'productVariant')
+        $product_warehouse_data = product_warehouse::selectRaw('*, SUM(product_warehouse.qte) as ttl_qte')->with('warehouse', 'product' ,'productVariant')
         ->join('products', 'product_warehouse.product_id', '=', 'products.id')
-        ->whereRaw('qte <= stock_alert')
         ->where('product_warehouse.deleted_at', null)
-        ->take('5')->get();
+        ->take('5')
+        ->groupBy('product_warehouse.warehouse_id', 'product_warehouse.product_id')
+        ->havingRaw('SUM(product_warehouse.qte) <= products.stock_alert')
+        ->get();
 
         $stock_alert = [];
         if ($product_warehouse_data->isNotEmpty()) {
@@ -434,7 +436,7 @@ class ReportController extends BaseController
                     } else {
                         $item['code'] = $product_warehouse['product']->code;
                     }
-                    $item['quantity'] = $product_warehouse->qte;
+                    $item['quantity'] = $product_warehouse->ttl_qte;
                     $item['name'] = $product_warehouse['product']->name;
                     $item['warehouse'] = $product_warehouse['warehouse']->name;
                     $item['stock_alert'] = $product_warehouse['product']->stock_alert;

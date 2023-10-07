@@ -43,8 +43,7 @@ class Purchase extends Model
         $prefix = $code.$year.$dayOfYear;
 
         $latest = static::orderBy('created_at', 'desc')->first();
-
-        $number = $latest ? intval(substr($latest->code, strlen($prefix))) + 1 : '000001';
+        $number = $latest ? intval(substr($latest->Ref, strlen($prefix))) + 1 : '000001';
         $paddedNumber = str_pad($number, 6, '0', STR_PAD_LEFT);
 
         return $prefix . $paddedNumber;

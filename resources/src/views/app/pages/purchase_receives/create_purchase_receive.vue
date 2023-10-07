@@ -1629,7 +1629,7 @@ export default {
                         );
 
                         this.SubmitProcessing = false;
-                        this.$router.push({ name: "index_purchases" });
+                        this.$router.push({ name: "index_purchase_receives" });
                     })
                     .catch((error) => {
                         // Complete the animation of theprogress bar.
