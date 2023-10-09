@@ -29,6 +29,31 @@ class Sale extends Model
         'paid_amount' => 'double',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->Ref = static::generateReference(); // Generate and assign reference
+        });
+    }
+
+    private static function generateReference()
+    {
+        $code = 'SO';
+        $year = date('y');
+        $dayOfYear = date('z') + 1;
+
+        $prefix = $code.$year.$dayOfYear;
+
+        $latest = static::orderBy('created_at', 'desc')->first();
+
+        $number = $latest ? intval(substr($latest->code, strlen($prefix))) + 1 : '000001';
+        $paddedNumber = str_pad($number, 6, '0', STR_PAD_LEFT);
+
+        return $prefix . $paddedNumber;
+    }
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');
@@ -53,5 +78,11 @@ class Sale extends Model
     {
         return $this->belongsTo('App\Models\Warehouse');
     }
+
+    public function receipts()
+    {
+        return $this->hasMany('App\Models\SalesReceive');
+    }
+
 
 }

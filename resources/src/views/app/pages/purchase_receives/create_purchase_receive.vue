@@ -1386,7 +1386,6 @@ export default {
                     this.products = response.data.products;
                     this.purchase.warehouse_id = response.data.warehouse_id;
                     this.purchase.supplier_id = response.data.provider_id;
-                    console.log(this.purchase);
                     NProgress.done();
                 })
                 .catch((error) => {});

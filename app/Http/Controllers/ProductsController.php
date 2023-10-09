@@ -10,7 +10,9 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\product_warehouse;
 use App\Models\Purchase;
+use App\Models\Sale;
 use App\Models\PurchaseDetail;
+use App\Models\SaleDetail;
 use App\Models\Unit;
 use App\Models\Warehouse;
 use App\utils\helpers;
@@ -656,7 +658,7 @@ class ProductsController extends BaseController
                     return $query->where('qte', '>', 0);
                 }
             })->get();
-    //    dd($product_warehouse_data);
+      
         foreach ($product_warehouse_data as $product_warehouse) {
 
             if ($product_warehouse->product_variant_id) {
@@ -709,7 +711,7 @@ class ProductsController extends BaseController
             }
 
             $data[] = $item;
-            // dd($data);
+        
            
         }
 
@@ -792,6 +794,8 @@ class ProductsController extends BaseController
 
             $data[] = $item;
         }
+
+     
  
         return response()->json([
             'warehouse_id'  => $purchase->warehouse_id,
@@ -799,6 +803,92 @@ class ProductsController extends BaseController
             'products'      => $data
         ]);
      }
+
+         //------------ Get products By Warehouse - Sales -----------------\\
+
+         public function Products_by_Sales(Request $request, $id)
+         {
+            $data = [];
+            $sale = Sale::find($id);
+            $product_ids = SaleDetail::where('is_receive', 0)->where('sale_id', $id)->pluck('product_id');
+             
+            $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
+                ->whereIn('product_id', $product_ids)
+                ->where('deleted_at', '=', null)
+                ->where(function ($query) use ($request) {
+                     if ($request->stock == '1') {
+                         return $query->where('qte', '>', 0);
+                     }
+                 })->get();
+            
+            $sale_details = SaleDetail::where('is_receive', 0)
+                ->where('sale_id', $sale->id)
+                ->with('product', 'productVariant')
+                ->get();
+            
+            foreach ($sale_details as $sale_detail) {
+                if($sale_detail->product_variant_id) {
+                    $item['product_variant_id'] = $sale_detail->product_variant_id;
+                    $item['code'] = $sale_detail['productVariant']->name . '-' . $sale_detail['product']->code;
+                    $item['Variant'] = $sale_detail['productVariant']->name;
+                }else{
+                    $item['product_variant_id'] = null;
+                    $item['code'] = $sale_detail['product']->code;
+                    $item['Variant'] = null;
+                }
+                $item['sale_detail_id'] = $sale_detail->id;
+                $item['id'] = $sale_detail->product_id;
+                $item['name'] = $sale_detail['product']->name;
+                $item['barcode'] = $sale_detail['product']->code;
+                $item['is_expire'] = $sale_detail['product']->is_expire;
+                $item['Type_barcode'] = $sale_detail['product']->Type_barcode;
+                $item['quantity_balance'] = $sale_detail->quantity - $sale_detail->quantity_receive; 
+                $item['order_quantity'] = $sale_detail->quantity; 
+                $firstimage = explode(',', $sale_detail['product']->image);
+                $item['image'] = $firstimage[0];
+    
+                if ($sale_detail['product']['unitSale']->operator == '/') {
+                    $item['qte_sale'] = $sale_detail->quantity_receive * $sale_detail['product']['unitSale']->operator_value;
+                    $price = $sale_detail['product']->price / $sale_detail['product']['unitSale']->operator_value;
+                } else {
+                    $item['qte_sale'] = $sale_detail->quantity_receive / $sale_detail['product']['unitSale']->operator_value;
+                    $price = $sale_detail['product']->price * $sale_detail['product']['unitSale']->operator_value;
+                }
+    
+                if ($sale_detail['product']['unitPurchase']->operator == '/') {
+                    $item['qte_purchase'] = round($sale_detail->quantity_receive * $sale_detail['product']['unitPurchase']->operator_value, 5);
+                } else {
+                    $item['qte_purchase'] = round($sale_detail->quantity_receive / $sale_detail['product']['unitPurchase']->operator_value, 5);
+                }
+    
+                $item['qte'] = $sale_detail->quantity_receive;
+                $item['unitSale'] = $sale_detail['product']['unitSale']->ShortName;
+                $item['unitPurchase'] = $sale_detail['product']['unitPurchase']->ShortName;
+    
+                if ($sale_detail['product']->TaxNet !== 0.0) {
+                    //Exclusive
+                    if ($sale_detail['product']->tax_method == '1') {
+                        $tax_price = $price * $sale_detail['product']->TaxNet / 100;
+                        $item['Net_price'] = $price + $tax_price;
+                        // Inxclusive
+                    } else {
+                        $item['Net_price'] = $price;
+                    }
+                } else {
+                    $item['Net_price'] = $price;
+                }
+    
+                $data[] = $item;
+               
+            }
+            return response()->json([
+                'warehouse_id'  => $sale->warehouse_id,
+                'provider_id'   => $sale->client_id,
+                'products'      => $data
+            ]);
+         }
+
+
 
     //------------ Get product By ID -----------------\\
 

@@ -136,7 +136,7 @@
                                     ></i>
                                     {{ $t("EditSale") }}
                                 </b-dropdown-item>
-
+                                {{ props.row.payment_statut }}
                                 <b-dropdown-item
                                     v-if="
                                         currentUserPermissions.includes(
@@ -182,6 +182,7 @@
                                 </b-dropdown-item>
 
                                 <b-dropdown-item
+                                    v-if="props.row.statut !== 'pending'"
                                     title="Invoice"
                                     @click="Invoice_POS(props.row.id)"
                                 >
@@ -192,6 +193,7 @@
                                 </b-dropdown-item>
 
                                 <b-dropdown-item
+                                    v-if="props.row.statut !== 'pending'"
                                     title="PDF"
                                     @click="
                                         Invoice_PDF(props.row, props.row.id)
@@ -204,6 +206,7 @@
                                 </b-dropdown-item>
 
                                 <b-dropdown-item
+                                    v-if="props.row.statut === 'ordered'"
                                     title="Email"
                                     @click="Sale_Email(props.row, props.row.id)"
                                 >
@@ -211,6 +214,28 @@
                                         class="nav-icon i-Envelope-2 font-weight-bold mr-2"
                                     ></i>
                                     {{ $t("EmailSale") }}
+                                </b-dropdown-item>
+
+                                <b-dropdown-item
+                                    v-if="props.row.statut === 'pending'"
+                                    title="Ordered"
+                                    @click="editStatus('ordered', props.row.id)"
+                                >
+                                    <i
+                                        class="nav-icon i-Pen-2 font-weight-bold mr-2"
+                                    ></i>
+                                    Set status to ordered
+                                </b-dropdown-item>
+
+                                <b-dropdown-item
+                                    v-if="props.row.statut === 'partial'"
+                                    title="Cancel"
+                                    @click="Edit_Status('revoke', props.row.id)"
+                                >
+                                    <i
+                                        class="nav-icon i-Pen-2 font-weight-bold mr-2"
+                                    ></i>
+                                    Cancel Remaining
                                 </b-dropdown-item>
 
                                 <b-dropdown-item
@@ -1015,9 +1040,7 @@
                                 </td>
                                 <td style="text-align: right" class="total">
                                     {{ invoice_pos.symbol }}
-                                    {{
-                                        formatNumber(invoice_pos.sale.taxe, 2)
-                                    }}
+                                    {{ formatNumber(invoice_pos.sale.taxe, 2) }}
                                     ({{
                                         formatNumber(
                                             invoice_pos.sale.tax_rate,
@@ -1335,13 +1358,13 @@ export default {
                     tdClass: "text-left",
                     thClass: "text-left",
                 },
-                {
-                    label: this.$t("Shipping_status"),
-                    field: "shipping_status",
-                    html: true,
-                    tdClass: "text-left",
-                    thClass: "text-left",
-                },
+                // {
+                //     label: this.$t("Shipping_status"),
+                //     field: "shipping_status",
+                //     html: true,
+                //     tdClass: "text-left",
+                //     thClass: "text-left",
+                // },
                 {
                     label: this.$t("Action"),
                     field: "actions",
@@ -1906,6 +1929,37 @@ export default {
                     this.loadStripe_payment();
                 }, 500);
             }
+        },
+
+        editStatus(status, id) {
+            this.paymentProcessing = true;
+            NProgress.start();
+            NProgress.set(0.1);
+            axios
+                .put("sales/edit/status/" + id, {
+                    statut: status,
+                })
+                .then((response) => {
+                    // Complete the animation of the  progress bar.
+                    this.paymentProcessing = false;
+                    setTimeout(() => NProgress.done(), 500);
+                    this.makeToast(
+                        "success",
+                        "Purchase status edited successfully",
+                        "Success"
+                    );
+                    Fire.$emit("Edit_Status_Purchase");
+                })
+                .catch((error) => {
+                    // Complete the animation of the  progress bar.
+                    this.paymentProcessing = false;
+                    setTimeout(() => NProgress.done(), 500);
+                    this.makeToast(
+                        "danger",
+                        this.$t("SMTPIncorrect"),
+                        this.$t("Failed")
+                    );
+                });
         },
         //-------------------------------Show All Payment with Sale ---------------------\\
         Show_Payments(id, sale) {

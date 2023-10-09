@@ -35,4 +35,9 @@ class SaleDetail extends Model
         return $this->belongsTo('App\Models\Product');
     }
 
+    public function productVariant()
+    {
+        return $this->belongsTo('App\Models\ProductVariant');
+    }
+
 }

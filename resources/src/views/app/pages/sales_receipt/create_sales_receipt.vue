@@ -66,7 +66,7 @@
                                                 "
                                                 v-model="purchase.purchase_id"
                                                 :reduce="(label) => label.value"
-                                                placeholder="Choose PO Refecence"
+                                                placeholder="Choose SO Refecence"
                                                 :options="
                                                     purchases.map(
                                                         (purchases) => ({
@@ -75,7 +75,7 @@
                                                         })
                                                     )
                                                 "
-                                                @input="Selected_PO_Reference"
+                                                @input="Selected_SO_Reference"
                                             />
                                             <b-form-invalid-feedback>{{
                                                 errors[0]
@@ -1368,25 +1368,25 @@ export default {
         },
 
         //---------------------- Event Select PO Reference ------------------------------\\
-        Selected_PO_Reference(value) {
+        Selected_SO_Reference(value) {
             this.search_input = "";
             this.product_filter = [];
-            this.Get_Products_By_Purchase(value);
+            this.Get_Products_By_Sales(value);
         },
 
         //------------------------------------ Get Products By Purchase -------------------------\\
 
-        Get_Products_By_Purchase(id) {
+        Get_Products_By_Sales(id) {
             // Start the progress bar.
             NProgress.start();
             NProgress.set(0.1);
             axios
-                .get("Products/Purchase/" + id + "?stock=" + 0)
+                .get("Products/Sales/" + id + "?stock=" + 0)
                 .then((response) => {
                     this.products = response.data.products;
                     this.purchase.warehouse_id = response.data.warehouse_id;
                     this.purchase.supplier_id = response.data.provider_id;
-                    console.log(this.purchase);
+                    console.log(this.purchase.warehouse_id);
                     NProgress.done();
                 })
                 .catch((error) => {});
@@ -1680,7 +1680,7 @@ export default {
         //---------------------------------------Get Elements Purchase ------------------------------\\
         GetElements() {
             axios
-                .get("purchase_receives/create")
+                .get("sales_receipt/create")
                 .then((response) => {
                     this.suppliers = response.data.suppliers;
                     this.warehouses = response.data.warehouses;

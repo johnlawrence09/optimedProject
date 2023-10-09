@@ -542,87 +542,6 @@
                                     </validation-provider>
                                 </b-col>
 
-                                <!-- Status  -->
-                                <b-col lg="4" md="4" sm="12" class="mb-3">
-                                    <validation-provider
-                                        name="Status"
-                                        :rules="{ required: true }"
-                                    >
-                                        <b-form-group
-                                            slot-scope="{ valid, errors }"
-                                            :label="$t('Status') + ' ' + '*'"
-                                        >
-                                            <v-select
-                                                :class="{
-                                                    'is-invalid':
-                                                        !!errors.length,
-                                                }"
-                                                :state="
-                                                    errors[0]
-                                                        ? false
-                                                        : valid
-                                                        ? true
-                                                        : null
-                                                "
-                                                v-model="sale.statut"
-                                                :reduce="(label) => label.value"
-                                                :placeholder="
-                                                    $t('Choose_Status')
-                                                "
-                                                :options="[
-                                                    {
-                                                        label: 'completed',
-                                                        value: 'completed',
-                                                    },
-                                                    {
-                                                        label: 'Pending',
-                                                        value: 'pending',
-                                                    },
-                                                    {
-                                                        label: 'ordered',
-                                                        value: 'ordered',
-                                                    },
-                                                ]"
-                                            ></v-select>
-                                            <b-form-invalid-feedback>{{
-                                                errors[0]
-                                            }}</b-form-invalid-feedback>
-                                        </b-form-group>
-                                    </validation-provider>
-                                </b-col>
-
-                                <!-- PaymentStatus  -->
-                                <b-col md="4">
-                                    <validation-provider name="PaymentStatus">
-                                        <b-form-group
-                                            :label="$t('PaymentStatus')"
-                                        >
-                                            <v-select
-                                                @input="Selected_PaymentStatus"
-                                                :reduce="(label) => label.value"
-                                                v-model="payment.status"
-                                                :placeholder="
-                                                    $t('Choose_Status')
-                                                "
-                                                :options="[
-                                                    {
-                                                        label: 'Paid',
-                                                        value: 'paid',
-                                                    },
-                                                    {
-                                                        label: 'partial',
-                                                        value: 'partial',
-                                                    },
-                                                    {
-                                                        label: 'Pending',
-                                                        value: 'pending',
-                                                    },
-                                                ]"
-                                            ></v-select>
-                                        </b-form-group>
-                                    </validation-provider>
-                                </b-col>
-
                                 <!-- Payment choice -->
                                 <b-col
                                     md="4"
@@ -1493,7 +1412,6 @@ export default {
                         (product) =>
                             product.code === this.search_input ||
                             product.barcode.includes(this.search_input)
-                        // product.expiration_date === this.search_input
                     );
                     if (product_filter.length === 1) {
                         this.SearchProduct(product_filter[0]);
@@ -1516,11 +1434,6 @@ export default {
                                         .includes(
                                             this.search_input.toLowerCase()
                                         )
-                                    // product.expiration_date
-                                    //     .toLowerCase()
-                                    //     .includes(
-                                    //         this.search_input.toLowerCase()
-                                    //     )
                                 );
                             }
                         );
@@ -1538,12 +1451,33 @@ export default {
         //------------------------- get Result Value Search Product
 
         getResultValue(result) {
-            const dateNow = new Date();
-            const year = dateNow.getFullYear();
-            const month = (dateNow.getMonth() + 1).toString().padStart(2, "0");
-            const day = dateNow.getDate().toString().padStart(2, "0");
-            const date = `${year}-${month}-${day}`;
+            //current date
+            // const dateNow = new Date();
 
+            // //Convert date in to numeric datatyp
+            // function dateFormat(date) {
+            //     const expDate = new Date(date);
+            //     const year = expDate.getFullYear();
+            //     const month = (expDate.getMonth() + 1)
+            //         .toString()
+            //         .padStart(2, "0");
+            //     const day = expDate.getDate().toString().padStart(2, "0");
+            //     return parseInt(`${year}${month}${day}`, 10);
+            // }
+
+            // const data = [
+            //     result.code,
+            //     result.name,
+            //     dateFormat(result.expiration_date),
+            // ];
+
+            // console.log(data);
+            // const data1 = data.filter(
+            //     (a) =>
+            //         a.dateFormat(result.expiration_date) >= dateFormat(dateNow)
+            // );
+
+            // console.log(data1);
             const exp =
                 result.expiration_date === null
                     ? ""
@@ -1905,15 +1839,15 @@ export default {
                                 : 0,
                             GrandTotal: this.GrandTotal,
                             details: this.details,
-                            payment: this.payment,
-                            amount: parseFloat(this.payment.amount).toFixed(2),
-                            received_amount: parseFloat(
-                                this.payment.received_amount
-                            ).toFixed(2),
-                            change: parseFloat(
-                                this.payment.received_amount -
-                                    this.payment.amount
-                            ).toFixed(2),
+                            // payment: this.payment,
+                            // amount: parseFloat(this.payment.amount).toFixed(2),
+                            // received_amount: parseFloat(
+                            //     this.payment.received_amount
+                            // ).toFixed(2),
+                            // change: parseFloat(
+                            //     this.payment.received_amount -
+                            //         this.payment.amount
+                            // ).toFixed(2),
                         })
                         .then((response) => {
                             this.makeToast(
