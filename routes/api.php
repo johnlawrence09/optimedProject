@@ -316,7 +316,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
      //------------------------------- PURCHASES --------------------------\\
     //------------------------------------------------------------------\\
 
-    Route::resource('sales_receipt', 'SalesReceivedController');
+    Route::resource('sales_receives', 'SalesReceivedController');
 
 
     //-------------------------------  Shipments --------------------------\\

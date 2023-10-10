@@ -8,8 +8,8 @@ use App\Models\ProductVariant;
 use App\Models\Client;
 use App\Models\Sale;
 use App\Models\SaleDetail;
-use App\Models\SaleReceive;
-use App\Models\SaleReceiveDetail;
+use App\Models\SalesReceive;
+use App\Models\SalesReceiveDetail;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\Unit;
@@ -26,6 +26,7 @@ class SalesReceivedController extends Controller
 
     public function index(Request $request)
     {
+
      // $this->authorizeForUser($request->user('api'), 'view', PurchaseReceive::class);
      $role = Auth::user()->roles()->first();
      $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -122,7 +123,7 @@ class SalesReceivedController extends Controller
                 $item['sales_ref'] = $Sale->sale->Ref;
     
                 $data[] = $item;
-               
+                
             }
 
         $customers = Client::where('deleted_at', '=', null)->get(['id', 'name']);
@@ -160,37 +161,38 @@ class SalesReceivedController extends Controller
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          } 
 
-        $purchases = Sale::whereIn('statut', ['ordered', 'partial'])->get(['id', 'Ref']);
+        $sales = Sale::whereIn('statut', ['ordered', 'partial'])->get(['id', 'Ref']);
+       
 
-        $suppliers = Client::where('deleted_at', '=', null)->get(['id', 'name']);
-
+        $client = Client::where('deleted_at', '=', null)->get(['id', 'name']);
+        
         $warehouse_locations = WarehouseLocation::where('deleted_at', '=', null)->get(['id', 'name']);
 
         return response()->json([
             'warehouses' => $warehouses,
-            'suppliers' => $suppliers,
-            'purchases' => $purchases,
+            'suppliers' => $client,
+            'purchases' => $sales,
             'warehouse_locations' => $warehouse_locations
         ]);
     }
 
     public function store(Request $request)
     {
+   
     //  $this->authorizeForUser($request->user('api'), 'create', Purchase::class);
-
         request()->validate([
-            'supplier_id' => 'required',
+            'client_id' => 'required',
             'warehouse_id' => 'required',
         ]);
 
         
 
         \DB::transaction(function () use ($request) {
-            $order = new PurchaseReceive;
+            $order = new SalesReceive;
 
             $order->date = $request->date;
-            $order->purchase_id = $request->purchase_id;
-            $order->provider_id = $request->supplier_id;
+            $order->sales_id = $request->sales_id;
+            $order->client_id = $request->client_id;
             $order->GrandTotal = $request->GrandTotal;
             $order->warehouse_id = $request->warehouse_id;
             $order->tax_rate = $request->tax_rate;
@@ -203,15 +205,15 @@ class SalesReceivedController extends Controller
             $order->user_id = Auth::user()->id;
 
             $order->save();
-
+          
             $data = $request['details'];
             foreach ($data as $key => $value) {
-                $unit = Unit::where('id', $value['purchase_unit_id'])->first();
+                $unit = Unit::where('id', $value['sale_unit_id'])->first();
                 $orderDetails[] = [
-                'purchase_receive_id' => $order->id,
+                'sale_receive_id' => $order->id,
                 'quantity' => $value['quantity'],
                 'cost' => $value['Unit_cost'],
-                'purchase_unit_id' =>  $value['purchase_unit_id'],
+                'sale_unit_id' =>  $value['sale_unit_id'],
                 'TaxNet' => $value['tax_percent'],
                 'tax_method' => $value['tax_method'],
                 'discount' => $value['discount'],
@@ -223,15 +225,16 @@ class SalesReceivedController extends Controller
                 'expiration_date' => $value['expiration_date'],
                 'lot_number' =>  $value['lot_number'],
             ];
-                if ($order->statut == "received") {
-                    $purchase_detail = PurchaseDetail::find($value['purchase_detail_id']);
 
-                    if($purchase_detail->quantity > $purchase_detail->quantity_receive) {
-                    $purchase_detail->quantity_receive = $purchase_detail->quantity_receive + $value['quantity'];
-                    if($purchase_detail->quantity_receive == $purchase_detail->quantity) {
-                        $purchase_detail->is_receive = 1;
+            
+                if ($order->statut == "received") {
+                    $sale_detail = SaleDetail::find($value['sale_detail_id']);
+                    if($sale_detail->quantity > $sale_detail->quantity_receive) {
+                    $sale_detail->quantity_receive = $sale_detail->quantity_receive - $value['quantity'];
+                    if($sale_detail->quantity_receive == $sale_detail->quantity) {
+                        $sale_detail->is_receive = 1;
                     }
-                    $purchase_detail->save();
+                    $sale_detail->save();
                     }
                     if ($value['product_variant_id'] !== null) {
                         if($value['expiration_date'] !== null) {
@@ -262,9 +265,9 @@ class SalesReceivedController extends Controller
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
-                                $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
+                                $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
                             } else {
-                                $product_warehouse->qte += $value['quantity'] * $unit->operator_value;
+                                $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
                             }
                             $product_warehouse->save();
                         }
@@ -297,34 +300,35 @@ class SalesReceivedController extends Controller
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
-                                $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
+                                $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
                             } else {
-                                $product_warehouse->qte += $value['quantity'] * $unit->operator_value;
+                                $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
                             }
                             $product_warehouse->save();
                         }
                     }
                 }
             }
-            PurchaseReceiveDetail::insert($orderDetails);
-
-            $purchase = Purchase::where('id', $order->purchase_id)
+            
+            SalesReceiveDetail::insert($orderDetails);
+           
+            $sale = Sale::where('id', $order->sales_id)
             ->with(['details' => function ($query) {
                 // Add a query for the 'details' relationship here
                 $query->where('is_receive', 0);
             }])
             ->first();
-            if(count($purchase->details)) {
-                $purchase->statut = 'partial';
-                $purchase->save();
+            if(count($sale->details)) {
+                $sale->statut = 'partial';
+                $sale->save();
             }else{
-                $purchase->statut = 'received';
-                $purchase->save();
+                $sale->statut = 'received';
+                $sale->save();
             }
 
         }, 10);
 
-        return response()->json(['success' => true, 'message' => 'Purchase Receipt Created !!']);
+        return response()->json(['success' => true, 'message' => 'Sales Receipt Created !!']);
     }
 
 

@@ -224,9 +224,10 @@ class PurchaseReceiveController extends Controller
                 'expiration_date' => $value['expiration_date'],
                 'lot_number' =>  $value['lot_number'],
             ];
+            
+            dd($data);
                 if ($order->statut == "received") {
                     $purchase_detail = PurchaseDetail::find($value['purchase_detail_id']);
-
                     if($purchase_detail->quantity > $purchase_detail->quantity_receive) {
                     $purchase_detail->quantity_receive = $purchase_detail->quantity_receive + $value['quantity'];
                     if($purchase_detail->quantity_receive == $purchase_detail->quantity) {
