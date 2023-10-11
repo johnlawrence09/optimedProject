@@ -695,7 +695,7 @@ export default {
     //------ Get Result Value Products
 
     getResultValue(result) {
-      return result.code + " " + "(" + result.name + ")";
+      return result.code;
     },
 
     //------ Submit Search Products
@@ -739,7 +739,7 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
       axios
-        .get("Products/Warehouse/" + id + "?stock=" + 1)
+        .get("Products/Warehouse/Purchase_Return/" + id + "?stock=" + 1)
          .then(response => {
             this.products = response.data;
              NProgress.done();

@@ -742,7 +742,7 @@ export default {
     //------ get Result Value Products
 
     getResultValue(result) {
-      return result.code + " " + "(" + result.name + ")";
+      return result.code;
     },
 
     //------ Submit Search Products
@@ -756,7 +756,8 @@ export default {
       } else {
         this.product.code = result.code;
         this.product.stock = result.qte_purchase;
-         this.product.fix_stock = result.qte;
+        this.product.fix_stock = result.qte;
+        this.product.expiration_date = result.expiration_date;
         if (result.qte_purchase < 1) {
           this.product.quantity = result.qte_purchase;
         } else {
@@ -785,7 +786,7 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
       axios
-        .get("Products/Warehouse/" + id + "?stock=" + 1)
+        .get("Products/Warehouse/Purchase_Return/" + id + "?stock=" + 1)
          .then(response => {
             this.products = response.data;
              NProgress.done();

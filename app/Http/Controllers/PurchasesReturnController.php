@@ -161,7 +161,6 @@ class PurchasesReturnController extends BaseController
             $order = new PurchaseReturn;
 
             $order->date = $request->date;
-            $order->Ref = $this->getNumberOrder();
             $order->provider_id = $request->supplier_id;
             $order->warehouse_id = $request->warehouse_id;
             $order->tax_rate = $request->tax_rate;
@@ -198,11 +197,20 @@ class PurchasesReturnController extends BaseController
                 if ($order->statut == "completed") {
                     if ($value['product_variant_id'] !== null) {
 
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        }else{
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
@@ -215,10 +223,19 @@ class PurchasesReturnController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
@@ -263,6 +280,7 @@ class PurchasesReturnController extends BaseController
 
             $old_Return_Details = PurchaseReturnDetails::where('purchase_return_id', $id)->get();
             $New_Return_Details = $request['details'];
+            
             $length = sizeof($New_Return_Details);
 
             // Get Ids details
@@ -289,12 +307,20 @@ class PurchasesReturnController extends BaseController
                 if($value['purchase_unit_id'] !== null){
                     if ($current_PurchaseReturn->statut == "completed") {
                         if ($value['product_variant_id'] !== null) {
-
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
+                            if($value['expiration_date']) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->first();
+                            }
 
                             if ($unit && $product_warehouse) {
                                 if ($unit->operator == '/') {
@@ -306,10 +332,19 @@ class PurchasesReturnController extends BaseController
                             }
 
                         } else {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->first();
+                            if($value['expiration_date']) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($unit && $product_warehouse) {
                                 if ($unit->operator == '/') {
@@ -339,11 +374,20 @@ class PurchasesReturnController extends BaseController
 
                     if ($request->statut == "completed") {
                         if ($product_detail['product_variant_id'] !== null) {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $request->warehouse_id)
-                                ->where('product_id', $product_detail['product_id'])
-                                ->where('product_variant_id', $product_detail['product_variant_id'])
-                                ->first();
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $request->warehouse_id)
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $request->warehouse_id)
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->first();
+                            }
 
                             if ($unit_prod && $product_warehouse) {
                                 if ($unit_prod->operator == '/') {
@@ -355,10 +399,19 @@ class PurchasesReturnController extends BaseController
                             }
 
                         } else {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $request->warehouse_id)
-                                ->where('product_id', $product_detail['product_id'])
-                                ->first();
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $request->warehouse_id)
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $request->warehouse_id)
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($unit_prod && $product_warehouse) {
                                 if ($unit_prod->operator == '/') {
@@ -747,6 +800,7 @@ class PurchasesReturnController extends BaseController
             $data['name'] = $detail['product']['name'];
             $data['cost'] = $detail->cost;
             $data['unit_purchase'] = $unit->ShortName;
+            $data['unit_purchase'] = $unit->ShortName;
 
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;
@@ -766,6 +820,7 @@ class PurchasesReturnController extends BaseController
 
             $data['is_imei'] = $detail['product']['is_imei'];
             $data['imei_number'] = $detail->imei_number;
+            $data['expiration_date'] = $detail->expiration_date ? $detail->expiration_date : 'N/A';
 
             $details[] = $data;
         }
@@ -834,7 +889,6 @@ class PurchasesReturnController extends BaseController
                 $data['total'] = number_format($detail->total, 2, '.', '');
                 $data['name'] = $detail['product']['name'];
                 $data['cost'] = number_format($detail->cost, 2, '.', '');
-                $data['unit_purchase'] = $unit->ShortName;
 
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = number_format($detail->discount, 2, '.', '');
@@ -941,18 +995,35 @@ class PurchasesReturnController extends BaseController
             }
 
             if ($detail->product_variant_id) {
-                $item_product = product_warehouse::where('product_id', $detail->product_id)
-                    ->where('deleted_at', '=', null)
-                    ->where('product_variant_id', $detail->product_variant_id)
-                    ->where('warehouse_id', $Purchase_Return->warehouse_id)
-                    ->first();
+                if($detail->expiration_date) {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('product_variant_id', $detail->product_variant_id)
+                        ->where('warehouse_id', $Purchase_Return->warehouse_id)
+                        ->whereDate('expiration_date', Carbon::parse($detail->expiration_date)->format('Y-m-d'))
+                        ->first();
+                } else {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('product_variant_id', $detail->product_variant_id)
+                        ->where('warehouse_id', $Purchase_Return->warehouse_id)
+                        ->first();
+                }
+                
 
                 $productsVariants = ProductVariant::where('product_id', $detail->product_id)
                     ->where('id', $detail->product_variant_id)->first();
 
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
-                $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
+                $data['code'] = $productsVariants->name . '-' . $detail['product']['code']. ' ('. $detail['product']['name'] .')';
                 $data['product_variant_id'] = $detail->product_variant_id;
+                if($detail->expiration_date) {
+                    $data['code'] = $data['code'] . ' - ' . $detail->expiration_date;
+                    $data['expiration_date'] = $detail->expiration_date;
+                } else {
+                    $data['expiration_date'] = null;
+                }
+                
 
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
@@ -963,14 +1034,30 @@ class PurchasesReturnController extends BaseController
                 }
 
             } else {
-                $item_product = product_warehouse::where('product_id', $detail->product_id)
-                    ->where('warehouse_id', $Purchase_Return->warehouse_id)
-                    ->where('deleted_at', '=', null)->where('product_variant_id', '=', null)
-                    ->first();
+                if($detail->expiration_date) {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('warehouse_id', $Purchase_Return->warehouse_id)
+                        ->where('deleted_at', '=', null)->where('product_variant_id', '=', null)
+                        ->whereDate('expiration_date', Carbon::parse($detail->expiration_date)->format('Y-m-d'))
+                        ->first();
+                } else {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('warehouse_id', $Purchase_Return->warehouse_id)
+                        ->where('deleted_at', '=', null)->where('product_variant_id', '=', null)
+                        ->first();
+                }
+                
 
                     $item_product ? $data['del'] = 0 : $data['del'] = 1;
-                    $data['code'] = $detail['product']['code'];
+                    $data['code'] = $detail['product']['code']. ' ('. $detail['product']['name'] .')';
                     $data['product_variant_id'] = null;
+
+                    if($detail->expiration_date) {
+                        $data['code'] = $data['code'] . ' - ' . $detail->expiration_date;
+                        $data['expiration_date'] = $detail->expiration_date;
+                    } else {
+                        $data['expiration_date'] = null;
+                    }
 
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;

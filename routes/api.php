@@ -233,8 +233,9 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('Products/Get_element/barcode', 'ProductsController@Get_element_barcode');
     Route::post('Products/delete/by_selection', 'ProductsController@delete_by_selection');
     Route::get('Products/Warehouse/Purchase_Receive/{id}', 'ProductsController@Products_by_Warehouse_For_Purchase_Receive');
-    Route::get('Products/Purchase/{id}', 'ProductsController@Products_by_Purchase');
+    Route::get('Products/Warehouse/Purchase/{id}', 'ProductsController@Products_by_Warehouse_For_Purchase');
     Route::get('Products/Sales/{id}', 'ProductsController@Products_by_Sales');
+    Route::get('Products/Warehouse/Purchase_Return/{id}', 'ProductsController@Products_by_Warehouse_For_Purchase_Return');
 
     // Route::get('Products/filter/{id}/{input}', 'ProductsController@Filter_Products');
 
