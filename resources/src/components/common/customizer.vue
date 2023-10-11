@@ -39,7 +39,7 @@
           </div>
         </div>
 
-         <div class>
+         <!-- <div class>
           <div class="card-header">
             <p class="mb-0">Language</p>
           </div>
@@ -114,7 +114,7 @@
               </a>
             </div>
           </div>
-        </div>
+        </div> -->
       </vue-perfect-scrollbar>
     </div>
   </div>

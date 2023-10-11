@@ -14,7 +14,7 @@
         </transition>
 
         <div class="flex-grow-1"></div>
-        <appFooter />
+        <!-- <appFooter /> -->
       </div>
     </main>
   </div>

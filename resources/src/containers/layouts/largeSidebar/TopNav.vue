@@ -26,7 +26,7 @@
       <i class="i-Full-Screen header-icon d-none d-sm-inline-block" @click="handleFullScreen"></i>
       <!-- Grid menu Dropdown -->
 
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <b-dropdown
           id="dropdown"
           text="Dropdown Button"
@@ -121,7 +121,7 @@
             </div>
           </vue-perfect-scrollbar>
         </b-dropdown>
-      </div>
+      </div> -->
       <!-- Notificaiton -->
       <div class="dropdown">
         <b-dropdown

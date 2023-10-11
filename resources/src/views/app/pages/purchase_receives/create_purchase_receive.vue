@@ -230,13 +230,10 @@
                                                         }}
                                                     </th>
                                                     <th scope="col">
-                                                        Ordered Qty
+                                                        Remaining
                                                     </th>
                                                     <th scope="col">
-                                                        Remaining Qty
-                                                    </th>
-                                                    <th scope="col">
-                                                        Receive Qty
+                                                        Receive
                                                     </th>
                                                     <th scope="col">
                                                         Lot Number
@@ -307,17 +304,6 @@
                                                                 3
                                                             )
                                                         }}
-                                                    </td>
-                                                    <td>
-                                                        <span
-                                                            class="badge badge-outline-warning"
-                                                            >{{
-                                                                detail.order_quantity
-                                                            }}
-                                                            {{
-                                                                detail.unitPurchase
-                                                            }}</span
-                                                        >
                                                     </td>
                                                     <td>
                                                         <span
@@ -1333,16 +1319,34 @@ export default {
                     "This Product has already been received",
                     this.$t("Warning")
                 );
-            } else if (
+            } 
+            else if (
                 this.details.length > 0 &&
                 this.details.some((detail) => detail.code === result.code)
             ) {
-                this.makeToast(
-                    "warning",
-                    this.$t("AlreadyAdd"),
-                    this.$t("Warning")
-                );
-            } else {
+                const filteredDetails = this.details.filter((detail) => detail.code === result.code);
+                const sumQuantity = filteredDetails.reduce((sum, detail) => sum + (detail.quantity || 0), 0);
+                console.log(sumQuantity);
+                if (result.quantity_balance <= sumQuantity) {
+                    this.makeToast(
+                        "warning",
+                        "Already completed",
+                        this.$t("Warning")
+                    );
+                }else{
+                    this.product.code = result.code;
+                    this.product.quantity = 1;
+                    this.product.stock = result.qte_purchase;
+                    this.product.fix_stock = result.qte;
+                    this.product.product_variant_id = result.product_variant_id;
+                    this.product.quantity_balance = result.quantity_balance;
+                    this.product.is_expire = result.is_expire;
+                    this.product.order_quantity = result.order_quantity;
+                    this.product.purchase_detail_id = result.purchase_detail_id;
+                    this.Get_Product_Details(result.id);
+                }
+            } 
+            else {
                 this.product.code = result.code;
                 this.product.quantity = 1;
                 this.product.stock = result.qte_purchase;
@@ -1381,7 +1385,7 @@ export default {
             NProgress.start();
             NProgress.set(0.1);
             axios
-                .get("Products/Purchase/" + id + "?stock=" + 0)
+                .get("Products/Warehouse/Purchase_Receive/" + id + "?stock=" + 0)
                 .then((response) => {
                     this.products = response.data.products;
                     this.purchase.warehouse_id = response.data.warehouse_id;
@@ -1428,6 +1432,17 @@ export default {
                 if (this.details[i].detail_id == id) {
                     if (isNaN(detail.quantity)) {
                         this.details[i].quantity = 1;
+                    }else{
+                        const filteredDetails = this.details.filter((dd) => dd.code === detail.code);
+                        const sumQuantity = filteredDetails.reduce((sum, dd) => sum + (dd.quantity || 0), 0);
+                        if (detail.quantity_balance < sumQuantity) {
+                            this.makeToast(
+                                "warning",
+                                "Quantity must not exceed to remaining quantity ",
+                                this.$t("Warning")
+                            );
+                            this.details[i].quantity = 1;
+                        } 
                     }
                     this.Calcul_Total();
                     this.$forceUpdate();
@@ -1440,7 +1455,9 @@ export default {
         increment(detail, id) {
             for (var i = 0; i < this.details.length; i++) {
                 if (this.details[i].detail_id == id) {
-                    if (detail.quantity_balance > this.details[i].quantity) {
+                    const filteredDetails = this.details.filter((dd) => dd.code === detail.code);
+                    const sumQuantity = filteredDetails.reduce((sum, dd) => sum + (dd.quantity || 0), 0);
+                    if (detail.quantity_balance > sumQuantity) {
                         this.formatNumber(this.details[i].quantity++, 2);
                     } else {
                         this.makeToast(
@@ -1460,8 +1477,16 @@ export default {
         decrement(detail, id) {
             for (var i = 0; i < this.details.length; i++) {
                 if (this.details[i].detail_id == id) {
-                    if (detail.quantity - 1 > 0) {
+                    const filteredDetails = this.details.filter((dd) => dd.code === detail.code);
+                    const sumQuantity = filteredDetails.reduce((sum, dd) => sum + (dd.quantity || 0), 0);
+                    if (detail.quantity_balance > sumQuantity) {
                         this.formatNumber(this.details[i].quantity--, 2);
+                    } else {
+                        this.makeToast(
+                            "warning",
+                            "Quantity must not exceed to remaining quantity ",
+                            this.$t("Warning")
+                        );
                     }
                 }
             }

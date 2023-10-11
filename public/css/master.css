@@ -21,14 +21,14 @@
   }
 
   .loading {
-    border: 3px solid rgba(102, 51, 153, 0.45);
+    border: 3px solid rgba(51, 104, 153, 0.45);
     position: absolute;
     left: calc(50% - 40px);
     top: 50%;
     width: 55px;
     height: 55px;
     border-radius: 50%;
-    border-top-color: #8b5cf6;
+    border-top-color: #3b82f6;
     animation: loader 1s ease-in-out infinite;
     -webkit-animation: loader 1s ease-in-out infinite;
   }

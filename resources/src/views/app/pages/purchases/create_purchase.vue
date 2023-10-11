@@ -1194,7 +1194,7 @@ export default {
             } else {
                 this.product.code = result.code;
                 this.product.quantity = 1;
-                this.product.stock = result.qte_purchase;
+                this.product.stock = result.ttl_qte;
                 this.product.fix_stock = result.qte;
                 this.product.product_variant_id = result.product_variant_id;
                 this.Get_Product_Details(result.id);

@@ -107,6 +107,7 @@
                   <thead class="bg-gray-300">
                     <tr>
                       <th scope="col">{{$t('ProductName')}}</th>
+                      <th scope="col">Expiration Date</th>
                       <th scope="col">{{$t('Net_Unit_Cost')}}</th>
                       <th scope="col">{{$t('Quantity')}}</th>
                       <th scope="col">{{$t('Unitcost')}}</th>
@@ -120,6 +121,7 @@
                       <td><span>{{detail.code}} ({{detail.name}})</span>
                         <p v-show="detail.is_imei && detail.imei_number !==null ">{{$t('IMEI_SN')}} : {{detail.imei_number}}</p>
                       </td>
+                      <td>{{ detail.expiration_date }}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.Net_cost,3)}}</td>
                       <td>{{formatNumber(detail.quantity,2)}} {{detail.unit_purchase}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.cost,2)}}</td>

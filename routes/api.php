@@ -30,6 +30,8 @@ Route::group([
 
 Route::resource('purchase_receives_test', 'PurchaseReceiveController');
 
+Route::get('test_only/{id}', 'ProductsController@Products');
+
 Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     //-------------------------- Clear Cache ---------------------------
@@ -230,7 +232,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('Products/Stock/Alerts', 'ProductsController@Products_Alert');
     Route::get('Products/Get_element/barcode', 'ProductsController@Get_element_barcode');
     Route::post('Products/delete/by_selection', 'ProductsController@delete_by_selection');
-    Route::get('Products/Purchase/{id}', 'ProductsController@Products_by_Purchase');
+    Route::get('Products/Warehouse/Purchase_Receive/{id}', 'ProductsController@Products_by_Warehouse_For_Purchase_Receive');
 
     // Route::get('Products/filter/{id}/{input}', 'ProductsController@Filter_Products');
 

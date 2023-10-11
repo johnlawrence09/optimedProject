@@ -563,9 +563,11 @@ class PurchaseReceiveController extends Controller
                 $data['code'] = $detail['product']['code'];
             }
             
+            $data['expiration_date'] = $detail->expiration_date ? $detail->expiration_date : 'N/A';
             $data['quantity'] = $detail->quantity;
             $data['total'] = $detail->total;
             $data['name'] = $detail['product']['name'];
+            $data['cost'] = $detail->cost;
             $data['cost'] = $detail->cost;
             $data['unit_purchase'] = $unit->ShortName;
 
