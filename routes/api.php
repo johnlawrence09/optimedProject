@@ -233,6 +233,8 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('Products/Get_element/barcode', 'ProductsController@Get_element_barcode');
     Route::post('Products/delete/by_selection', 'ProductsController@delete_by_selection');
     Route::get('Products/Warehouse/Purchase_Receive/{id}', 'ProductsController@Products_by_Warehouse_For_Purchase_Receive');
+    Route::get('Products/Purchase/{id}', 'ProductsController@Products_by_Purchase');
+    Route::get('Products/Sales/{id}', 'ProductsController@Products_by_Sales');
 
     // Route::get('Products/filter/{id}/{input}', 'ProductsController@Filter_Products');
 
@@ -312,6 +314,13 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('sales/send/sms', 'SalesController@Send_SMS');
     Route::get('sales/export/Excel', 'SalesController@exportExcel');
     Route::post('sales/delete/by_selection', 'SalesController@delete_by_selection');
+    Route::put('sales/edit/status/{sales}', 'SalesController@Edit_Status');
+
+     //------------------------------- PURCHASES --------------------------\\
+    //------------------------------------------------------------------\\
+
+    Route::resource('sales_receives', 'SalesReceivedController');
+
 
     //-------------------------------  Shipments --------------------------\\
     //------------------------------------------------------------------\\

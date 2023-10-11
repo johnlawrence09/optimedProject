@@ -5,7 +5,7 @@
             v-if="isLoading"
             class="loading_page spinner spinner-primary mr-3"
         ></div>
-
+        {{ product }}
         <validation-observer ref="create_purchase" v-if="!isLoading">
             <b-form @submit.prevent="Submit_Sales">
                 <b-row>
@@ -66,7 +66,7 @@
                                                 "
                                                 v-model="purchase.purchase_id"
                                                 :reduce="(label) => label.value"
-                                                placeholder="Choose PO Refecence"
+                                                placeholder="Choose SO Refecence"
                                                 :options="
                                                     purchases.map(
                                                         (purchases) => ({
@@ -75,7 +75,7 @@
                                                         })
                                                     )
                                                 "
-                                                @input="Selected_PO_Reference"
+                                                @input="Selected_SO_Reference"
                                             />
                                             <b-form-invalid-feedback>{{
                                                 errors[0]
@@ -1079,7 +1079,7 @@ export default {
                 quantity_balance: "",
                 is_expire: "",
                 order_quantity: "",
-                purchase_detail_id: "",
+                sale_detail_id: "",
                 expiration_date: "",
                 lot_number: "",
             },
@@ -1146,7 +1146,7 @@ export default {
             this.detail.name = detail.name;
             this.Get_Purchases_units(detail.product_id);
             this.detail.detail_id = detail.detail_id;
-            this.detail.purchase_unit_id = detail.purchase_unit_id;
+            this.detail.sale_unit_id = detail.sale_unit_id;
             this.detail.Unit_cost = detail.Unit_cost;
             this.detail.tax_method = detail.tax_method;
             this.detail.fix_cost = detail.fix_cost;
@@ -1351,10 +1351,9 @@ export default {
                 this.product.quantity_balance = result.quantity_balance;
                 this.product.is_expire = result.is_expire;
                 this.product.order_quantity = result.order_quantity;
-                this.product.purchase_detail_id = result.purchase_detail_id;
+                this.product.sale_detail_id = result.sale_detail_id;
                 this.Get_Product_Details(result.id);
             }
-
             this.search_input = "";
             this.$refs.product_autocomplete.value = "";
             this.product_filter = [];
@@ -1368,25 +1367,24 @@ export default {
         },
 
         //---------------------- Event Select PO Reference ------------------------------\\
-        Selected_PO_Reference(value) {
+        Selected_SO_Reference(value) {
             this.search_input = "";
             this.product_filter = [];
-            this.Get_Products_By_Purchase(value);
+            this.Get_Products_By_Sales(value);
         },
 
         //------------------------------------ Get Products By Purchase -------------------------\\
 
-        Get_Products_By_Purchase(id) {
+        Get_Products_By_Sales(id) {
             // Start the progress bar.
             NProgress.start();
             NProgress.set(0.1);
             axios
-                .get("Products/Purchase/" + id + "?stock=" + 0)
+                .get("Products/Sales/" + id + "?stock=" + 0)
                 .then((response) => {
                     this.products = response.data.products;
                     this.purchase.warehouse_id = response.data.warehouse_id;
                     this.purchase.supplier_id = response.data.provider_id;
-                    console.log(this.purchase);
                     NProgress.done();
                 })
                 .catch((error) => {});
@@ -1598,10 +1596,10 @@ export default {
                 NProgress.start();
                 NProgress.set(0.1);
                 axios
-                    .post("purchase_receives", {
+                    .post("sales_receives", {
                         date: this.purchase.date,
-                        purchase_id: this.purchase.purchase_id,
-                        supplier_id: this.purchase.supplier_id,
+                        sales_id: this.purchase.purchase_id,
+                        client_id: this.purchase.supplier_id,
                         warehouse_id: this.purchase.warehouse_id,
                         statut: this.purchase.statut,
                         notes: this.purchase.notes,
@@ -1667,7 +1665,7 @@ export default {
                 this.product.tax_percent = response.data.tax_percent;
                 this.product.unitPurchase = response.data.unitPurchase;
                 this.product.fix_cost = response.data.fix_cost;
-                this.product.purchase_unit_id = response.data.purchase_unit_id;
+                this.product.sale_unit_id = response.data.purchase_unit_id;
                 this.product.is_imei = response.data.is_imei;
                 this.product.imei_number = "";
                 this.product.expiration_date = "";
@@ -1680,7 +1678,7 @@ export default {
         //---------------------------------------Get Elements Purchase ------------------------------\\
         GetElements() {
             axios
-                .get("purchase_receives/create")
+                .get("sales_receives/create")
                 .then((response) => {
                     this.suppliers = response.data.suppliers;
                     this.warehouses = response.data.warehouses;

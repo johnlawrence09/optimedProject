@@ -151,6 +151,7 @@ class PurchasesController extends BaseController
 
     public function store(Request $request)
     {
+        // dd($request);
         $this->authorizeForUser($request->user('api'), 'create', Purchase::class);
 
         request()->validate([
