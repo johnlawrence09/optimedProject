@@ -513,7 +513,9 @@ export default {
         taxe: "",
         tax_percent: "",
         tax_method: "",
-        product_variant_id: ""
+        product_variant_id: "",
+        expiration_date: "",
+        lot_number: ""
       }
     };
   },
@@ -718,7 +720,7 @@ export default {
     //-------------------- get Result Value Search Product
 
     getResultValue(result) {
-      return result.code + " " + "(" + result.name + ")";
+      return result.code;
     },
 
     //--------------------  Submit Search Product
@@ -734,6 +736,8 @@ export default {
         this.product.code = result.code;
         this.product.stock = result.qte_purchase;
         this.product.fix_stock = result.qte;
+        this.product.expiration_date = result.expiration_date;
+        this.product.lot_number = result.lot_number;
         if (result.qte_purchase < 1) {
           this.product.quantity = result.qte_purchase;
         } else {
@@ -991,7 +995,7 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
       axios
-        .get("Products/Warehouse/" + id + "?stock=" + 1)
+        .get("Products/Warehouse/Transfer/" + id + "?stock=" + 1)
          .then(response => {
             this.products = response.data;
              NProgress.done();

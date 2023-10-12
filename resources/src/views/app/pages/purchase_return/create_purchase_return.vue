@@ -758,6 +758,7 @@ export default {
         this.product.stock = result.qte_purchase;
         this.product.fix_stock = result.qte;
         this.product.expiration_date = result.expiration_date;
+        this.product.lot_number = result.lot_number;
         if (result.qte_purchase < 1) {
           this.product.quantity = result.qte_purchase;
         } else {

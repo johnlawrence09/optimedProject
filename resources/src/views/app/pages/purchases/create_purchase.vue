@@ -1175,7 +1175,7 @@ export default {
         // get Result Value Search Products
 
         getResultValue(result) {
-            return result.code + " " + "(" + result.name + ")";
+            return result.code;
         },
 
         // Submit Search Products

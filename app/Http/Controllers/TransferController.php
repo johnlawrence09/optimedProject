@@ -125,7 +125,6 @@ class TransferController extends BaseController
             $order = new Transfer;
 
             $order->date = $request->transfer['date'];
-            $order->Ref = $this->getNumberOrder();
             $order->from_warehouse_id = $request->transfer['from_warehouse'];
             $order->to_warehouse_id = $request->transfer['to_warehouse'];
             $order->items = sizeof($request['details']);
@@ -149,11 +148,21 @@ class TransferController extends BaseController
                     if ($value['product_variant_id'] !== null) {
 
                         //--------- eliminate the quantity ''from_warehouse''--------------\\
-                        $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $request->transfer['from_warehouse'])
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse_from) {
                             if ($unit->operator == '/') {
@@ -165,11 +174,31 @@ class TransferController extends BaseController
                         }
 
                         //--------- ADD the quantity ''TO_warehouse''------------------\\
-                        $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $request->transfer['to_warehouse'])
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['to_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                            if(!$product_warehouse_to) {
+                                $product_warehouse_to = product_warehouse::create([
+                                    'product_id' => $value['product_id'],
+                                    'warehouse_id' => $request->transfer['to_warehouse'],
+                                    'product_variant_id' => $value['product_variant_id'],
+                                    'qte' => 0,
+                                    'expiration_date' => $value['expiration_date'],
+                                    'lot_number' => $value['lot_number'],
+                                ]);
+                            }
+                        } else {
+                            $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['to_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse_to) {
                             if ($unit->operator == '/') {
@@ -183,9 +212,19 @@ class TransferController extends BaseController
                     } else {
 
                         //--------- eliminate the quantity ''from_warehouse''--------------\\
-                        $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $request->transfer['from_warehouse'])
-                            ->where('product_id', $value['product_id'])->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse_from) {
                             if ($unit->operator == '/') {
@@ -197,9 +236,29 @@ class TransferController extends BaseController
                         }
 
                         //--------- ADD the quantity ''TO_warehouse''------------------\\
-                        $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $request->transfer['to_warehouse'])
-                            ->where('product_id', $value['product_id'])->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['to_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                            if(!$product_warehouse_to) {
+                                $product_warehouse_to = product_warehouse::create([
+                                    'product_id' => $value['product_id'],
+                                    'warehouse_id' => $request->transfer['to_warehouse'],
+                                    'product_variant_id' => $value['product_variant_id'],
+                                    'qte' => 0,
+                                    'expiration_date' => $value['expiration_date'],
+                                    'lot_number' => $value['lot_number'],
+                                ]);
+                            }
+                        } else {
+                            $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['to_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                       
 
                         if ($unit && $product_warehouse_to) {
                             if ($unit->operator == '/') {
@@ -214,12 +273,21 @@ class TransferController extends BaseController
                 } elseif ($request->transfer['statut'] == "sent") {
 
                     if ($value['product_variant_id'] !== null) {
-
-                        $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $request->transfer['from_warehouse'])
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse_from) {
                             if ($unit->operator == '/') {
@@ -231,10 +299,19 @@ class TransferController extends BaseController
                         }
 
                     } else {
-
-                        $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $request->transfer['from_warehouse'])
-                            ->where('product_id', $value['product_id'])->first();
+                        if($value['expiration_date']) {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $request->transfer['from_warehouse'])
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse_from) {
                             if ($unit->operator == '/') {
@@ -258,6 +335,8 @@ class TransferController extends BaseController
                 $orderDetails['discount'] = $value['discount'];
                 $orderDetails['discount_method'] = $value['discount_Method'];
                 $orderDetails['total'] = $value['subtotal'];
+                $orderDetails['expiration_date'] = $value['expiration_date'];
+                $orderDetails['lot_number'] = $value['lot_number'];
 
                 TransferDetail::insert($orderDetails);
             }
@@ -320,12 +399,20 @@ class TransferController extends BaseController
 
                     if ($current_Transfer->statut == "completed") {
                         if ($value['product_variant_id'] !== null) {
-
-                            $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
+                            if($value['expiration_date']) { 
+                                $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->first();
+                            }
 
                             if ($unit && $warehouse_from_variant) {
                                 if ($unit->operator == '/') {
@@ -336,12 +423,21 @@ class TransferController extends BaseController
                                 $warehouse_from_variant->save();
                             }
 
-                            $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
-
+                            if($value['expiration_date']) { 
+                                $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->first();
+                            }
+                            
                             if ($unit && $warehouse_To_variant) {
                                 if ($unit->operator == '/') {
                                     $warehouse_To_variant->qte -= $value['quantity'] / $unit->operator_value;
@@ -352,9 +448,19 @@ class TransferController extends BaseController
                             }
 
                         } else {
-                            $warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                                ->where('product_id', $value['product_id'])->first();
+                            if($value['expiration_date']) { 
+                                $warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($unit && $warehouse_from) {
                                 if ($unit->operator == '/') {
@@ -365,9 +471,18 @@ class TransferController extends BaseController
                                 $warehouse_from->save();
                             }
 
-                            $warehouse_To = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
-                                ->where('product_id', $value['product_id'])->first();
+                            if($value['expiration_date']) { 
+                                $warehouse_To = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $warehouse_To = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->first();
+                            }
 
                             if ($unit && $warehouse_To) {
                                 if ($unit->operator == '/') {
@@ -382,11 +497,21 @@ class TransferController extends BaseController
                     } elseif ($current_Transfer->statut == "sent") {
                         if ($value['product_variant_id'] !== null) {
 
-                            $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
+                            if($value['expiration_date']) { 
+                                $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->first();
+                            }
+                           
 
                             if ($unit && $Sent_variant_To) {
                                 if ($unit->operator == '/') {
@@ -397,9 +522,19 @@ class TransferController extends BaseController
                                 $Sent_variant_To->save();
                             }
                         } else {
-                            $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                                ->where('product_id', $value['product_id'])->first();
+                            if($value['expiration_date']) { 
+                                $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($unit && $Sent_variant_From) {
                                 if ($unit->operator == '/') {
@@ -430,11 +565,21 @@ class TransferController extends BaseController
                         if ($product_detail['product_variant_id'] !== null) {
 
                             //--------- eliminate the quantity ''from_warehouse''--------------\\
-                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $Trans['from_warehouse'])
-                                ->where('product_id', $product_detail['product_id'])
-                                ->where('product_variant_id', $product_detail['product_variant_id'])
-                                ->first();
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->first();
+                            }
+                           
 
                             if ($unit && $product_warehouse_from) {
                                 if ($unit->operator == '/') {
@@ -446,11 +591,21 @@ class TransferController extends BaseController
                             }
 
                             //--------- ADD the quantity ''TO_warehouse''------------------\\
-                            $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $Trans['to_warehouse'])
-                                ->where('product_id', $product_detail['product_id'])
-                                ->where('product_variant_id', $product_detail['product_variant_id'])
-                                ->first();
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['to_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['to_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->first();
+                            }
+                           
 
                             if ($unit && $product_warehouse_to) {
                                 if ($unit->operator == '/') {
@@ -464,9 +619,19 @@ class TransferController extends BaseController
                         } else {
 
                             //--------- eliminate the quantity ''from_warehouse''--------------\\
-                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $Trans['from_warehouse'])
-                                ->where('product_id', $product_detail['product_id'])->first();
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($unit && $product_warehouse_from) {
                                 if ($unit->operator == '/') {
@@ -478,9 +643,19 @@ class TransferController extends BaseController
                             }
 
                             //--------- ADD the quantity ''TO_warehouse''------------------\\
-                            $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $Trans['to_warehouse'])
-                                ->where('product_id', $product_detail['product_id'])->first();
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['to_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse_to = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['to_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($unit && $product_warehouse_to) {
                                 if ($unit->operator == '/') {
@@ -495,13 +670,21 @@ class TransferController extends BaseController
                     } elseif ($Trans['statut'] == "sent") {
 
                         if ($product_detail['product_variant_id'] !== null) {
-
-                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $Trans['from_warehouse'])
-                                ->where('product_id', $product_detail['product_id'])
-                                ->where('product_variant_id', $product_detail['product_variant_id'])
-                                ->first();
-
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->where('product_variant_id', $product_detail['product_variant_id'])
+                                    ->first();
+                            }
+                            
                             if ($unit && $product_warehouse_from) {
                                 if ($unit->operator == '/') {
                                     $product_warehouse_from->qte -= $product_detail['quantity'] / $unit->operator_value;
@@ -512,10 +695,19 @@ class TransferController extends BaseController
                             }
 
                         } else {
-
-                            $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $Trans['from_warehouse'])
-                                ->where('product_id', $product_detail['product_id'])->first();
+                            if($product_detail['expiration_date']) {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($product_detail['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $Trans['from_warehouse'])
+                                    ->where('product_id', $product_detail['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($unit && $product_warehouse_from) {
                                 if ($unit->operator == '/') {
@@ -599,12 +791,21 @@ class TransferController extends BaseController
  
                 if ($current_Transfer->statut == "completed") {
                     if ($value['product_variant_id'] !== null) {
-
-                        $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $warehouse_from_variant) {
                             if ($unit->operator == '/') {
@@ -615,11 +816,21 @@ class TransferController extends BaseController
                             $warehouse_from_variant->save();
                         }
 
-                        $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_Transfer->to_warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $warehouse_To_variant) {
                             if ($unit->operator == '/') {
@@ -631,9 +842,19 @@ class TransferController extends BaseController
                         }
 
                     } else {
-                        $warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                            ->where('product_id', $value['product_id'])->first();
+                        if ($value['expiration_date'] !== null) {
+                            $warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $warehouse_from) {
                             if ($unit->operator == '/') {
@@ -644,9 +865,19 @@ class TransferController extends BaseController
                             $warehouse_from->save();
                         }
 
-                        $warehouse_To = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_Transfer->to_warehouse_id)
-                            ->where('product_id', $value['product_id'])->first();
+                        if ($value['expiration_date'] !== null) {
+                            $warehouse_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $warehouse_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $warehouse_To) {
                             if ($unit->operator == '/') {
@@ -660,12 +891,21 @@ class TransferController extends BaseController
 
                 } elseif ($current_Transfer->statut == "sent") {
                     if ($value['product_variant_id'] !== null) {
-
-                        $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $Sent_variant_To) {
                             if ($unit->operator == '/') {
@@ -676,9 +916,19 @@ class TransferController extends BaseController
                             $Sent_variant_To->save();
                         }
                     } else {
-                        $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                            ->where('product_id', $value['product_id'])->first();
+                        if ($value['expiration_date'] !== null) {
+                            $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                       
 
                         if ($unit && $Sent_variant_From) {
                             if ($unit->operator == '/') {
@@ -738,12 +988,21 @@ class TransferController extends BaseController
 
                if ($current_Transfer->statut == "completed") {
                    if ($value['product_variant_id'] !== null) {
-
-                       $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
-                           ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                           ->where('product_id', $value['product_id'])
-                           ->where('product_variant_id', $value['product_variant_id'])
-                           ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $warehouse_from_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                       
 
                        if ($unit && $warehouse_from_variant) {
                            if ($unit->operator == '/') {
@@ -754,11 +1013,21 @@ class TransferController extends BaseController
                            $warehouse_from_variant->save();
                        }
 
-                       $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
-                           ->where('warehouse_id', $current_Transfer->to_warehouse_id)
-                           ->where('product_id', $value['product_id'])
-                           ->where('product_variant_id', $value['product_variant_id'])
-                           ->first();
+                       if ($value['expiration_date'] !== null) {
+                            $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                       } else {
+                            $warehouse_To_variant = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                       }
+                       
 
                        if ($unit && $warehouse_To_variant) {
                            if ($unit->operator == '/') {
@@ -770,9 +1039,19 @@ class TransferController extends BaseController
                        }
 
                    } else {
-                       $warehouse_from = product_warehouse::where('deleted_at', '=', null)
-                           ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                           ->where('product_id', $value['product_id'])->first();
+                        if ($value['expiration_date'] !== null) {
+                            $warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $warehouse_from = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                       
 
                        if ($unit && $warehouse_from) {
                            if ($unit->operator == '/') {
@@ -783,9 +1062,19 @@ class TransferController extends BaseController
                            $warehouse_from->save();
                        }
 
-                       $warehouse_To = product_warehouse::where('deleted_at', '=', null)
-                           ->where('warehouse_id', $current_Transfer->to_warehouse_id)
-                           ->where('product_id', $value['product_id'])->first();
+                       if ($value['expiration_date'] !== null) {
+                            $warehouse_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                       } else {
+                            $warehouse_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->to_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                       }
+                       
 
                        if ($unit && $warehouse_To) {
                            if ($unit->operator == '/') {
@@ -799,12 +1088,21 @@ class TransferController extends BaseController
 
                } elseif ($current_Transfer->statut == "sent") {
                    if ($value['product_variant_id'] !== null) {
-
-                       $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
-                           ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                           ->where('product_id', $value['product_id'])
-                           ->where('product_variant_id', $value['product_variant_id'])
-                           ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $Sent_variant_To = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                       
 
                        if ($unit && $Sent_variant_To) {
                            if ($unit->operator == '/') {
@@ -815,9 +1113,19 @@ class TransferController extends BaseController
                            $Sent_variant_To->save();
                        }
                    } else {
-                       $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
-                           ->where('warehouse_id', $current_Transfer->from_warehouse_id)
-                           ->where('product_id', $value['product_id'])->first();
+                        if ($value['expiration_date'] !== null) {
+                            $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $Sent_variant_From = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Transfer->from_warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                       
 
                        if ($unit && $Sent_variant_From) {
                            if ($unit->operator == '/') {
@@ -926,18 +1234,32 @@ class TransferController extends BaseController
             }
 
             if ($detail->product_variant_id) {
-                $item_product = product_warehouse::where('product_id', $detail->product_id)
-                    ->where('deleted_at', '=', null)
-                    ->where('product_variant_id', $detail->product_variant_id)
-                    ->where('warehouse_id', $Transfer_data->from_warehouse_id)
-                    ->first();
+                if($detail->expiration_date) {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('product_variant_id', $detail->product_variant_id)
+                        ->where('warehouse_id', $Transfer_data->from_warehouse_id)
+                        ->whereDate('expiration_date', Carbon::parse($detail->expiration_date)->format('Y-m-d'))
+                        ->first();
+                } else {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('product_variant_id', $detail->product_variant_id)
+                        ->where('warehouse_id', $Transfer_data->from_warehouse_id)
+                        ->first();
+                }
+               
 
                 $productsVariants = ProductVariant::where('product_id', $detail->product_id)
                     ->where('id', $detail->product_variant_id)->first();
 
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
-                $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
+                $data['code'] = $productsVariants->name . '-' . $detail['product']['code']. ' ('. $detail['product']['name'] .')';
                 $data['product_variant_id'] = $detail->product_variant_id;
+
+                if($detail->expiration_date) {
+                    $data['code'] = $data['code'] . ' - ' . $detail->expiration_date;
+                } 
 
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
@@ -955,8 +1277,12 @@ class TransferController extends BaseController
 
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
                 $data['product_variant_id'] = null;
-                $data['code'] = $detail['product']['code'];
-               
+                $data['code'] = $detail['product']['code']. ' ('. $detail['product']['name'] .')';
+                
+                if($detail->expiration_date) {
+                    $data['code'] = $data['code'] . ' - ' . $detail->expiration_date;
+                } 
+
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
                 } else if ($unit && $unit->operator == '*') {
@@ -976,6 +1302,8 @@ class TransferController extends BaseController
             $data['qte_copy'] = $detail->quantity;
             $data['unitPurchase'] = $unit->ShortName;
             $data['purchase_unit_id'] = $unit->id;
+            $data['expiration_date'] = $detail->expiration_date;
+            $data['lot_number'] = $detail->lot_number;
 
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;

@@ -26,7 +26,7 @@ class Product extends Model
 
     private static function generateReference()
     {
-        $code = 'PROD';
+        $code = 'PROD-';
         $year = date('y');
         $dayOfYear = date('z') + 1;
 

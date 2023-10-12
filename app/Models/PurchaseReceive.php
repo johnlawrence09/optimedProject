@@ -14,7 +14,7 @@ class PurchaseReceive extends Model
     protected $fillable = [
         'date', 'Ref', 'provider_id', 'warehouse_id', 'GrandTotal',
         'discount', 'shipping', 'statut', 'notes', 'TaxNet', 'tax_rate', 'paid_amount',
-        'payment_statut', 'created_at', 'updated_at', 'deleted_at',
+        'payment_statut', 'created_at', 'updated_at', 'deleted_at', 'expiration_date',
     ];
 
     protected $casts = [
@@ -39,7 +39,7 @@ class PurchaseReceive extends Model
 
     private static function generateReference()
     {
-        $code = 'PR';
+        $code = 'PR-';
         $year = date('y');
         $dayOfYear = date('z') + 1;
 

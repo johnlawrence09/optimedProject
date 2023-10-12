@@ -36,7 +36,7 @@ class Purchase extends Model
 
     private static function generateReference()
     {
-        $code = 'PO';
+        $code = 'PO-';
         $year = date('y');
         $dayOfYear = date('z') + 1;
 

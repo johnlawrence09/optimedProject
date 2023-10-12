@@ -191,6 +191,8 @@ class PurchasesReturnController extends BaseController
                     'product_variant_id' => $value['product_variant_id'],
                     'total' => $value['subtotal'],
                     'imei_number' => $value['imei_number'],
+                    'expiration_date' => $value['expiration_date'],
+                    'lot_number' => $value['lot_number'],
                 ];
 
             
@@ -506,12 +508,21 @@ class PurchasesReturnController extends BaseController
 
                 if ($current_PurchaseReturn->statut == "completed") {
                     if ($value['product_variant_id'] !== null) {
-
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
@@ -523,10 +534,19 @@ class PurchasesReturnController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
@@ -590,12 +610,21 @@ class PurchasesReturnController extends BaseController
    
                    if ($current_PurchaseReturn->statut == "completed") {
                        if ($value['product_variant_id'] !== null) {
-   
-                           $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                               ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
-                               ->where('product_id', $value['product_id'])
-                               ->where('product_variant_id', $value['product_variant_id'])
-                               ->first();
+                            if ($value['expiration_date'] !== null) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->first();
+                            }
+                           
    
                            if ($unit && $product_warehouse) {
                                if ($unit->operator == '/') {
@@ -607,10 +636,19 @@ class PurchasesReturnController extends BaseController
                            }
    
                        } else {
-                           $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                               ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
-                               ->where('product_id', $value['product_id'])
-                               ->first();
+                            if ($value['expiration_date'] !== null) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->first();
+                            }
+                            
    
                            if ($unit && $product_warehouse) {
                                if ($unit->operator == '/') {
@@ -800,7 +838,6 @@ class PurchasesReturnController extends BaseController
             $data['name'] = $detail['product']['name'];
             $data['cost'] = $detail->cost;
             $data['unit_purchase'] = $unit->ShortName;
-            $data['unit_purchase'] = $unit->ShortName;
 
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;
@@ -821,7 +858,6 @@ class PurchasesReturnController extends BaseController
             $data['is_imei'] = $detail['product']['is_imei'];
             $data['imei_number'] = $detail->imei_number;
             $data['expiration_date'] = $detail->expiration_date ? $detail->expiration_date : 'N/A';
-
             $details[] = $data;
         }
 
@@ -1019,9 +1055,6 @@ class PurchasesReturnController extends BaseController
                 $data['product_variant_id'] = $detail->product_variant_id;
                 if($detail->expiration_date) {
                     $data['code'] = $data['code'] . ' - ' . $detail->expiration_date;
-                    $data['expiration_date'] = $detail->expiration_date;
-                } else {
-                    $data['expiration_date'] = null;
                 }
                 
 
@@ -1054,9 +1087,6 @@ class PurchasesReturnController extends BaseController
 
                     if($detail->expiration_date) {
                         $data['code'] = $data['code'] . ' - ' . $detail->expiration_date;
-                        $data['expiration_date'] = $detail->expiration_date;
-                    } else {
-                        $data['expiration_date'] = null;
                     }
 
                 if ($unit && $unit->operator == '/') {
@@ -1079,6 +1109,8 @@ class PurchasesReturnController extends BaseController
 
             $data['is_imei'] = $detail['product']['is_imei'];
             $data['imei_number'] = $detail->imei_number;
+            $data['expiration_date'] = $detail->expiration_date;
+            $data['lot_number'] = $detail->lot_number;
             
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;
