@@ -8,7 +8,7 @@ class AdjustmentDetail extends Model
 {
 
     protected $fillable = [
-        'id', 'product_id', 'adjustment_id', 'quantity', 'type', 'product_variant_id',
+        'id', 'product_id', 'adjustment_id', 'quantity', 'type', 'product_variant_id', 'expiration_date', 'lot_number',
     ];
 
     protected $casts = [

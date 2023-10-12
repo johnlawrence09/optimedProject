@@ -1400,6 +1400,7 @@ class TransferController extends BaseController
             $data['quantity'] = $detail->quantity;
             $data['unit'] = $unit->ShortName;
             $data['total'] = $detail->total;
+            $data['expiration_date'] = $detail->expiration_date ? $detail->expiration_date : 'N/A';
 
             $details[] = $data;
         }

@@ -237,6 +237,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('Products/Sales/{id}', 'ProductsController@Products_by_Sales');
     Route::get('Products/Warehouse/Purchase_Return/{id}', 'ProductsController@Products_by_Warehouse_For_Purchase_Return');
     Route::get('Products/Warehouse/Transfer/{id}', 'ProductsController@Products_by_Warehouse_For_Transfer');
+    Route::get('Products/Warehouse/Adjustment/{id}', 'ProductsController@Products_by_Warehouse_For_Adjustment');
 
     // Route::get('Products/filter/{id}/{input}', 'ProductsController@Filter_Products');
 

@@ -12,7 +12,7 @@ class PurchaseReturn extends Model
         'date', 'Ref', 'GrandTotal',
         'user_id', 'discount', 'shipping',
         'warehouse_id', 'provider_id', 'notes', 'TaxNet', 'tax_rate', 'statut',
-        'paid_amount', 'payment_statut', 'created_at', 'updated_at', 'deleted_at', 'expiration_date', 'lot_number',
+        'paid_amount', 'payment_statut', 'created_at', 'updated_at', 'deleted_at'
     ];
 
     protected $casts = [

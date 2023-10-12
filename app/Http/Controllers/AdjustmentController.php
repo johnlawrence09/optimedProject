@@ -112,7 +112,6 @@ class AdjustmentController extends BaseController
         \DB::transaction(function () use ($request) {
             $order = new Adjustment;
             $order->date = $request->date;
-            $order->Ref = $this->getNumberOrder();
             $order->warehouse_id = $request->warehouse_id;
             $order->notes = $request->notes;
             $order->items = sizeof($request['details']);
@@ -128,15 +127,27 @@ class AdjustmentController extends BaseController
                     'product_id' => $value['product_id'],
                     'product_variant_id' => $value['product_variant_id'],
                     'type' => $value['type'],
+                    'expiration_date' => $value['expiration_date'],
+                    'lot_number' => $value['lot_number'],
                 ];
 
                 if ($value['type'] == "add") {
                     if ($value['product_variant_id'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                       
 
                         if ($product_warehouse) {
                             $product_warehouse->qte += $value['quantity'];
@@ -144,10 +155,19 @@ class AdjustmentController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte += $value['quantity'];
@@ -157,11 +177,21 @@ class AdjustmentController extends BaseController
                 } else {
 
                     if ($value['product_variant_id'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte -= $value['quantity'];
@@ -169,10 +199,19 @@ class AdjustmentController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $order->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $order->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                       
 
                         if ($product_warehouse) {
                             $product_warehouse->qte -= $value['quantity'];
@@ -233,11 +272,21 @@ class AdjustmentController extends BaseController
                 if ($value['type'] == "add") {
 
                     if ($value['product_variant_id'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                       
 
                         if ($product_warehouse) {
                             $product_warehouse->qte -= $value['quantity'];
@@ -245,10 +294,19 @@ class AdjustmentController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte -= $value['quantity'];
@@ -257,11 +315,21 @@ class AdjustmentController extends BaseController
                     }
                 } else {
                     if ($value['product_variant_id'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte += $value['quantity'];
@@ -269,10 +337,19 @@ class AdjustmentController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte += $value['quantity'];
@@ -391,11 +468,21 @@ class AdjustmentController extends BaseController
                 if ($value['type'] == "add") {
 
                     if ($value['product_variant_id'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte -= $value['quantity'];
@@ -403,10 +490,19 @@ class AdjustmentController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte -= $value['quantity'];
@@ -415,11 +511,21 @@ class AdjustmentController extends BaseController
                     }
                 } else {
                     if ($value['product_variant_id'] !== null) {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->where('product_variant_id', $value['product_variant_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte += $value['quantity'];
@@ -427,10 +533,19 @@ class AdjustmentController extends BaseController
                         }
 
                     } else {
-                        $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                            ->where('warehouse_id', $current_adjustment->warehouse_id)
-                            ->where('product_id', $value['product_id'])
-                            ->first();
+                        if ($value['expiration_date'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                ->first();
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+                        }
+                        
 
                         if ($product_warehouse) {
                             $product_warehouse->qte += $value['quantity'];
@@ -476,11 +591,21 @@ class AdjustmentController extends BaseController
                     if ($value['type'] == "add") {
 
                         if ($value['product_variant_id'] !== null) {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_adjustment->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
+                            if ($value['expiration_date'] !== null) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($product_warehouse) {
                                 $product_warehouse->qte -= $value['quantity'];
@@ -488,10 +613,19 @@ class AdjustmentController extends BaseController
                             }
 
                         } else {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_adjustment->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->first();
+                            if ($value['expiration_date'] !== null) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($product_warehouse) {
                                 $product_warehouse->qte -= $value['quantity'];
@@ -500,11 +634,21 @@ class AdjustmentController extends BaseController
                         }
                     } else {
                         if ($value['product_variant_id'] !== null) {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_adjustment->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
+                            if ($value['expiration_date'] !== null) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->where('product_variant_id', $value['product_variant_id'])
+                                    ->first();
+                            }
+                            
 
                             if ($product_warehouse) {
                                 $product_warehouse->qte += $value['quantity'];
@@ -512,10 +656,19 @@ class AdjustmentController extends BaseController
                             }
 
                         } else {
-                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                ->where('warehouse_id', $current_adjustment->warehouse_id)
-                                ->where('product_id', $value['product_id'])
-                                ->first();
+                            if ($value['expiration_date'] !== null) {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->whereDate('expiration_date', Carbon::parse($value['expiration_date'])->format('Y-m-d'))
+                                    ->first();
+                            } else {
+                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                    ->where('warehouse_id', $current_adjustment->warehouse_id)
+                                    ->where('product_id', $value['product_id'])
+                                    ->first();
+                            }
+                           
 
                             if ($product_warehouse) {
                                 $product_warehouse->qte += $value['quantity'];
@@ -610,11 +763,21 @@ class AdjustmentController extends BaseController
         foreach ($Adjustment_data['details'] as $detail) {
 
             if ($detail->product_variant_id) {
-                $item_product = product_warehouse::where('product_id', $detail->product_id)
-                    ->where('deleted_at', '=', null)
-                    ->where('product_variant_id', $detail->product_variant_id)
-                    ->where('warehouse_id', $Adjustment_data->warehouse_id)
-                    ->first();
+                if($detail->expiration_date) { 
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('product_variant_id', $detail->product_variant_id)
+                        ->where('warehouse_id', $Adjustment_data->warehouse_id)
+                        ->whereDate('expiration_date', Carbon::parse($detail->expiration_date)->format('Y-m-d'))
+                        ->first();
+                } else {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('product_variant_id', $detail->product_variant_id)
+                        ->where('warehouse_id', $Adjustment_data->warehouse_id)
+                        ->first();
+                }
+                
 
                 $productsVariants = ProductVariant::where('product_id', $detail->product_id)
                     ->where('id', $detail->product_variant_id)->first();
@@ -633,11 +796,21 @@ class AdjustmentController extends BaseController
 
 
             } else {
-                $item_product = product_warehouse::where('product_id', $detail->product_id)
-                    ->where('deleted_at', '=', null)
-                    ->where('warehouse_id', $Adjustment_data->warehouse_id)
-                    ->where('product_variant_id', '=', null)
-                    ->first();
+                if($detail->expiration_date) { 
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('warehouse_id', $Adjustment_data->warehouse_id)
+                        ->where('product_variant_id', '=', null)
+                        ->whereDate('expiration_date', Carbon::parse($detail->expiration_date)->format('Y-m-d'))
+                        ->first();
+                } else {
+                    $item_product = product_warehouse::where('product_id', $detail->product_id)
+                        ->where('deleted_at', '=', null)
+                        ->where('warehouse_id', $Adjustment_data->warehouse_id)
+                        ->where('product_variant_id', '=', null)
+                        ->first();
+                }
+                
                     
                     $data['id'] = $detail->id;
                     $data['detail_id'] = $detail_id += 1;
@@ -707,6 +880,8 @@ class AdjustmentController extends BaseController
                 $data['name'] = $detail['product']['name'];
                 $data['unit'] = $detail['product']['unit']->ShortName;
                 $data['type'] = $detail->type;
+                $data['expiration_date'] = $detail->expiration_date;
+                $data['lot_number'] = $detail->lot_number;
 
             } else {
 
@@ -715,6 +890,8 @@ class AdjustmentController extends BaseController
                 $data['name'] = $detail['product']['name'];
                 $data['type'] = $detail->type;
                 $data['unit'] = $detail['product']['unit']->ShortName;
+                $data['expiration_date'] = $detail->expiration_date;
+                $data['lot_number'] = $detail->lot_number;
             }
 
             $details[] = $data;

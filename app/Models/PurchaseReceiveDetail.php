@@ -11,7 +11,7 @@ class PurchaseReceiveDetail extends Model
 
     protected $fillable = [
         'id', 'purchase_id','purchase_unit_id', 'quantity', 'product_id', 'total', 'product_variant_id',
-        'cost', 'TaxNet', 'discount', 'discount_method', 'tax_method',
+        'cost', 'TaxNet', 'discount', 'discount_method', 'tax_method', 'expiration_date', 'lot_number'
     ];
 
     protected $casts = [

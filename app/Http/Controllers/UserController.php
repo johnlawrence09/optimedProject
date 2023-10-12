@@ -96,15 +96,24 @@ class UserController extends BaseController
         $user['footer'] = Setting::first()->footer;
         $user['developed_by'] = Setting::first()->developed_by;
         $permissions = Auth::user()->roles()->first()->permissions->pluck('name');
-        $products_alerts = product_warehouse::join('products', 'product_warehouse.product_id', '=', 'products.id')
-            ->whereRaw('qte <= stock_alert')
-            ->where('product_warehouse.deleted_at', null)
-            ->count();
+        // $products_alerts = product_warehouse::join('products', 'product_warehouse.product_id', '=', 'products.id')
+        //     // ->whereRaw('qte <= stock_alert')
+        //     ->where('product_warehouse.deleted_at', null)
+        //     ->groupBy('product_warehouse.product_id')
+        //     ->havingRaw('SUM(product_warehouse.qte) <= products.stock_alert')
+        //     ->count();
 
+        $products_alerts = product_warehouse::selectRaw('*, SUM(product_warehouse.qte) as ttl_qte')->with('warehouse', 'product' ,'productVariant')
+            ->join('products', 'product_warehouse.product_id', '=', 'products.id')
+            ->where('product_warehouse.deleted_at', null)
+            ->take('5')
+            ->groupBy('product_warehouse.warehouse_id', 'product_warehouse.product_id')
+            ->havingRaw('SUM(product_warehouse.qte) <= products.stock_alert')
+            ->get();
         return response()->json([
             'success' => true,
             'user' => $user,
-            'notifs' => $products_alerts,
+            'notifs' => count($products_alerts),
             'permissions' => $permissions,
         ]);
     }

@@ -137,7 +137,7 @@
     <b-modal ok-only size="lg" id="showDetails" :title="$t('AdjustmentDetail')">
       <b-row>
         <b-col lg="5" md="12" sm="12" class="mt-3">
-          <table class="table table-hover table-bordered table-sm">
+          <table class="table table-hover table-sm">
             <tbody>
               <!-- date -->
               <tr>
@@ -157,13 +157,14 @@
             </tbody>
           </table>
         </b-col>
-        <b-col lg="7" md="12" sm="12" class="mt-3">
+        <b-col lg="12" md="12" sm="12" class="mt-3">
           <div class="table-responsive">
             <table class="table table-hover table-bordered table-sm">
               <thead>
                 <tr>
                   <th scope="col">{{$t('ProductName')}}</th>
                   <th scope="col">{{$t('CodeProduct')}}</th>
+                  <th scope="col">Expiration Date</th>
                   <th scope="col">{{$t('Quantity')}}</th>
                   <th scope="col">{{$t('type')}}</th>
                 </tr>
@@ -172,6 +173,7 @@
                 <tr v-for="detail in details">
                   <td>{{detail.name}}</td>
                   <td>{{detail.code}}</td>
+                  <td>{{detail.expiration_date}}</td>
                   <td>{{formatNumber(detail.quantity ,2)}} {{detail.unit}}</td>
                   <td v-if="detail.type == 'add'">{{$t('Addition')}}</td>
                   <td v-else-if="detail.type == 'sub'">{{$t('Subtraction')}}</td>

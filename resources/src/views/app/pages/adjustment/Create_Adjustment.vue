@@ -211,7 +211,9 @@ export default {
         product_id: "",
         detail_id: "",
         product_variant_id: "",
-        unit: ""
+        unit: "",
+        lot_number: "",
+        expiration_date: ""
       },
       symbol: ""
     };
@@ -275,6 +277,8 @@ export default {
       } else {
         this.product.code = result.code;
         this.product.current = result.qte;
+        this.product.expiration_date = result.expiration_date;
+        this.product.lot_number = result.lot_number;
         if (result.qte < 1) {
           this.product.quantity = result.qte;
         } else {
@@ -290,7 +294,7 @@ export default {
 
     //---------------------- Event Get Value Search ------------------------------\\
     getResultValue(result) {
-      return result.code + " " + "(" + result.name + ")";
+      return result.code;
     },
 
     //------------- Submit Validation Create Adjustment
@@ -336,7 +340,7 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
       axios
-        .get("Products/Warehouse/" + id + "?stock=" + 0)
+        .get("Products/Warehouse/Adjustment/" + id + "?stock=" + 0)
          .then(response => {
             this.products = response.data;
              NProgress.done();
