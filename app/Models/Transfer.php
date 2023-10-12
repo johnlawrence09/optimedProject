@@ -12,7 +12,7 @@ class Transfer extends Model
     protected $fillable = [
         'id', 'date','user_id', 'from_warehouse_id', 'to_warehouse_id',
         'items', 'statut', 'notes', 'GrandTotal', 'discount', 'shipping', 'TaxNet', 'tax_rate',
-        'created_at', 'updated_at', 'deleted_at', 'expiration_date',
+        'created_at', 'updated_at', 'deleted_at', 'expiration_date', 'lot_number',
     ];
 
     protected $casts = [
