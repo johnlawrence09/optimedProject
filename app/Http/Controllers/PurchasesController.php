@@ -624,7 +624,7 @@ class PurchasesController extends BaseController
         $purchase = Purchase::with('details.product.unitPurchase', 'receipts')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
-
+        
         $details = array();
 
         // Check If User Has Permission view All Records

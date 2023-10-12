@@ -257,18 +257,33 @@
                     </span>
                     <div v-else-if="props.column.field == 'statut'">
                         <span
-                            v-if="props.row.statut == 'completed'"
+                            v-if="props.row.statut == 'received'"
                             class="badge badge-outline-success"
-                            >{{ $t("complete") }}</span
+                            >{{ $t("Received") }}</span
                         >
                         <span
                             v-else-if="props.row.statut == 'pending'"
                             class="badge badge-outline-info"
                             >{{ $t("Pending") }}</span
                         >
-                        <span v-else class="badge badge-outline-warning">{{
-                            $t("Ordered")
-                        }}</span>
+                        <span
+                            v-else-if="props.row.statut == 'ordered'"
+                            class="badge badge-outline-warning"
+                        >
+                            {{ $t("Ordered") }}</span
+                        >
+                        <span
+                            v-else-if="props.row.statut == 'partial'"
+                            class="badge badge-outline-primary"
+                        >
+                            Partial</span
+                        >
+                        <span
+                            v-else-if="props.row.statut == 'revoked'"
+                            class="badge badge-outline-danger"
+                        >
+                            Revoked</span
+                        >
                     </div>
 
                     <div v-else-if="props.column.field == 'payment_status'">

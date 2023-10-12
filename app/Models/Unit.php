@@ -19,4 +19,9 @@ class Unit extends Model
 
     ];
 
+    public function receiveDetail()
+    {
+        return $this->belongsTo('App\Models\SalesReceiveDetail');
+    }
+
 }

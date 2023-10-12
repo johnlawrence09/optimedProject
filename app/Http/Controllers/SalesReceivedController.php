@@ -161,7 +161,7 @@ class SalesReceivedController extends Controller
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          } 
 
-        $sales = Sale::whereIn('statut', ['ordered', 'partial'])->get(['id', 'Ref']);
+        $sales = Sale::whereIn('statut', ['ordered', 'partial'])->whereNull('deleted_at')->get(['id', 'Ref']);
        
 
         $client = Client::where('deleted_at', '=', null)->get(['id', 'name']);
@@ -178,7 +178,6 @@ class SalesReceivedController extends Controller
 
     public function store(Request $request)
     {
-   
     //  $this->authorizeForUser($request->user('api'), 'create', Purchase::class);
         request()->validate([
             'client_id' => 'required',
@@ -191,7 +190,7 @@ class SalesReceivedController extends Controller
             $order = new SalesReceive;
 
             $order->date = $request->date;
-            $order->sales_id = $request->sales_id;
+            $order->sale_id = $request->sale_id;
             $order->client_id = $request->client_id;
             $order->GrandTotal = $request->GrandTotal;
             $order->warehouse_id = $request->warehouse_id;
@@ -205,6 +204,7 @@ class SalesReceivedController extends Controller
             $order->user_id = Auth::user()->id;
 
             $order->save();
+         
           
             $data = $request['details'];
             foreach ($data as $key => $value) {
@@ -225,17 +225,16 @@ class SalesReceivedController extends Controller
                 'expiration_date' => $value['expiration_date'],
                 'lot_number' =>  $value['lot_number'],
             ];
-
-            
                 if ($order->statut == "received") {
                     $sale_detail = SaleDetail::find($value['sale_detail_id']);
                     if($sale_detail->quantity > $sale_detail->quantity_receive) {
-                    $sale_detail->quantity_receive = $sale_detail->quantity_receive - $value['quantity'];
+                    $sale_detail->quantity_receive = $sale_detail->quantity_receive + $value['quantity'];
                     if($sale_detail->quantity_receive == $sale_detail->quantity) {
                         $sale_detail->is_receive = 1;
                     }
                     $sale_detail->save();
                     }
+                   
                     if ($value['product_variant_id'] !== null) {
                         if($value['expiration_date'] !== null) {
                             $product_warehouse = product_warehouse::where('deleted_at', '=', null)
@@ -259,9 +258,12 @@ class SalesReceivedController extends Controller
                                 ->where('warehouse_id', $order->warehouse_id)
                                 ->where('product_id', $value['product_id'])
                                 ->where('product_variant_id', $value['product_variant_id'])
-                                ->first();
+                                ->first(); 
+                                
+                                
                         }
                         
+                       
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
@@ -312,7 +314,7 @@ class SalesReceivedController extends Controller
             
             SalesReceiveDetail::insert($orderDetails);
            
-            $sale = Sale::where('id', $order->sales_id)
+            $sale = Sale::where('id', $order->sale_id)
             ->with(['details' => function ($query) {
                 // Add a query for the 'details' relationship here
                 $query->where('is_receive', 0);

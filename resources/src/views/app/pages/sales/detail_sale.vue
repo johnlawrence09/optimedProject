@@ -12,7 +12,8 @@
                     <router-link
                         v-if="
                             currentUserPermissions &&
-                            currentUserPermissions.includes('Sales_edit')
+                            currentUserPermissions.includes('Sales_edit') &&
+                            sale.statut === 'pending'
                         "
                         title="Edit"
                         class="btn btn-success btn-icon ripple btn-sm"
@@ -27,6 +28,7 @@
                     <button
                         @click="Sale_Email()"
                         class="btn btn-info btn-icon ripple btn-sm"
+                        v-if="sale.statut !== 'pending'"
                     >
                         <i class="i-Envelope-2"></i>
                         {{ $t("Email") }}
@@ -34,6 +36,7 @@
                     <button
                         @click="Sale_SMS()"
                         class="btn btn-secondary btn-icon ripple btn-sm"
+                        v-if="sale.statut !== 'pending'"
                     >
                         <i class="i-Speach-Bubble"></i>
                         SMS
@@ -41,6 +44,7 @@
                     <button
                         @click="Sale_PDF()"
                         class="btn btn-primary btn-icon ripple btn-sm"
+                        v-if="sale.statut !== 'pending'"
                     >
                         <i class="i-File-TXT"></i>
                         PDF
@@ -55,13 +59,30 @@
                     <button
                         v-if="
                             currentUserPermissions &&
-                            currentUserPermissions.includes('Sales_delete')
+                            currentUserPermissions.includes('Sales_delete') &&
+                            sale.statut === 'pending'
                         "
                         @click="Delete_Sale()"
                         class="btn btn-danger btn-icon ripple btn-sm"
                     >
                         <i class="i-Close-Window"></i>
                         {{ $t("Del") }}
+                    </button>
+                    <button
+                        @click="Edit_Status('ordered', $route.params.id)"
+                        class="btn btn-warning btn-icon ripple btn-sm"
+                        v-if="sale.statut === 'pending'"
+                    >
+                        <i class="i-Edit"></i>
+                        Set status to ordered
+                    </button>
+                    <button
+                        @click="Edit_Status('revoked', $route.params.id)"
+                        class="btn btn-danger btn-icon ripple btn-sm"
+                        v-if="sale.statut === 'partial'"
+                    >
+                        <i class="i-Edit"></i>
+                        Cancel remaining
                     </button>
                     <button
                         @click="printPicklist()"
@@ -128,9 +149,9 @@
                             <div>
                                 {{ $t("Status") }} :
                                 <span
-                                    v-if="sale.statut == 'completed'"
+                                    v-if="sale.statut == 'received'"
                                     class="badge badge-outline-success"
-                                    >{{ $t("complete") }}</span
+                                    >{{ $t("Received") }}</span
                                 >
                                 <span
                                     v-else-if="sale.statut == 'pending'"
@@ -138,10 +159,36 @@
                                     >{{ $t("Pending") }}</span
                                 >
                                 <span
+                                    v-else-if="sale.statut == 'partial'"
+                                    class="badge badge-outline-primary"
+                                    >{{ $t("partial") }}</span
+                                >
+                                <span
+                                    v-else-if="sale.statut == 'revoked'"
+                                    class="badge badge-outline-danger"
+                                    >Revoked</span
+                                >
+                                <span
                                     v-else
                                     class="badge badge-outline-warning"
                                     >{{ $t("Ordered") }}</span
                                 >
+                            </div>
+                            <div
+                                v-for="(item, i) in sale.receipts"
+                                :key="item.id"
+                            >
+                                <div>
+                                    DR Reference#{{ i + 1 }} :
+                                    <router-link
+                                        :to="
+                                            '/app/sales_receipt/detail/' +
+                                            item.id
+                                        "
+                                    >
+                                        {{ item.Ref }}
+                                    </router-link>
+                                </div>
                             </div>
                         </b-col>
                     </b-row>
@@ -160,9 +207,9 @@
                                             <th scope="col">
                                                 {{ $t("Net_Unit_Price") }}
                                             </th>
-                                            <th scope="col">
-                                                {{ $t("Quantity") }}
-                                            </th>
+                                            <th scope="col">Received</th>
+                                            <th scope="col">Ordered</th>
+                                            <th scope="col">Balance</th>
                                             <th scope="col">
                                                 {{ $t("UnitPrice") }}
                                             </th>
@@ -206,11 +253,53 @@
                                             <td>
                                                 {{
                                                     formatNumber(
+                                                        detail.quantity_receive,
+                                                        2
+                                                    )
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    formatNumber(
                                                         detail.quantity,
                                                         2
                                                     )
                                                 }}
                                                 {{ detail.unit_sale }}
+                                            </td>
+                                            <td>
+                                                <span
+                                                    v-if="
+                                                        parseFloat(
+                                                            detail.quantity -
+                                                                detail.quantity_receive,
+                                                            2
+                                                        ) === 0
+                                                    "
+                                                    class="badge badge-outline-success"
+                                                >
+                                                    {{
+                                                        formatNumber(
+                                                            detail.quantity -
+                                                                detail.quantity_receive,
+                                                            2
+                                                        )
+                                                    }}
+                                                    {{ detail.unit_purchase }}
+                                                </span>
+                                                <span
+                                                    v-else
+                                                    class="badge badge-outline-danger"
+                                                >
+                                                    {{
+                                                        formatNumber(
+                                                            detail.quantity -
+                                                                detail.quantity_receive,
+                                                            2
+                                                        )
+                                                    }}
+                                                    {{ detail.unit_purchase }}
+                                                </span>
                                             </td>
                                             <td>
                                                 {{ currentUser.currency }}
@@ -505,6 +594,7 @@ export default {
                 .get(`sales/${id}`)
                 .then((response) => {
                     this.sale = response.data.sale;
+                    console.log(this.sale);
                     this.details = response.data.details;
                     this.company = response.data.company;
                     this.isLoading = false;

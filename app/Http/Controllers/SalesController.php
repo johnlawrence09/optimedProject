@@ -15,6 +15,8 @@ use App\Models\Shipment;
 use App\Models\Role;
 use App\Models\Sale;
 use App\Models\SaleDetail;
+use App\Models\SaleReceiveDetail;
+use App\Models\SalesReceive;
 use App\Models\Setting;
 use App\Models\PosSetting;
 use App\Models\User;
@@ -135,6 +137,7 @@ class SalesController extends BaseController
             $item['payment_status'] = $Sale['payment_statut'];
             
             $data[] = $item;
+      
         }
         
         $stripe_key = config('app.STRIPE_KEY');
@@ -743,7 +746,8 @@ class SalesController extends BaseController
         $this->authorizeForUser($request->user('api'), 'view', Sale::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
-        $sale_data = Sale::with('details.product.unitSale')
+
+        $sale_data = Sale::with('details.product.unitSale','receipts')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
 
@@ -772,6 +776,7 @@ class SalesController extends BaseController
         $sale_details['paid_amount'] = number_format($sale_data->paid_amount, 2, '.', '');
         $sale_details['due'] = number_format($sale_details['GrandTotal'] - $sale_details['paid_amount'], 2, '.', '');
         $sale_details['payment_status'] = $sale_data->payment_statut;
+        $sale_details['receipts'] = $sale_data['receipts'];
 
         foreach ($sale_data['details'] as $detail) {
 
@@ -801,6 +806,7 @@ class SalesController extends BaseController
             $data['name'] = $detail['product']['name'];
             $data['price'] = $detail->price;
             $data['unit_sale'] = $unit->ShortName;
+            $data['quantity_receive'] = $detail['quantity_receive'];
 
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;

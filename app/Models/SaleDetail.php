@@ -25,6 +25,8 @@ class SaleDetail extends Model
         'discount' => 'double',
     ];
 
+    
+
     public function sale()
     {
         return $this->belongsTo('App\Models\Sale');
@@ -40,4 +42,8 @@ class SaleDetail extends Model
         return $this->belongsTo('App\Models\ProductVariant');
     }
 
+    public function receipts()
+    {
+        return $this->belongsTo('App\Models\SalesReceive');
+    }
 }

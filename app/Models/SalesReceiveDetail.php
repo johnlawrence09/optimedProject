@@ -28,7 +28,7 @@ class SalesReceiveDetail extends Model
 
     public function sale()
     {
-        return $this->belongsTo('App\Models\Sale');
+        return $this->hasMany('App\Models\Sale');
     }
 
     public function product()

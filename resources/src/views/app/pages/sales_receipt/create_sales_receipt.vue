@@ -5,7 +5,7 @@
             v-if="isLoading"
             class="loading_page spinner spinner-primary mr-3"
         ></div>
-        {{ product }}
+
         <validation-observer ref="create_purchase" v-if="!isLoading">
             <b-form @submit.prevent="Submit_Sales">
                 <b-row>
@@ -1326,6 +1326,7 @@ export default {
         // Submit Search Products
 
         SearchProduct(result) {
+            console.log(result);
             this.product = {};
             if (result.quantity_balance === 0) {
                 this.makeToast(
@@ -1377,6 +1378,7 @@ export default {
 
         Get_Products_By_Sales(id) {
             // Start the progress bar.
+            console.log(id);
             NProgress.start();
             NProgress.set(0.1);
             axios
@@ -1598,7 +1600,7 @@ export default {
                 axios
                     .post("sales_receives", {
                         date: this.purchase.date,
-                        sales_id: this.purchase.purchase_id,
+                        sale_id: this.purchase.purchase_id,
                         client_id: this.purchase.supplier_id,
                         warehouse_id: this.purchase.warehouse_id,
                         statut: this.purchase.statut,
@@ -1627,7 +1629,7 @@ export default {
                         );
 
                         this.SubmitProcessing = false;
-                        this.$router.push({ name: "index_purchases" });
+                        this.$router.push({ name: "index_sales" });
                     })
                     .catch((error) => {
                         // Complete the animation of theprogress bar.
