@@ -752,6 +752,8 @@ class SalesController extends BaseController
             ->findOrFail($id);
 
         $details = array();
+       
+        
 
         // Check If User Has Permission view All Records
         if (!$view_records) {

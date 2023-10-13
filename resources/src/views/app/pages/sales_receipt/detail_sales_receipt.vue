@@ -84,11 +84,10 @@
                                 PO Reference
                                 <router-link
                                     :to="
-                                        '/app/purchases/detail/' +
-                                        purchase.purchase_id
+                                        '/app/sales/detail/' + purchase.sale.id
                                     "
                                 >
-                                    <span> : {{ purchase.purchase.Ref }}</span>
+                                    <span> : {{ purchase.Ref }}</span>
                                 </router-link>
                             </div>
                             <div>
@@ -411,7 +410,8 @@ export default {
             axios
                 .get(`sales_receives/${id}`)
                 .then((response) => {
-                    this.purchase = response.data.purchase;
+                    this.purchase = response.data.sale;
+                    console.log(this.purchase);
                     this.details = response.data.details;
                     this.company = response.data.company;
                     this.isLoading = false;

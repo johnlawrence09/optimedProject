@@ -35,4 +35,9 @@ class SalesReceiveDetail extends Model
     {
         return $this->belongsTo('App\Models\Product');
     }
+
+    public function receipts()
+    {
+        return $this->belongsTo('App\Models\SalesReceive');
+    }
 }

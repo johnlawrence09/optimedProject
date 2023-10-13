@@ -67,9 +67,9 @@ class SalesReceive extends Model
         return $this->hasMany('App\Models\SalesReceiveDetail');
     }
 
-    public function provider()
+    public function client()
     {
-        return $this->belongsTo('App\Models\Provider');
+        return $this->belongsTo('App\Models\Client');
     }
 
     public function facture()
