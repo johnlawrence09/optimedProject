@@ -140,6 +140,7 @@
     <title>Document</title>
   </head>
   <body>
+
     <main class="main-container">
       <header>
         <img class="logo" src="img/optimed-logo.jpg.png" alt="optimed-logo" />
@@ -150,6 +151,7 @@
       <div class="main-header-text">
         <div class="left-text">
           <div class="text-container">
+            {{ $picklists }}
             <p>SHIP TO :</p>
             <div class="address">
               <p class="sub-adress">Hilton Tucson East-</p>
@@ -165,11 +167,11 @@
         <div class="right-text">
           <div class="so-number">
             <p class="number">SO Number</p>
-            <p class="number"><strong>: {{ $so_number }}</strong></p>
+            <p class="number"><strong>: dfdfd</strong></p>
           </div>
           <div class="order-date">
             <p class="number">Order Date</p>
-            <p class="number"><strong>: {{ $date}}</strong></p>
+            <p class="number"><strong>:</strong></p>
           </div>
         </div>
       </div>
@@ -182,17 +184,18 @@
           <th>Expiration Date</th>
           <th>Location</th>
         </tr>
+        @foreach($products as $product)
         <tr>
           <tbody>
-          
-            <td></td>
-            <td>3</td>
-            <td>pcs</td>
-            <td>Dialysis Machine</td>
-            <td>09/23/2023</td>
-            <td>Germany</td>
+                <td></td>
+                <td>{{$product->quantity}}</td>
+                <td>{{$product->ShortName}}</td>
+                <td>{{$product->name}}</td>
+                <td>{{$product->expiration_date}}</td>
+                <td>Germany</td>
           </tbody>
         </tr>
+        @endforeach
       </table>
       <footer>
         <div class="text-item">

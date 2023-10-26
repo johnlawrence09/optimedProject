@@ -101,4 +101,10 @@ class Product extends Model
         return $this->belongsTo('App\Models\Brand');
     }
 
+    public function ProductWarehouse()
+    {
+        return $this->hasMany('App\Models\product_warehouse');
+    }
+
+
 }

@@ -62,7 +62,7 @@ class SalesReceive extends Model
         return $prefix . $paddedNumber;
     }
 
-    public function details()
+    public function detailsRecieved()
     {
         return $this->hasMany('App\Models\SalesReceiveDetail');
     }
@@ -90,5 +90,10 @@ class SalesReceive extends Model
     public function sale()
     {
         return $this->belongsTo('App\Models\Sale');
+    }
+
+    public function details()
+    {
+        return $this->hasMany('App\Models\SaleDetail','sale_id','sale_id');
     }
 }

@@ -513,6 +513,7 @@ export default {
                 .get(`purchases/${id}`)
                 .then((response) => {
                     this.purchase = response.data.purchase;
+                    console.log(this.purchase);
                     this.details = response.data.details;
                     this.company = response.data.company;
                     this.isLoading = false;

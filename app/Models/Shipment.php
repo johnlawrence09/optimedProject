@@ -22,7 +22,7 @@ class Shipment extends Model
 
     public function sale()
     {
-        return $this->belongsTo('App\Models\Sale');
+        return $this->hasOne('App\Models\Sale');
     }
 
     public function user()

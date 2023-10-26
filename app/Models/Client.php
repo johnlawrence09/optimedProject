@@ -18,4 +18,9 @@ class Client extends Model
     protected $casts = [
         'code' => 'integer',
     ];
+
+    public function saleReceive()
+    {
+        return $this->hasMany('App\Models\SalesReceive');
+    }
 }

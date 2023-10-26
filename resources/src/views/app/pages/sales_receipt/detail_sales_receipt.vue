@@ -411,8 +411,8 @@ export default {
                 .get(`sales_receives/${id}`)
                 .then((response) => {
                     this.purchase = response.data.sale;
-                    console.log(this.purchase);
                     this.details = response.data.details;
+                    console.log(this.details);
                     this.company = response.data.company;
                     this.isLoading = false;
                 })

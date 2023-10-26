@@ -84,5 +84,15 @@ class Sale extends Model
         return $this->hasMany('App\Models\SalesReceive');
     }
 
+    public function productwarehouse()
+    {
+        return $this->hasMany('App\Models\product_warehouse');
+    }
+
+    public function shipment()
+    {
+        return $this->hasOne('App\Models\Shipment');
+    }
+
 
 }

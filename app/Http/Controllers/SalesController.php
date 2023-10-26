@@ -747,12 +747,14 @@ class SalesController extends BaseController
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
 
-        $sale_data = Sale::with('details.product.unitSale','receipts')
+        $sale_data = Sale::with('details.product.unitSale','receipts.detailsRecieved')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
+       
+        // dd($sale_data);
 
         $details = array();
-       
+    
         
 
         // Check If User Has Permission view All Records
@@ -779,7 +781,7 @@ class SalesController extends BaseController
         $sale_details['due'] = number_format($sale_details['GrandTotal'] - $sale_details['paid_amount'], 2, '.', '');
         $sale_details['payment_status'] = $sale_data->payment_statut;
         $sale_details['receipts'] = $sale_data['receipts'];
-
+       
         foreach ($sale_data['details'] as $detail) {
 
              //check if detail has sale_unit_id Or Null
@@ -1063,36 +1065,7 @@ class SalesController extends BaseController
 
     }
 
-    public function print_picklist (Request $request, $id) {
-        
-        
-        $products = DB::table('products as a')
-            ->select("*",'a.name')
-            ->leftJoin('sale_details','a.id','=','sale_details.product_id')
-            ->join('units as u','a.unit_id','=','u.id')
-            ->join('sales','sale_details.sale_id','=','sales.id')
-            ->where('sales.id','=', $id)->get();
-
-        $date = date_create($products[0]->date);
-        $date_formated = date_format($date, "m/d/Y");
-
-        $sales = DB::table('sales')->where('id','=', $request->id)->get();
-
-        return view('pdf.picklist', [ 
-            'so_number' => $sales[0]->Ref,
-            'products' => $products,
-            'date' =>  $date_formated
-        ]);
-
-        // $pdf = PDF::loadView('pdf.picklist', [ 
-        //     'so_number' => $sales[0]->Ref,
-        //     'products' => $products,
-        //     'date' =>  $date_formated
-        // ])->setOptions(['defaultFont' => 'Roboto']);
-        
-        // return $pdf->download('picklist.pdf');
-        
-    }
+    
 
     //----------------Show Form Create Sale ---------------\\
 

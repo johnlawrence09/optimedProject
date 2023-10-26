@@ -20,6 +20,7 @@ use App\utils\helpers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SalesReceivedController extends Controller
 {
@@ -519,15 +520,8 @@ class SalesReceivedController extends Controller
         $sale = SalesReceive::with('details.product.unitPurchase', 'sale')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
+
         $details = array();
-  
-       
-        
-        // Check If User Has Permission view All Records
-        // if (!$view_records) {
-        //     // Check If User->id === purchase->id
-        //     $this->authorizeForUser($request->user('api'), 'check_record', $purchase);
-        // }
 
         $sale_data['Ref'] = $sale->Ref;
         $sale_data['sale_id'] = $sale->sale_id;
@@ -548,6 +542,8 @@ class SalesReceivedController extends Controller
         $sale_data['due'] = number_format($sale_data['GrandTotal'] - $sale_data['paid_amount'], 2, '.', '');
         $sale_data['payment_status'] = $sale->payment_statut;
         $sale_data['sale'] = $sale->sale;
+
+        // dd($sale['details']);
 
         foreach ($sale['details'] as $detail) {
 
@@ -577,7 +573,6 @@ class SalesReceivedController extends Controller
             $data['total'] = $detail->total;
             $data['name'] = $detail['product']['name'];
             $data['cost'] = $detail->cost;
-            $data['cost'] = $detail->cost;
             $data['unit_sale'] = $unit->ShortName;
 
             if ($detail->discount_method == '2') {
@@ -603,8 +598,9 @@ class SalesReceivedController extends Controller
             $data['imei_number'] = $detail->imei_number;
 
             $details[] = $data;
-          
         }
+
+        // dd($details);
 
         $company = Setting::where('deleted_at', '=', null)->first();
 
@@ -704,6 +700,38 @@ class SalesReceivedController extends Controller
             'details' => $details,
         ]);
         return $pdf->download('Purchase.pdf');
+
+    }
+
+    public function picklist (Request $request, $id) {
+        
+        $role = Auth::user()->roles()->first();
+        $view_records = Role::findOrFail($role->id)->inRole('record_view');
+
+        $sale_data = Sale::with('receipts.detailsRecieved.product.unit','warehouse','client','shipment')
+        ->where('deleted_at','=', null)->findOrFail($id);
+
+        $list['warehouse'] = $sale_data['warehouse']->name;
+        $list['client'] = $sale_data['client']->name;
+        $list['ShipTo'] = $sale_data['shipment']->shipping_address;
+        
+            foreach($sale_data['receipts'] as $data) {
+                $list['Date'] = $data['date'];
+                $list['Ref'] = $data['Ref'];
+    
+                foreach($data['detailsRecieved'] as $detail) {
+                   $list['product_name'] = $detail['product']->name;
+                   $list['unit'] = $detail['product']['unit']->ShortName;
+                   $list['expiration_date'] = $detail['expiration_date'];
+                   $list['quantity'] = $detail['quantity'];
+
+                   $pick_list[] = $list; 
+                }
+        }
+
+        return view('pdf.picklist', [ 
+            'picklists' =>   $pick_list, 
+        ]);
 
     }
 
