@@ -28,6 +28,7 @@ Route::get('password/find/{token}', 'PasswordResetController@find');
 
 $installed = Storage::disk('public')->exists('installed');
 
+
 if ($installed === false) {
     Route::get('/setup', [
         'uses' => 'SetupController@viewCheck',

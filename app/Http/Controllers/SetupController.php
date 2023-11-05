@@ -61,12 +61,16 @@ class SetupController extends Controller
     public function viewStep1()
     {
 
+
+
         $data = array(
             "APP_NAME" => session('env.APP_NAME') ? str_replace('"', '', session('env.APP_NAME')) : str_replace('"', '', config('app.name')),
             "APP_ENV" => session('env.APP_ENV') ? session('env.APP_ENV') : config('app.env'),
             "APP_DEBUG" => session('env.APP_DEBUG') ? session('env.APP_DEBUG') : config('app.debug'),
             "APP_KEY" => session('env.APP_KEY') ? session('env.APP_KEY') : config('app.key'),
         );
+
+        
 
         return view('setup.step1', compact('data'));
     }

@@ -640,6 +640,7 @@ class ProductsController extends BaseController
         }
 
         $data[] = $item;
+        
 
         return response()->json($data[0]);
 
@@ -1280,6 +1281,7 @@ class ProductsController extends BaseController
             $data = [];
             $sale = Sale::find($id);
             $product_ids = SaleDetail::where('is_receive', 0)->where('sale_id', $id)->pluck('product_id');
+
              
             $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
                 ->whereIn('product_id', $product_ids)
@@ -1289,11 +1291,15 @@ class ProductsController extends BaseController
                          return $query->where('qte', '>', 0);
                      }
                  })->get();
+
+            
             
             $sale_details = SaleDetail::where('is_receive', 0)
                 ->where('sale_id', $sale->id)
                 ->with('product', 'productVariant')
                 ->get();
+
+            dd($sale_details);
             
             foreach ($sale_details as $sale_detail) {
                 if($sale_detail->product_variant_id) {
@@ -1348,6 +1354,9 @@ class ProductsController extends BaseController
                 }
     
                 $data[] = $item;
+
+                dd($data);
+
                
             }
             return response()->json([

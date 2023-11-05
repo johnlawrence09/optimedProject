@@ -1326,7 +1326,7 @@ export default {
         // Submit Search Products
 
         SearchProduct(result) {
-            console.log(result);
+
             this.product = {};
             if (result.quantity_balance === 0) {
                 this.makeToast(
@@ -1378,7 +1378,6 @@ export default {
 
         Get_Products_By_Sales(id) {
             // Start the progress bar.
-            console.log(id);
             NProgress.start();
             NProgress.set(0.1);
             axios

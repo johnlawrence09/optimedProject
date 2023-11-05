@@ -22,6 +22,7 @@ class UpdateController extends Controller
     
     public function lastStep(Request $request)
     {
+
         ini_set('max_execution_time', 600); //600 seconds = 10 minutes 
 
         try {
