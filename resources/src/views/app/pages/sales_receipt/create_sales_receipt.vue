@@ -42,7 +42,7 @@
                                     </validation-provider>
                                 </b-col>
 
-                                <!-- Purchase Order -->
+                                <!-- Sale Order -->
                                 <b-col lg="3" md="3" sm="12" class="mb-3">
                                     <validation-provider
                                         name="PO_Refecence"
@@ -1320,7 +1320,9 @@ export default {
         // get Result Value Search Products
 
         getResultValue(result) {
-            return result.code + " " + "(" + result.name + ")";
+            // return result.code + " " + "(" + result.name + ")";
+            return `${result.code} ${result.name}`;
+
         },
 
         // Submit Search Products
@@ -1384,6 +1386,7 @@ export default {
                 .get("Products/Sales/" + id + "?stock=" + 0)
                 .then((response) => {
                     this.products = response.data.products;
+                    console.log(this.products);
                     this.purchase.warehouse_id = response.data.warehouse_id;
                     this.purchase.supplier_id = response.data.provider_id;
                     NProgress.done();

@@ -640,7 +640,6 @@ class ProductsController extends BaseController
         }
 
         $data[] = $item;
-        
 
         return response()->json($data[0]);
 
@@ -1182,7 +1181,7 @@ class ProductsController extends BaseController
 
             $data[] = $item;
         
-           
+        //    dd($data);
         }
 
         return response()->json($data);
@@ -1293,15 +1292,14 @@ class ProductsController extends BaseController
                  })->get();
 
             
-            
             $sale_details = SaleDetail::where('is_receive', 0)
                 ->where('sale_id', $sale->id)
-                ->with('product', 'productVariant')
+                ->with('product.ProductWarehouse', 'productVariant')
                 ->get();
 
-            dd($sale_details);
-            
+
             foreach ($sale_details as $sale_detail) {
+
                 if($sale_detail->product_variant_id) {
                     $item['product_variant_id'] = $sale_detail->product_variant_id;
                     $item['code'] = $sale_detail['productVariant']->name . '-' . $sale_detail['product']->code;
@@ -1311,7 +1309,7 @@ class ProductsController extends BaseController
                     $item['code'] = $sale_detail['product']->code;
                     $item['Variant'] = null;
                 }
-                $item['sale_detail_id'] = $sale_detail->id;
+
                 $item['id'] = $sale_detail->product_id;
                 $item['name'] = $sale_detail['product']->name;
                 $item['barcode'] = $sale_detail['product']->code;
@@ -1321,7 +1319,8 @@ class ProductsController extends BaseController
                 $item['order_quantity'] = $sale_detail->quantity; 
                 $firstimage = explode(',', $sale_detail['product']->image);
                 $item['image'] = $firstimage[0];
-    
+
+
                 if ($sale_detail['product']['unitSale']->operator == '/') {
                     $item['qte_sale'] = $sale_detail->quantity_receive * $sale_detail['product']['unitSale']->operator_value;
                     $price = $sale_detail['product']->price / $sale_detail['product']['unitSale']->operator_value;
@@ -1335,7 +1334,11 @@ class ProductsController extends BaseController
                 } else {
                     $item['qte_purchase'] = round($sale_detail->quantity_receive / $sale_detail['product']['unitPurchase']->operator_value, 5);
                 }
-    
+
+                foreach($sale_detail['product']['ProductWarehouse'] as $prodWarehouse) {
+                    $item['expiraton'] = $prodWarehouse->expiration_date;
+                }
+
                 $item['qte'] = $sale_detail->quantity_receive;
                 $item['unitSale'] = $sale_detail['product']['unitSale']->ShortName;
                 $item['unitPurchase'] = $sale_detail['product']['unitPurchase']->ShortName;
@@ -1352,10 +1355,8 @@ class ProductsController extends BaseController
                 } else {
                     $item['Net_price'] = $price;
                 }
-    
-                $data[] = $item;
 
-                dd($data);
+                $data[] = $item;
 
                
             }
@@ -1373,10 +1374,12 @@ class ProductsController extends BaseController
     public function show($id)
     {
 
-        $Product_data = Product::with('unit')
+        $Product_data = Product::with('unit','ProductWarehouse')
             ->where('id', $id)
             ->where('deleted_at', '=', null)
             ->first();
+
+      
 
         $data = [];
         $item['id'] = $Product_data['id'];
@@ -1443,7 +1446,17 @@ class ProductsController extends BaseController
             $item['tax_cost'] = 0;
         }
 
+        foreach($Product_data['ProductWarehouse'] as $productExpired) {
+            $item['Expiration_date'] = $productExpired->expiration_date;
+            $item['lot_number'] = $productExpired->lot_number;
+
+       }
+
         $data[] = $item;
+
+
+        // Show Product in the table
+        dd($data); 
 
         return response()->json($data[0]);
     }
