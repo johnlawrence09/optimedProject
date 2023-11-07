@@ -1456,7 +1456,7 @@ class ProductsController extends BaseController
 
 
         // Show Product in the table
-        dd($data); 
+      
 
         return response()->json($data[0]);
     }

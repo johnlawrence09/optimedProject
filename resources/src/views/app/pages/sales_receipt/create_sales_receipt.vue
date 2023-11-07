@@ -213,6 +213,8 @@
                                     </div>
                                 </b-col>
 
+                                {{ details }}
+
                                 <!-- Order products  -->
                                 <b-col md="12">
                                     <h5>{{ $t("order_products") }} *</h5>
@@ -417,18 +419,9 @@
                                                                 }"
                                                                 v-slot="validationContext"
                                                             >
-                                                                <b-form-input
-                                                                    :state="
-                                                                        getValidationState(
-                                                                            validationContext
-                                                                        )
-                                                                    "
-                                                                    aria-describedby="date-feedback"
-                                                                    type="date"
-                                                                    v-model="
-                                                                        detail.expiration_date
-                                                                    "
-                                                                ></b-form-input>
+                                                            <span>
+                                                                {{ detail.expiration_date }}
+                                                            </span>
                                                                 <b-form-invalid-feedback
                                                                     id="date-feedback"
                                                                     >{{
@@ -1672,7 +1665,7 @@ export default {
                 this.product.sale_unit_id = response.data.purchase_unit_id;
                 this.product.is_imei = response.data.is_imei;
                 this.product.imei_number = "";
-                this.product.expiration_date = "";
+                this.product.expiration_date = response.data.Expiration_date;
                 this.product.lot_number = "";
                 this.add_product();
                 this.Calcul_Total();
