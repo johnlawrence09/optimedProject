@@ -151,7 +151,6 @@
       <div class="main-header-text">
         <div class="left-text">
           <div class="text-container">
-            {{ $picklists }}
             <p>SHIP TO :</p>
             <div class="address">
               <p class="sub-adress">Hilton Tucson East-</p>
@@ -184,19 +183,19 @@
           <th>Expiration Date</th>
           <th>Location</th>
         </tr>
-        @foreach($products as $product)
+       
         <tr>
           <tbody>
                 <td></td>
-                <td>{{$product->quantity}}</td>
-                <td>{{$product->ShortName}}</td>
-                <td>{{$product->name}}</td>
-                <td>{{$product->expiration_date}}</td>
+                <td>$product->quantity</td>
+                <td>$product->ShortName</td>
+                <td>$product->name</td>
+                <td>$product->expiration_date</td>
                 <td>Germany</td>
           </tbody>
         </tr>
-        @endforeach
       </table>
+
       <footer>
         <div class="text-item">
           <p>No. of ITEMS to Prepare : <strong>1279</strong></p>

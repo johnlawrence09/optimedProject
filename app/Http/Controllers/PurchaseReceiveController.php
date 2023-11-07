@@ -513,6 +513,8 @@ class PurchaseReceiveController extends Controller
 
         $details = array();
 
+        dd($purchase['details']);
+
         // Check If User Has Permission view All Records
         // if (!$view_records) {
         //     // Check If User->id === purchase->id
@@ -593,6 +595,7 @@ class PurchaseReceiveController extends Controller
             $data['imei_number'] = $detail->imei_number;
 
             $details[] = $data;
+            dd($details);
         }
 
         $company = Setting::where('deleted_at', '=', null)->first();

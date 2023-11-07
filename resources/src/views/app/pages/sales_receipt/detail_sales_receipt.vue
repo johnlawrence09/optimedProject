@@ -53,7 +53,7 @@
                 <div class="invoice-print">
                     <b-row class="justify-content-md-center">
                         <h4 class="font-weight-bold">
-                            Purchase Receipt Detail : {{ purchase.Ref }}
+                            Sale Receipt Detail : {{ purchase.Ref }}
                         </h4>
                     </b-row>
                     <hr />
@@ -78,10 +78,10 @@
                         </b-col>
                         <b-col lg="4" md="4" sm="12" class="mb-4">
                             <h5 class="font-weight-bold">
-                                Purchase Receipt Info
+                                Sale Receipt Info
                             </h5>
                             <div>
-                                PO Reference
+                                SO Reference
                                 <router-link
                                     :to="
                                         '/app/sales/detail/' + purchase.sale.id
@@ -407,6 +407,7 @@ export default {
         //----------------------------------- Get Details Purchase ------------------------------\\
         Get_Details() {
             let id = this.$route.params.id;
+            console.log(id);
             axios
                 .get(`sales_receives/${id}`)
                 .then((response) => {

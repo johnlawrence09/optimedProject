@@ -42,7 +42,7 @@
                                     </validation-provider>
                                 </b-col>
 
-                                <!-- Sale Order -->
+                                <!-- Purchase Order -->
                                 <b-col lg="3" md="3" sm="12" class="mb-3">
                                     <validation-provider
                                         name="PO_Refecence"
@@ -212,8 +212,6 @@
                                         </ul>
                                     </div>
                                 </b-col>
-
-                                {{ details }}
 
                                 <!-- Order products  -->
                                 <b-col md="12">
@@ -386,12 +384,15 @@
                                                                 name="lot_number"
                                                                 v-slot="validationContext"
                                                             >
-                                                                <b-form-input
+                                                            <span>
+                                                                {{ detail.lot_number }}
+                                                            </span>
+                                                                <!-- <b-form-input
                                                                     aria-describedby="lot-feedback"
                                                                     v-model="
                                                                         detail.lot_number
                                                                     "
-                                                                ></b-form-input>
+                                                                ></b-form-input> -->
                                                                 <b-form-invalid-feedback
                                                                     id="lot-feedback"
                                                                     >{{
@@ -412,24 +413,38 @@
                                                                 1
                                                             "
                                                         >
-                                                            <validation-provider
+                                                            <!-- <validation-provider
                                                                 name="expiration_date"
                                                                 :rules="{
                                                                     required: true,
                                                                 }"
                                                                 v-slot="validationContext"
-                                                            >
+                                                            > -->
                                                             <span>
-                                                                {{ detail.expiration_date }}
+                                                                {{ 
+                                                                    detail.expiration_date
+                                                                }}
                                                             </span>
-                                                                <b-form-invalid-feedback
+                                                                <!-- <b-form-input
+                                                                    :state="
+                                                                        getValidationState(
+                                                                            validationContext
+                                                                        )
+                                                                    "
+                                                                    aria-describedby="date-feedback"
+                                                                    type="date"
+                                                                    v-model="
+                                                                        detail.expiration_date
+                                                                    "
+                                                                ></b-form-input> -->
+                                                                <!-- <b-form-invalid-feedback
                                                                     id="date-feedback"
                                                                     >{{
                                                                         validationContext
                                                                             .errors[0]
                                                                     }}</b-form-invalid-feedback
                                                                 >
-                                                            </validation-provider>
+                                                            </validation-provider> -->
                                                         </div>
                                                         <div v-else>
                                                             <span>N/A</span>
@@ -1313,15 +1328,13 @@ export default {
         // get Result Value Search Products
 
         getResultValue(result) {
-            // return result.code + " " + "(" + result.name + ")";
-            return `${result.code} ${result.name}`;
-
+            return result.code + " " + "(" + result.name + ")";
         },
 
         // Submit Search Products
 
         SearchProduct(result) {
-
+          
             this.product = {};
             if (result.quantity_balance === 0) {
                 this.makeToast(
@@ -1666,7 +1679,7 @@ export default {
                 this.product.is_imei = response.data.is_imei;
                 this.product.imei_number = "";
                 this.product.expiration_date = response.data.Expiration_date;
-                this.product.lot_number = "";
+                this.product.lot_number = response.data.lot_number;
                 this.add_product();
                 this.Calcul_Total();
             });

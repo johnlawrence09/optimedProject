@@ -213,6 +213,8 @@
                                     </div>
                                 </b-col>
 
+                                {{ details }}
+
                                 <!-- Order products  -->
                                 <b-col md="12">
                                     <h5>{{ $t("order_products") }} *</h5>
@@ -1312,6 +1314,7 @@ export default {
         // Submit Search Products
 
         SearchProduct(result) {
+            
             this.product = {};
             if (result.quantity_balance === 0) {
                 this.makeToast(

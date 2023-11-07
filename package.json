@@ -8,6 +8,7 @@
         "hot": "mix watch --hot",
         "prod": "npm run production",
         "production": "mix --production"
+        
     },
     "dependencies": {
         "@johmun/vue-tags-input": "^2.1.0",

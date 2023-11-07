@@ -179,7 +179,7 @@ class SalesReceivedController extends Controller
 
     public function store(Request $request)
     {
-
+        
     //  $this->authorizeForUser($request->user('api'), 'create', Purchase::class);
         request()->validate([
             'client_id' => 'required',
@@ -513,13 +513,14 @@ class SalesReceivedController extends Controller
  
     public function show(Request $request, $id)
     {
-
+       
         // $this->authorizeForUser($request->user('api'), 'view', Purchase::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
-        $sale = SalesReceive::with('details.product.unitPurchase', 'sale')
+        $sale = SalesReceive::with('detailsRecieved.product.unitPurchase', 'sale')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
+
 
         $details = array();
 
@@ -545,7 +546,7 @@ class SalesReceivedController extends Controller
 
         // dd($sale['details']);
 
-        foreach ($sale['details'] as $detail) {
+        foreach ($sale['detailsRecieved'] as $detail) {
 
              //-------check if detail has purchase_unit_id Or Null
              if($detail->sale_unit_id !== null){
@@ -600,7 +601,6 @@ class SalesReceivedController extends Controller
             $details[] = $data;
         }
 
-        // dd($details);
 
         $company = Setting::where('deleted_at', '=', null)->first();
 
@@ -713,8 +713,9 @@ class SalesReceivedController extends Controller
 
         $list['warehouse'] = $sale_data['warehouse']->name;
         $list['client'] = $sale_data['client']->name;
-        $list['ShipTo'] = $sale_data['shipment']->shipping_address;
-        
+
+        $list['ShipTo'] = $sale_data['shipment'] == null ? "" : $sale_data['shipment']->shipping_address;
+       
             foreach($sale_data['receipts'] as $data) {
                 $list['Date'] = $data['date'];
                 $list['Ref'] = $data['Ref'];
@@ -728,6 +729,7 @@ class SalesReceivedController extends Controller
                    $pick_list[] = $list; 
                 }
         }
+
 
         return view('pdf.picklist', [ 
             'picklists' =>   $pick_list, 

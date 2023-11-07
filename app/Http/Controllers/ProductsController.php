@@ -1181,7 +1181,7 @@ class ProductsController extends BaseController
 
             $data[] = $item;
         
-        //    dd($data);
+
         }
 
         return response()->json($data);
@@ -1310,6 +1310,7 @@ class ProductsController extends BaseController
                     $item['Variant'] = null;
                 }
 
+                $item['sale_detail_id'] = $sale_detail->id;
                 $item['id'] = $sale_detail->product_id;
                 $item['name'] = $sale_detail['product']->name;
                 $item['barcode'] = $sale_detail['product']->code;
@@ -1357,7 +1358,7 @@ class ProductsController extends BaseController
                 }
 
                 $data[] = $item;
-
+               
                
             }
             return response()->json([
@@ -1454,9 +1455,9 @@ class ProductsController extends BaseController
 
         $data[] = $item;
 
-
+     
         // Show Product in the table
-      
+        // dd($data);
 
         return response()->json($data[0]);
     }
