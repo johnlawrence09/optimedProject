@@ -69,7 +69,7 @@
                         {{ $t("Del") }}
                     </button>
                     <button
-                        @click="Edit_Status('ordered', $route.params.id)"
+                        @click="Edit_Status('`ordered`', $route.params.id)"
                         class="btn btn-warning btn-icon ripple btn-sm"
                         v-if="sale.statut === 'pending'"
                     >
@@ -207,7 +207,7 @@
                                             <th scope="col">
                                                 {{ $t("Net_Unit_Price") }}
                                             </th>
-                                            <th scope="col">Received</th>
+                                            <th scope="col">Delivered</th>
                                             <th scope="col">Ordered</th>
                                             <th scope="col">Balance</th>
                                             <th scope="col">
@@ -639,6 +639,38 @@ export default {
                 }
             });
         },
+
+        Edit_Status(status, id) {
+            console.log('test');
+            NProgress.start();
+            NProgress.set(0.1);
+            axios
+                .put("sales/edit/status/" + id, {
+                    statut: status,
+                })
+                .then((response) => {
+                    // Complete the animation of the  progress bar.
+                    this.paymentProcessing = false;
+                    setTimeout(() => NProgress.done(), 500);
+                    this.makeToast(
+                        "success",
+                        "Sale status edited successfully",
+                        "Success"
+                    );
+                    this.$router.push({ name: "index_sales" });
+                })
+                .catch((error) => {
+                    // Complete the animation of the  progress bar.
+                    setTimeout(() => NProgress.done(), 500);
+                    this.makeToast(
+                        "danger",
+                        this.$t("InvalidData"),
+                        this.$t("Failed")
+                    );
+                });
+        },
+
+
     }, //end Methods
 
     //----------------------------- Created function-------------------
