@@ -15,9 +15,9 @@ class AddForeignKeysToQuotationsTable extends Migration {
 	{
 		Schema::table('quotations', function(Blueprint $table)
 		{
-			$table->foreign('client_id', 'client_id _quotation')->references('id')->on('clients')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'user_id_quotation')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('warehouse_id', 'warehouse_id_quotation')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('client_id', 'client_id _quotation')->references('id')->on('clients')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'user_id_quotation')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('warehouse_id', 'warehouse_id_quotation')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

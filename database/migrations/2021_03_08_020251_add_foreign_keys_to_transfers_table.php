@@ -15,9 +15,9 @@ class AddForeignKeysToTransfersTable extends Migration {
 	{
 		Schema::table('transfers', function(Blueprint $table)
 		{
-			$table->foreign('from_warehouse_id', 'from_warehouse_id')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('to_warehouse_id', 'to_warehouse_id')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'user_id_transfers')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('from_warehouse_id', 'from_warehouse_id')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('to_warehouse_id', 'to_warehouse_id')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'user_id_transfers')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

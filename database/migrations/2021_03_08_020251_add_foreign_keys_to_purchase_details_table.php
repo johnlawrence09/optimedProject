@@ -15,8 +15,8 @@ class AddForeignKeysToPurchaseDetailsTable extends Migration {
 	{
 		Schema::table('purchase_details', function(Blueprint $table)
 		{
-			$table->foreign('product_id', 'product_id')->references('id')->on('products')->onUpdate('CASCADE')->onDelete('RESTRICT');
-			$table->foreign('purchase_id', 'purchase_id')->references('id')->on('purchases')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('product_id', 'product_id')->references('id')->on('products')->onUpdate('CASCADE')->onDelete('NO ACTION');
+			$table->foreign('purchase_id', 'purchase_id')->references('id')->on('purchases')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 			$table->foreign('product_variant_id', 'purchase_product_variant_id')->references('id')->on('product_variants')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}

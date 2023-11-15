@@ -23,6 +23,13 @@ class CreateAdjustmentDetailsTable extends Migration {
 			$table->float('quantity', 10, 0);
 			$table->string('type', 192);
 			$table->timestamps(6);
+
+			// $table->foreign('adjustment_id', 'adjust_adjustment_id')
+            // ->references('id')
+            // ->on('adjustments');
+            // // ->onDelete('NO ACTION')  
+            // // ->onUpdate('NO ACTION'); 
+
 		});
 	}
 

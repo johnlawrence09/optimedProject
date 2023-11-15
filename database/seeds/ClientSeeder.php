@@ -16,7 +16,6 @@ class ClientSeeder extends Seeder
        	// Insert some stuff
         DB::table('clients')->insert(
             array(
-                'id'     => 1,
                 'name'   => 'walk-in-customer',
                 'code' => 1,
                 'email' => 'walk-in-customer@example.com',

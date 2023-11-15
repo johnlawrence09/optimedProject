@@ -742,7 +742,7 @@ class SalesController extends BaseController
 
     public function show(Request $request, $id)
     {
-
+        
         $this->authorizeForUser($request->user('api'), 'view', Sale::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -751,12 +751,9 @@ class SalesController extends BaseController
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
        
-        // dd($sale_data);
 
         $details = array();
     
-        
-
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === sale->id
@@ -835,6 +832,7 @@ class SalesController extends BaseController
 
             $details[] = $data;
         }
+
 
         $company = Setting::where('deleted_at', '=', null)->first();
 

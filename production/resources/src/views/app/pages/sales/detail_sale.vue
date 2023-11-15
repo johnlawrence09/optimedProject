@@ -5,7 +5,6 @@
             v-if="isLoading"
             class="loading_page spinner spinner-primary mr-3"
         ></div>
-
         <b-card v-if="!isLoading">
             <b-row>
                 <b-col md="12" class="mb-5">
@@ -639,6 +638,38 @@ export default {
                 }
             });
         },
+
+        Edit_Status(status, id) {
+            console.log('test');
+            NProgress.start();
+            NProgress.set(0.1);
+            axios
+                .put("sales/edit/status/" + id, {
+                    statut: status,
+                })
+                .then((response) => {
+                    // Complete the animation of the  progress bar.
+                    this.paymentProcessing = false;
+                    setTimeout(() => NProgress.done(), 500);
+                    this.makeToast(
+                        "success",
+                        "Sale status edited successfully",
+                        "Success"
+                    );
+                    this.$router.push({ name: "index_sales" });
+                })
+                .catch((error) => {
+                    // Complete the animation of the  progress bar.
+                    setTimeout(() => NProgress.done(), 500);
+                    this.makeToast(
+                        "danger",
+                        this.$t("InvalidData"),
+                        this.$t("Failed")
+                    );
+                });
+        },
+
+
     }, //end Methods
 
     //----------------------------- Created function-------------------

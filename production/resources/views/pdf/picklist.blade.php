@@ -146,11 +146,12 @@
         <img class="logo" src="img/optimed-logo.jpg.png" alt="optimed-logo" />
       </header>
       <div class="card">
-        <h1 class="header-text">PickList</h1>
+        <h1 class="header-text">pickList</h1>
       </div>
       <div class="main-header-text">
         <div class="left-text">
           <div class="text-container">
+            @foreach ($picklist as $item)
             <p>SHIP TO :</p>
             <div class="address">
               <p class="sub-adress">Hilton Tucson East-</p>
@@ -166,7 +167,7 @@
         <div class="right-text">
           <div class="so-number">
             <p class="number">SO Number</p>
-            <p class="number"><strong>: dfdfd</strong></p>
+            <p class="number"><strong>: {{ $item->Ref }}</strong></p>
           </div>
           <div class="order-date">
             <p class="number">Order Date</p>
@@ -195,7 +196,7 @@
           </tbody>
         </tr>
       </table>
-
+          @endforeach
       <footer>
         <div class="text-item">
           <p>No. of ITEMS to Prepare : <strong>1279</strong></p>

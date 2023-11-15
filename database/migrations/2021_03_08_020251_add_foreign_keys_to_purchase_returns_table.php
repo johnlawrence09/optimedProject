@@ -15,9 +15,9 @@ class AddForeignKeysToPurchaseReturnsTable extends Migration {
 	{
 		Schema::table('purchase_returns', function(Blueprint $table)
 		{
-			$table->foreign('provider_id', 'provider_id_return')->references('id')->on('providers')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'purchase_return_user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('warehouse_id', 'purchase_return_warehouse_id')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('provider_id', 'provider_id_return')->references('id')->on('providers')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'purchase_return_user_id')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('warehouse_id', 'purchase_return_warehouse_id')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

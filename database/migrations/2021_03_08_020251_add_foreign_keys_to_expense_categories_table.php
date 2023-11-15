@@ -15,7 +15,7 @@ class AddForeignKeysToExpenseCategoriesTable extends Migration {
 	{
 		Schema::table('expense_categories', function(Blueprint $table)
 		{
-			$table->foreign('user_id', 'expense_category_user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('user_id', 'expense_category_user_id')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

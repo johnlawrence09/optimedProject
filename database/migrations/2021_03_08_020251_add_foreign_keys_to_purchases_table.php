@@ -15,9 +15,9 @@ class AddForeignKeysToPurchasesTable extends Migration {
 	{
 		Schema::table('purchases', function(Blueprint $table)
 		{
-			$table->foreign('provider_id', 'provider_id')->references('id')->on('providers')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'user_id_purchases')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('warehouse_id', 'warehouse_id_purchase')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('provider_id', 'provider_id')->references('id')->on('providers')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'user_id_purchases')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('warehouse_id', 'warehouse_id_purchase')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

@@ -15,8 +15,8 @@ class AddForeignKeysToDesignationsTable extends Migration {
 	{
 		Schema::table('designations', function(Blueprint $table)
 		{
-			$table->foreign('company_id', 'designation_company_id')->references('id')->on('companies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('department_id', 'designation_departement_id')->references('id')->on('departments')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('company_id', 'designation_company_id')->references('id')->on('companies')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('department_id', 'designation_departement_id')->references('id')->on('departments')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

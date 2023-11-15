@@ -15,8 +15,8 @@ class AddForeignKeysToDepartmentsTable extends Migration {
 	{
 		Schema::table('departments', function(Blueprint $table)
 		{
-			$table->foreign('company_id', 'department_company_id')->references('id')->on('companies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('department_head', 'department_department_head')->references('id')->on('employees')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('company_id', 'department_company_id')->references('id')->on('companies')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('department_head', 'department_department_head')->references('id')->on('employees')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

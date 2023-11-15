@@ -878,7 +878,7 @@
         this.setToStrings();
         axios
           .get(
-            "purchase_receives?page=" +
+            "sales_receives?page=" +
               page +
               "&Ref=" +
               this.Filter_Ref +
@@ -902,9 +902,8 @@
               this.limit
           )
           .then(response => {
-            this.purchases = response.data.purchases;
-            console.log(this.purchases);
-            this.suppliers = response.data.suppliers;
+            this.purchases = response.data.sales;
+            this.suppliers = response.data.customers;
             this.warehouses = response.data.warehouses;
             this.totalRows = response.data.totalRows;
   

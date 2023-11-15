@@ -15,8 +15,8 @@ class AddForeignKeysToAdjustmentsTable extends Migration {
 	{
 		Schema::table('adjustments', function(Blueprint $table)
 		{
-			$table->foreign('user_id', 'user_id_adjustment')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('warehouse_id', 'warehouse_id_adjustment')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('user_id', 'user_id_adjustment')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('warehouse_id', 'warehouse_id_adjustment')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

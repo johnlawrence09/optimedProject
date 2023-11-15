@@ -15,9 +15,9 @@ class AddForeignKeysToSalesTable extends Migration {
 	{
 		Schema::table('sales', function(Blueprint $table)
 		{
-			$table->foreign('client_id', 'sale_client_id')->references('id')->on('clients')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'user_id_sales')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('warehouse_id', 'warehouse_id_sale')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('client_id', 'sale_client_id')->references('id')->on('clients')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'user_id_sales')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('warehouse_id', 'warehouse_id_sale')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

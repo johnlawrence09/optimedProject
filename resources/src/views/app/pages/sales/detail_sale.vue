@@ -5,7 +5,6 @@
             v-if="isLoading"
             class="loading_page spinner spinner-primary mr-3"
         ></div>
-
         <b-card v-if="!isLoading">
             <b-row>
                 <b-col md="12" class="mb-5">
@@ -151,7 +150,7 @@
                                 <span
                                     v-if="sale.statut == 'received'"
                                     class="badge badge-outline-success"
-                                    >{{ $t("Received") }}</span
+                                    >{{ $t("Delivered") }}</span
                                 >
                                 <span
                                     v-else-if="sale.statut == 'pending'"
@@ -514,7 +513,12 @@ export default {
         //--------------------------------- Print Picklist ------------------------------\\
         printPicklist() {
             let id = this.$route.params.id;
-            axios.get(`print_picklist/${id}`).then((response) => {});
+            console.log(id);
+
+            axios.get(`print_picklist/${id}`,)
+            .then(response => {
+            });
+            
         },
 
         //--------------------------------- Send Sale in Email ------------------------------\\

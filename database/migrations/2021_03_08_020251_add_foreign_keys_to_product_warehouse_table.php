@@ -15,9 +15,9 @@ class AddForeignKeysToProductWarehouseTable extends Migration {
 	{
 		Schema::table('product_warehouse', function(Blueprint $table)
 		{
-			$table->foreign('product_id', 'art_id')->references('id')->on('products')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('warehouse_id', 'mag_id')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('product_variant_id', 'product_variant_id')->references('id')->on('product_variants')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('product_id', 'art_id')->references('id')->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('warehouse_id', 'mag_id')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('product_variant_id', 'product_variant_id')->references('id')->on('product_variants')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

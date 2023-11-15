@@ -15,8 +15,8 @@ class AddForeignKeysClientsToSettings extends Migration
     {
         Schema::table('settings', function(Blueprint $table)
 		{
-            $table->foreign('client_id', 'settings_client_id')->references('id')->on('clients')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-            $table->foreign('warehouse_id', 'settings_warehouse_id')->references('id')->on('warehouses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+            $table->foreign('client_id', 'settings_client_id')->references('id')->on('clients')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign('warehouse_id', 'settings_warehouse_id')->references('id')->on('warehouses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 
 		});
     }

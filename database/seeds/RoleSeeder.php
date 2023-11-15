@@ -17,7 +17,6 @@ class RoleSeeder extends Seeder
         // Insert some stuff
 	    DB::table('roles')->insert(
             array([
-                'id'    => 1,
                 'name'  => 'Owner',
                 'label' => 'Owner',
                 'status' => 1,

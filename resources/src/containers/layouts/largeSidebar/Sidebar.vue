@@ -152,7 +152,8 @@
                             currentUserPermissions &&
                             (currentUserPermissions.includes('Sales_view') ||
                                 currentUserPermissions.includes('Sales_add') ||
-                                currentUserPermissions.includes('shipment'))
+                                currentUserPermissions.includes('shipment') || 
+                                currentUserPermissions.includes('Picklist') )
                         "
                         class="nav-item"
                         @mouseenter="toggleSubMenu"
@@ -791,6 +792,18 @@
                         class="nav-item"
                         v-if="
                             currentUserPermissions &&
+                            currentUserPermissions.includes('Picklist')
+                        "
+                    >
+                        <router-link tag="a" class to="/app/sales/picklist">
+                            <i class="nav-icon i-Files"></i>
+                            <span class="item-name">{{ $t("Picklist") }}</span>
+                        </router-link>
+                    </li>
+                    <li
+                        class="nav-item"
+                        v-if="
+                            currentUserPermissions &&
                             currentUserPermissions.includes('shipment')
                         "
                     >
@@ -799,6 +812,7 @@
                             <span class="item-name">{{ $t("Shipments") }}</span>
                         </router-link>
                     </li>
+                    
                 </ul>
                 <!-- Sales Receipt -->
                 <ul

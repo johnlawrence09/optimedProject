@@ -15,10 +15,10 @@ class AddForeignKeysToLeavesTable extends Migration {
 	{
 		Schema::table('leaves', function(Blueprint $table)
 		{
-			$table->foreign('company_id', 'leave_company_id')->references('id')->on('companies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('department_id', 'leave_department_id')->references('id')->on('departments')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('employee_id', 'leave_employee_id')->references('id')->on('employees')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('leave_type_id', 'leave_leave_type_id')->references('id')->on('leave_types')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('company_id', 'leave_company_id')->references('id')->on('companies')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('department_id', 'leave_department_id')->references('id')->on('departments')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('employee_id', 'leave_employee_id')->references('id')->on('employees')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('leave_type_id', 'leave_leave_type_id')->references('id')->on('leave_types')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

@@ -704,7 +704,7 @@ class SalesReceivedController extends Controller
     }
 
     public function picklist (Request $request, $id) {
-        
+
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
 
@@ -729,10 +729,9 @@ class SalesReceivedController extends Controller
                    $pick_list[] = $list; 
                 }
         }
-
-
+        $data = $pick_list;
         return view('pdf.picklist', [ 
-            'picklists' =>   $pick_list, 
+            'picklists' =>  $data, 
         ]);
 
     }

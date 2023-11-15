@@ -471,6 +471,14 @@ const routes = [
                                 /* webpackChunkName: "shipment" */ "./views/app/pages/sales/shipments"
                             ),
                     },
+                    {
+                        name: "picklist",
+                        path: "picklist/:id",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "picklist" */ "./views/app/pages/sales/picklist"
+                            ),
+                    },
                 ],
             },
 

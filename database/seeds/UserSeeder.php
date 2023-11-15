@@ -15,7 +15,6 @@ class UserSeeder extends Seeder
        // Insert some stuff
         DB::table('users')->insert(
             array(
-                'id' => 1,
                 'firstname' => 'Optimed',
                 'lastname' => 'Devices',
                 'username' => 'Optimedevices',

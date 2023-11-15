@@ -15,8 +15,8 @@ class AddForeignKeysToPaymentPurchasesTable extends Migration {
 	{
 		Schema::table('payment_purchases', function(Blueprint $table)
 		{
-			$table->foreign('purchase_id', 'factures_purchase_id')->references('id')->on('purchases')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'user_id_factures_achat')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('purchase_id', 'factures_purchase_id')->references('id')->on('purchases')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'user_id_factures_achat')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

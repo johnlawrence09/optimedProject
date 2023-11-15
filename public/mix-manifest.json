@@ -45,6 +45,7 @@
     "/js/bundle/edit_sale.js": "/js/bundle/edit_sale.js",
     "/js/bundle/detail_sale.js": "/js/bundle/detail_sale.js",
     "/js/bundle/shipment.js": "/js/bundle/shipment.js",
+    "/js/bundle/picklist.js": "/js/bundle/picklist.js",
     "/js/bundle/sale_return.js": "/js/bundle/sale_return.js",
     "/js/bundle/index_sale_return.js": "/js/bundle/index_sale_return.js",
     "/js/bundle/store_sale_return.js": "/js/bundle/store_sale_return.js",

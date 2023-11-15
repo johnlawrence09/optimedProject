@@ -15,7 +15,7 @@ class AddForeignKeysToSettingsTable extends Migration {
 	{
 		Schema::table('settings', function(Blueprint $table)
 		{
-			$table->foreign('currency_id', 'currency_id')->references('id')->on('currencies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('currency_id', 'currency_id')->references('id')->on('currencies')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

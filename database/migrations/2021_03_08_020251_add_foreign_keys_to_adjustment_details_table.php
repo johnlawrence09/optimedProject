@@ -15,9 +15,9 @@ class AddForeignKeysToAdjustmentDetailsTable extends Migration {
 	{
 		Schema::table('adjustment_details', function(Blueprint $table)
 		{
-			$table->foreign('adjustment_id', 'adjust_adjustment_id')->references('id')->on('adjustments')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('product_id', 'adjust_product_id')->references('id')->on('products')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('product_variant_id', 'adjust_product_variant')->references('id')->on('product_variants')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('adjustment_id', 'adjust_adjustment_id')->references('id')->on('adjustments')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('product_id', 'adjust_product_id')->references('id')->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('product_variant_id', 'adjust_product_variant')->references('id')->on('product_variants')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

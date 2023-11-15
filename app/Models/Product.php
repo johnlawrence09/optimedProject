@@ -24,7 +24,7 @@ class Product extends Model
         });
     }
 
-    private static function generateReference()
+    public static function generateReference()
     {
         $code = 'PROD-';
         $year = date('y');

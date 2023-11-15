@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
+use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
@@ -96,6 +97,7 @@ class UserController extends BaseController
         $user['footer'] = Setting::first()->footer;
         $user['developed_by'] = Setting::first()->developed_by;
         $permissions = Auth::user()->roles()->first()->permissions->pluck('name');
+
         // $products_alerts = product_warehouse::join('products', 'product_warehouse.product_id', '=', 'products.id')
         //     // ->whereRaw('qte <= stock_alert')
         //     ->where('product_warehouse.deleted_at', null)
@@ -110,6 +112,7 @@ class UserController extends BaseController
             ->groupBy('product_warehouse.warehouse_id', 'product_warehouse.product_id')
             ->havingRaw('SUM(product_warehouse.qte) <= products.stock_alert')
             ->get();
+
         return response()->json([
             'success' => true,
             'user' => $user,

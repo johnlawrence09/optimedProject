@@ -15,7 +15,7 @@ class AddForeignKeysToOfficeShiftsTable extends Migration {
 	{
 		Schema::table('office_shifts', function(Blueprint $table)
 		{
-			$table->foreign('company_id', 'office_shift_company_id')->references('id')->on('companies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('company_id', 'office_shift_company_id')->references('id')->on('companies')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

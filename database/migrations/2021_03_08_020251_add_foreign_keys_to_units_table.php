@@ -15,7 +15,7 @@ class AddForeignKeysToUnitsTable extends Migration {
 	{
 		Schema::table('units', function(Blueprint $table)
 		{
-			$table->foreign('base_unit', 'base_unit')->references('id')->on('units')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('base_unit', 'base_unit')->references('id')->on('units')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

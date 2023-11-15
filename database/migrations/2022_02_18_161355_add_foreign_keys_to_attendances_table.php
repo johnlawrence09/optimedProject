@@ -15,9 +15,9 @@ class AddForeignKeysToAttendancesTable extends Migration {
 	{
 		Schema::table('attendances', function(Blueprint $table)
 		{
-			$table->foreign('company_id', 'attendances_company_id')->references('id')->on('companies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'attendances_user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('employee_id', 'attendances_employee_id')->references('id')->on('employees')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('company_id', 'attendances_company_id')->references('id')->on('companies')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'attendances_user_id')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('employee_id', 'attendances_employee_id')->references('id')->on('employees')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

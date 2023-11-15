@@ -16,7 +16,7 @@ class AddPurchaseUnitIdToPurchaseReturnDetailsTable extends Migration
         Schema::table('purchase_return_details', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('purchase_unit_id')->nullable()->after('cost')->index('unit_id_purchase_return_details');
-            $table->foreign('purchase_unit_id', 'unit_id_purchase_return_details')->references('id')->on('units')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+            $table->foreign('purchase_unit_id', 'unit_id_purchase_return_details')->references('id')->on('units')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
     }
 

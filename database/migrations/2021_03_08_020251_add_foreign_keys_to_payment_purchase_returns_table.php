@@ -15,8 +15,8 @@ class AddForeignKeysToPaymentPurchaseReturnsTable extends Migration {
 	{
 		Schema::table('payment_purchase_returns', function(Blueprint $table)
 		{
-			$table->foreign('purchase_return_id', 'supplier_id_payment_return_purchase')->references('id')->on('purchase_returns')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'user_id_payment_return_purchase')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('purchase_return_id', 'supplier_id_payment_return_purchase')->references('id')->on('purchase_returns')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'user_id_payment_return_purchase')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

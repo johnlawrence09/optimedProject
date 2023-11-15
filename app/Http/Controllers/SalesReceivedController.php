@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+
 class SalesReceivedController extends Controller
 {
 
@@ -126,7 +127,7 @@ class SalesReceivedController extends Controller
                 $data[] = $item;
                 
             }
-
+            dd($data);
         $customers = Client::where('deleted_at', '=', null)->get(['id', 'name']);
 
          //get warehouses assigned to user
@@ -137,7 +138,6 @@ class SalesReceivedController extends Controller
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          } 
-
         return response()->json([
             'totalRows' => $totalRows,
             'sales' => $data,
@@ -600,8 +600,8 @@ class SalesReceivedController extends Controller
 
             $details[] = $data;
         }
-
-
+    
+        
         $company = Setting::where('deleted_at', '=', null)->first();
 
         return response()->json([
@@ -703,8 +703,8 @@ class SalesReceivedController extends Controller
 
     }
 
-    public function picklist (Request $request, $id) {
-        
+    public function picklist (Request $request, $id)
+     {
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
 
@@ -712,13 +712,13 @@ class SalesReceivedController extends Controller
         ->where('deleted_at','=', null)->findOrFail($id);
 
         $list['warehouse'] = $sale_data['warehouse']->name;
-        $list['client'] = $sale_data['client']->name;
+        $client = $sale_data['client']->name;
 
-        $list['ShipTo'] = $sale_data['shipment'] == null ? "" : $sale_data['shipment']->shipping_address;
+        $Shipto = $sale_data['shipment'] == null ? "" : $sale_data['shipment']->shipping_address;
        
             foreach($sale_data['receipts'] as $data) {
-                $list['Date'] = $data['date'];
-                $list['Ref'] = $data['Ref'];
+                $date = $data['date'];
+                $Reference = $data['Ref'];
     
                 foreach($data['detailsRecieved'] as $detail) {
                    $list['product_name'] = $detail['product']->name;
@@ -728,12 +728,29 @@ class SalesReceivedController extends Controller
 
                    $pick_list[] = $list; 
                 }
+
         }
 
+        return view('pdf.picklist', [
+            'details' => $pick_list,
+            'date' => $date,
+            'referrence' => $Reference,
+            'Shipto' => $Shipto
+            ]);
 
-        return view('pdf.picklist', [ 
-            'picklists' =>   $pick_list, 
-        ]);
+          return $pdf->download('picklist.pdf');
+
+        // return response()->json([
+        //     'details' => $pick_list,
+        //     'client' => $client,
+        //     'date' => $date,
+        //     'referrence' => $Reference,
+        //     'Shipto' => $Shipto
+        // ]);
+
+        // return view('pdf.picklist', [ 
+        //     'picklists' =>  $pick_list, 
+        // ]);
 
     }
 

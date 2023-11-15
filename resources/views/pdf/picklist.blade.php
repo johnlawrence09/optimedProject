@@ -141,7 +141,9 @@
   </head>
   <body>
 
-    <main class="main-container">
+      <h1>TEST</h1>
+
+    <!-- <main class="main-container">
       <header>
         <img class="logo" src="img/optimed-logo.jpg.png" alt="optimed-logo" />
       </header>
@@ -151,26 +153,25 @@
       <div class="main-header-text">
         <div class="left-text">
           <div class="text-container">
+           
             <p>SHIP TO :</p>
             <div class="address">
-              <p class="sub-adress">Hilton Tucson East-</p>
-              <p class="sub-adress">7600 E Broadway Blvd</p>
-              <p class="sub-adress">AZ 85710</p>
+              <p class="sub-adress">{{ shipTo }}</p>
             </div>
           </div>
           <div class="customer-name">
             <p class="number">Customer name</p>
-            <p class="number"><strong>: John Lawrence Lantin</strong></p>
+            <p class="number"><strong>: {{ client }}</strong></p>
           </div>
         </div>
         <div class="right-text">
           <div class="so-number">
             <p class="number">SO Number</p>
-            <p class="number"><strong>: dfdfd</strong></p>
+            <p class="number"><strong>: {{ referrence }}</strong></p>
           </div>
           <div class="order-date">
             <p class="number">Order Date</p>
-            <p class="number"><strong>:</strong></p>
+            <p class="number"><strong>: {{ date }} </strong></p>
           </div>
         </div>
       </div>
@@ -186,19 +187,19 @@
        
         <tr>
           <tbody>
+            @foreach($details as $detail)
                 <td></td>
-                <td>$product->quantity</td>
-                <td>$product->ShortName</td>
-                <td>$product->name</td>
-                <td>$product->expiration_date</td>
-                <td>Germany</td>
+                <td>{{ $detail->quantity }}</td>
+                <td>{{ $detail->unit }}</td>
+                <td>{{ $detail->product_name }}</td>
+                <td>{{ $detail->expiration_date}}</td>
+                <td>{{ $detail->warehouse }}</td>
+            @endforeach
           </tbody>
         </tr>
       </table>
-
       <footer>
         <div class="text-item">
-          <p>No. of ITEMS to Prepare : <strong>1279</strong></p>
           <p>Date of Print : <strong>05 Jul 2023</strong></p>
         </div>
         <div class="main-text-footer">
@@ -216,6 +217,6 @@
           </div>
         </div>
       </footer>
-    </main>
+    </main> -->
   </body>
 </html>

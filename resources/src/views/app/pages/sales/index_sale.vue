@@ -110,6 +110,7 @@
                                 </template>
                                 <b-navbar-nav>
                                     <b-dropdown-item
+                                    v-if ="props.row.statut !== 'pending' && props.row.statut !== 'ordered' "
                                         title="Show"
                                         :to="
                                             '/app/sales/detail/' + props.row.id
@@ -119,6 +120,20 @@
                                             class="nav-icon i-Eye font-weight-bold mr-2"
                                         ></i>
                                         {{ $t("SaleDetail") }}
+                                    </b-dropdown-item>
+                                </b-navbar-nav>
+                                <b-navbar-nav>
+                                    <b-dropdown-item
+                                    v-if ="props.row.statut !== 'pending' && props.row.statut !== 'ordered' "
+                                        title="Show"
+                                        :to="
+                                            '/app/sales/picklist/' + props.row.id
+                                        "
+                                    >
+                                        <i
+                                            class="nav-icon i-Eye font-weight-bold mr-2"
+                                        ></i>
+                                        {{ $t("Show Picklist") }}
                                     </b-dropdown-item>
                                 </b-navbar-nav>
 
@@ -141,7 +156,7 @@
                                     v-if="
                                         currentUserPermissions.includes(
                                             'payment_sales_view'
-                                        )
+                                        ) && props.row.statut !== 'pending'
                                     "
                                     @click="
                                         Show_Payments(props.row.id, props.row)
@@ -171,7 +186,7 @@
                                     v-if="
                                         currentUserPermissions.includes(
                                             'shipment'
-                                        )
+                                        ) && props.row.statut !== 'pending'
                                     "
                                     @click="Edit_Shipment(props.row.id)"
                                 >
@@ -259,7 +274,7 @@
                         <span
                             v-if="props.row.statut == 'received'"
                             class="badge badge-outline-success"
-                            >{{ $t("Received") }}</span
+                            >{{ $t("Delivered") }}</span
                         >
                         <span
                             v-else-if="props.row.statut == 'pending'"

@@ -15,9 +15,9 @@ class AddForeignKeysToTransferDetailsTable extends Migration {
 	{
 		Schema::table('transfer_details', function(Blueprint $table)
 		{
-			$table->foreign('product_id', 'product_id_transfers')->references('id')->on('products')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('product_variant_id', 'product_variant_id_transfer')->references('id')->on('product_variants')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('transfer_id', 'transfer_id')->references('id')->on('transfers')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('product_id', 'product_id_transfers')->references('id')->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('product_variant_id', 'product_variant_id_transfer')->references('id')->on('product_variants')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('transfer_id', 'transfer_id')->references('id')->on('transfers')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

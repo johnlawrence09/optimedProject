@@ -15,8 +15,8 @@ class AddForeignKeysToPaymentSaleReturnsTable extends Migration {
 	{
 		Schema::table('payment_sale_returns', function(Blueprint $table)
 		{
-			$table->foreign('sale_return_id', 'factures_sale_return')->references('id')->on('sale_returns')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id', 'factures_sale_return_user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('sale_return_id', 'factures_sale_return')->references('id')->on('sale_returns')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('user_id', 'factures_sale_return_user_id')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

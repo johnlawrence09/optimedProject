@@ -15,430 +15,960 @@ class PermissionsSeeder extends Seeder
        // Insert some stuff
 	DB::table('permissions')->insert(
 		array([
-			'id'    => 1,
+
 			'name'  => 'users_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
+
 		],
 		[
-			'id'    => 2,
+
 			'name'  => 'users_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 3,
+
 			'name'  => 'record_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 4,
+
 			'name'  => 'users_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 5,
+
 			'name'  => 'users_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 6,
 			'name'  => 'permissions_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 7,
+
 			'name'  => 'permissions_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
+
 		[
-			'id'    => 8,
 			'name'  => 'permissions_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 9,
+
 			'name'  => 'permissions_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 10,
+
 			'name'  => 'products_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 11,
+
 			'name'  => 'products_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 12,
+
 			'name'  => 'barcode_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 13,
+
 			'name'  => 'products_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 14,
+
 			'name'  => 'products_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 15,
+
 			'name'  => 'expense_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 16,
+
 			'name'  => 'expense_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 17,
+
 			'name'  => 'expense_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 18,
+
 			'name'  => 'expense_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 19,
+
 			'name'  => 'transfer_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 20,
+
 			'name'  => 'transfer_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 21,
+
 			'name'  => 'transfer_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 22,
+
 			'name'  => 'transfer_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 23,
+
 			'name'  => 'adjustment_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 24,
+
 			'name'  => 'adjustment_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 25,
+
 			'name'  => 'adjustment_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 26,
+
 			'name'  => 'adjustment_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 27,
+
 			'name'  => 'Sales_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 28,
+
 			'name'  => 'Sales_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 29,
+
 			'name'  => 'Sales_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 30,
+
 			'name'  => 'Sales_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 31,
+
 			'name'  => 'Purchases_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 32,
+
 			'name'  => 'Purchases_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 33,
+
 			'name'  => 'Purchases_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 34,
+
 			'name'  => 'Purchases_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 35,
+
 			'name'  => 'Quotations_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 36,
+
 			'name'  => 'Quotations_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 37,
+
 			'name'  => 'Quotations_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 38,
+			
 			'name'  => 'Quotations_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 39,
+
 			'name'  => 'payment_sales_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 40,
+
 			'name'  => 'payment_sales_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 41,
+
 			'name'  => 'payment_sales_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 42,
+
 			'name'  => 'payment_sales_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 43,
+
 			'name'  => 'Purchase_Returns_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 44,
+
 			'name'  => 'Purchase_Returns_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 45,
+
 			'name'  => 'Purchase_Returns_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 46,
+
 			'name'  => 'Purchase_Returns_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 47,
+
 			'name'  => 'Sale_Returns_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 48,
+
 			'name'  => 'Sale_Returns_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 49,
+
 			'name'  => 'Sale_Returns_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 50,
+
 			'name'  => 'Sale_Returns_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 51,
+
 			'name'  => 'payment_purchases_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 52,
+
 			'name'  => 'payment_purchases_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 53,
+
 			'name'  => 'payment_purchases_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 54,
+
 			'name'  => 'payment_purchases_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 55,
+
 			'name'  => 'payment_returns_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 56,
+
 			'name'  => 'payment_returns_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 57,
+
 			'name'  => 'payment_returns_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 58,
+
 			'name'  => 'payment_returns_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 59,
+
 			'name'  => 'Customers_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 60,
+
 			'name'  => 'Customers_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 61,
+
 			'name'  => 'Customers_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 62,
+
 			'name'  => 'Customers_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 63,
+
 			'name'  => 'unit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 64,
+
 			'name'  => 'currency',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 65,
+
 			'name'  => 'category',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 66,
+
 			'name'  => 'backup',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 67,
+
 			'name'  => 'warehouse',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 68,
+
 			'name'  => 'brand',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 69,
+			
 			'name'  => 'setting_system',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 70,
+
 			'name'  => 'Warehouse_report',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 72,
+
 			'name'  => 'Reports_quantity_alerts',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 73,
+
 			'name'  => 'Reports_profit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 74,
+
 			'name'  => 'Reports_suppliers',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 75,
+
 			'name'  => 'Reports_customers',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 76,
+
 			'name'  => 'Reports_purchase',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 77,
+
 			'name'  => 'Reports_sales',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 78,
+
 			'name'  => 'Reports_payments_purchase_Return',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 79,
+
 			'name'  => 'Reports_payments_Sale_Returns',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 80,
+
 			'name'  => 'Reports_payments_Purchases',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 81,
+
 			'name'  => 'Reports_payments_Sales',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 82,
+
 			'name'  => 'Suppliers_delete',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 83,
+
 			'name'  => 'Suppliers_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 84,
+
 			'name'  => 'Suppliers_edit',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 85,
+
 			'name'  => 'Suppliers_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 86,
+
 			'name'  => 'Pos_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 87,
+		
 			'name'  => 'product_import',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 88,
+		
 			'name'  => 'customers_import',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 89,
+		
 			'name'  => 'Suppliers_import',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 
 		//hrm
 		[
-			'id'    => 90,
+		
 			'name'  => 'view_employee',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 91,
+		
 			'name'  => 'add_employee',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 92,
+		
 			'name'  => 'edit_employee',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 93,
+		
 			'name'  => 'delete_employee',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 94,
+		
 			'name'  => 'company',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 95,
+		
 			'name'  => 'department',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 96,
+		
 			'name'  => 'designation',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 97,
+		
 			'name'  => 'office_shift',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 98,
+		
 			'name'  => 'attendance',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 99,
+		
 			'name'  => 'leave',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 100,
+			
 			'name'  => 'holiday',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 101,
+			
 			'name'  => 'Top_products',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 102,
+			
 			'name'  => 'Top_customers',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 103,
+			
 			'name'  => 'shipment',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 104,
+			
 			'name'  => 'users_report',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 105,
+			
 			'name'  => 'stock_report',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 106,
-			'name'  => 'Purchase_Receives_view'
+
+			'name'  => 'Purchase_Receives_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		],
 		[
-			'id'    => 107,
-			'name'  => 'Purchase_Receives_add'
+
+			'name'  => 'Purchase_Receives_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
 		]
 		
 		)

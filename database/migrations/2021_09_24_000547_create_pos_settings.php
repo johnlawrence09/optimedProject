@@ -31,7 +31,6 @@ class CreatePosSettings extends Migration
          // Insert some stuff
          DB::table('pos_settings')->insert(
             array(
-                'id' => 1,
                 'note_customer' => 'Thank You For Shopping With Us . Please Come Again',
                 'show_note' => 1,
                 'show_barcode' => 1,

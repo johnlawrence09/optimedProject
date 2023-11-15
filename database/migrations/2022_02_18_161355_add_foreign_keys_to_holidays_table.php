@@ -15,7 +15,7 @@ class AddForeignKeysToHolidaysTable extends Migration {
 	{
 		Schema::table('holidays', function(Blueprint $table)
 		{
-			$table->foreign('company_id', 'holidays_company_id')->references('id')->on('companies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('company_id', 'holidays_company_id')->references('id')->on('companies')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 

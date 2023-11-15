@@ -15,7 +15,6 @@ class SettingSeeder extends Seeder
        // Insert some stuff
         DB::table('settings')->insert(
             array(
-                'id' => 1,
                 'email' => 'admin@example.com',
                 'currency_id' => 1,
                 'client_id' => 1,

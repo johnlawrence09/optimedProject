@@ -15,7 +15,7 @@ class AddForeignKeysToEmployeeAccountsTable extends Migration {
 	{
 		Schema::table('employee_accounts', function(Blueprint $table)
 		{
-			$table->foreign('employee_id', 'employee_accounts_employee_id')->references('id')->on('employees')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('employee_id', 'employee_accounts_employee_id')->references('id')->on('employees')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 
