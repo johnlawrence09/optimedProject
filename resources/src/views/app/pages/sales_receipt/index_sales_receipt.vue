@@ -872,6 +872,7 @@
   
       //------------------------------------------------ Get All Purchases -------------------------------\\
       Get_Purchases(page) {
+        console.log(page);
         // Start the progress bar.
         NProgress.start();
         NProgress.set(0.1);

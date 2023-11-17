@@ -136,6 +136,7 @@ class PurchaseReceiveController extends Controller
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          } 
 
+
         return response()->json([
             'totalRows' => $totalRows,
             'purchases' => $data,

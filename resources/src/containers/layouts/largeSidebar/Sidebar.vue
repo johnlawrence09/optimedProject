@@ -348,7 +348,7 @@
                             ) ||
                                 currentUserPermissions.includes('warehouse') ||
                                 currentUserPermissions.includes('warehouse_location') ||
-                                currentUserPermissions.includes('backup') ||
+                                // currentUserPermissions.includes('backup') ||
                                 currentUserPermissions.includes('currency') ||
                                 currentUserPermissions.includes(
                                     'permissions_view'
@@ -1219,7 +1219,8 @@
                         class="nav-item"
                         v-if="
                             currentUserPermissions &&
-                            currentUserPermissions.includes('backup')
+                            //commented//
+                            currentUserPermissions.includes('backupp')
                         "
                     >
                         <router-link tag="a" class to="/app/settings/Backup">

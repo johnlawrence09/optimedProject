@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\utils\helpers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class CategorieController extends BaseController
 {
@@ -54,14 +55,24 @@ class CategorieController extends BaseController
     {
         $this->authorizeForUser($request->user('api'), 'create', Category::class);
 
-        request()->validate([
-            'name' => 'required',
-        ]);
+        $existingRecord = DB::table('categories')
+        ->where('name', $request['name'])
+        ->Where('deleted_at', null)
+        ->count();
 
-        Category::create([
-            'name' => $request['name'],
-        ]);
-        return response()->json(['success' => true]);
+        if($existingRecord < 1) {
+            request()->validate([
+                'name' => 'required'
+            ]);
+    
+            Category::create([
+                'name' => $request['name'],
+            ]);
+            return response()->json(['exist' => false]);
+        } else {
+            return response()->json(['exist' => true]);
+        }
+        
     }
 
      //------------ function show -----------\\
@@ -74,17 +85,30 @@ class CategorieController extends BaseController
     //-------------- Update Category ---------------\\
 
     public function update(Request $request, $id)
-    {
+    {   
+        
         $this->authorizeForUser($request->user('api'), 'update', Category::class);
 
-        request()->validate([
-            'name' => 'required',
-        ]);
+        $existingRecord = DB::table('categories')
+            ->where('name', $request['name'])
+            ->where('deleted_at', '=', NULL)
+            ->where('id', '!=', $id)
+            ->count();
 
-        Category::whereId($id)->update([
-            'name' => $request['name'],
-        ]);
-        return response()->json(['success' => true]);
+        if($existingRecord < 1) {
+            request()->validate([
+                'name' => 'required',
+            ]);
+    
+            Category::whereId($id)->update([
+                'name' => $request['name'],
+            ]);
+            return response()->json(['exist' => false]);
+        }else {
+            return response()->json(['exist' => true]);
+        }
+
+        
 
     }
 

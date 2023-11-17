@@ -314,20 +314,41 @@ export default {
 
     //----------------------------------Create new Category ----------------\\
     Create_Category() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       axios
         .post("categories", {
           name: this.category.name,
           code: this.category.code
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          Fire.$emit("Event_Category");
-          this.makeToast(
-            "success",
-            this.$t("Create.TitleCat"),
-            this.$t("Success")
-          );
+          if(response.data.exist == true) {
+              NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+
+          } else if(response.data.exist == false) {
+            this.SubmitProcessing = false;
+            Fire.$emit("Event_Category");
+
+            this.makeToast(
+              "success",
+              this.$t("Create.TitleUnit"),
+              this.$t("Success")
+            );
+          }
+
+          // this.SubmitProcessing = false;
+          // Fire.$emit("Event_Category");
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Create.TitleCat"),
+          //   this.$t("Success")
+          // );
         })
         .catch(error => {
           this.SubmitProcessing = false;
@@ -337,20 +358,34 @@ export default {
 
     //---------------------------------- Update Category ----------------\\
     Update_Category() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       axios
         .put("categories/" + this.category.id, {
           name: this.category.name,
           code: this.category.code
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          Fire.$emit("Event_Category");
-          this.makeToast(
-            "success",
-            this.$t("Update.TitleCat"),
-            this.$t("Success")
-          );
+          if(response.data.exist == true) {
+              NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+
+          } else if(response.data.exist == false) {
+            this.SubmitProcessing = false;
+            Fire.$emit("Event_Category");
+
+            this.makeToast(
+              "success",
+              this.$t("Update.TitleUnit"),
+              this.$t("Success")
+            );
+          }
+
         })
         .catch(error => {
           this.SubmitProcessing = false;

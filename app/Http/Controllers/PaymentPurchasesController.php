@@ -272,6 +272,7 @@ class PaymentPurchasesController extends BaseController
         $pdf = $this->Payment_purchase_pdf($request, $payment['id']);
         $this->Set_config_mail(); // Set_config_mail => BaseController
         $mail = Mail::to($request->to)->send(new Payment_Purchase($payment, $pdf));
+        dd($mail);
         return $mail;
     }
 

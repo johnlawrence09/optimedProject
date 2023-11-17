@@ -115,7 +115,7 @@
                       :rules="{ required: true}"
                       v-slot="validationContext"
                     >
-                      <b-form-group :label="$t('developed_by') + ' ' + '*'">
+                      <b-form-group :label="$t('Powered by') + ' ' + '*'">
                          <b-form-input
                           :state="getValidationState(validationContext)"
                           aria-describedby="developed_by-feedback"
@@ -356,14 +356,14 @@
     </validation-observer>
 
     <!-- Payment Gateway -->
-    <validation-observer ref="form_payment" v-if="!isLoading">
+    <!-- <validation-observer ref="form_payment" v-if="!isLoading">
       <b-form @submit.prevent="Submit_Payment">
         <b-row class="mt-5">
           <b-col lg="12" md="12" sm="12">
             <b-card no-body :header="$t('Payment_Gateway')">
               <b-card-body>
                 <b-row>
-                   <!-- Strip key  -->
+                   
                   <b-col lg="6" md="6" sm="12">
                       <b-form-group label="STRIPE_KEY">
                         <b-form-input
@@ -374,7 +374,7 @@
                       </b-form-group>
                   </b-col>
 
-                   <!-- Strip Secret  -->
+                  
                   <b-col lg="6" md="6" sm="12">
                       <b-form-group label="STRIPE_SECRET">
                         <b-form-input
@@ -385,7 +385,7 @@
                       </b-form-group>
                   </b-col>
 
-                   <!-- Remove Stripe Key & Secret-->
+                 
                     <b-col md="6" class="mt-3 mb-3">
                        <label class="switch switch-primary mr-3">
                          {{$t('Remove_Stripe_Key_Secret')}}
@@ -405,10 +405,10 @@
           </b-col>
         </b-row>
       </b-form>
-    </validation-observer>
+    </validation-observer> -->
 
     <!-- SMS API -->
-    <validation-observer ref="form_sms" v-if="!isLoading">
+    <!-- <validation-observer ref="form_sms" v-if="!isLoading">
       <b-form @submit.prevent="Submit_sms">
         <b-row class="mt-5">
           <b-col lg="12" md="12" sm="12">
@@ -416,7 +416,7 @@
               <b-card-body>
                 <b-row>
 
-                  <!-- Gateway  -->
+                
                 <b-col md="6">
                   <validation-provider name="Gateway">
                     <b-form-group :label="$t('Gateway')">
@@ -433,7 +433,7 @@
                   </validation-provider>
                 </b-col>
                   
-                   <!-- TWILIO_SID  -->
+               
                   <b-col lg="6" md="6" sm="12">
                     <validation-provider
                       name="TWILIO_SID"
@@ -454,7 +454,7 @@
                     </validation-provider>
                   </b-col>
 
-                   <!-- TWILIO_TOKEN  -->
+               
                   <b-col lg="6" md="6" sm="12">
                       <b-form-group label="TWILIO_TOKEN">
                         <b-form-input
@@ -465,7 +465,7 @@
                       </b-form-group>
                   </b-col>
 
-                    <!-- TWILIO_FROM  -->
+                  
                   <b-col lg="6" md="6" sm="12">
                     <validation-provider
                       name="TWILIO_FROM"
@@ -497,7 +497,7 @@
           </b-col>
         </b-row>
       </b-form>
-    </validation-observer>
+    </validation-observer> -->
 
     <!-- Server SMTP -->
     <validation-observer ref="form_smtp" v-if="!isLoading">

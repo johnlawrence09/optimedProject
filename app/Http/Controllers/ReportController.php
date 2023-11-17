@@ -2039,6 +2039,7 @@ class ReportController extends BaseController
         $this->authorizeForUser($request->user('api'), 'backup', User::class);
 
         Artisan::call('database:backup');
+        dd(Artisan::call('database:backup'));
 
         return response()->json('Generate complete success');
     }

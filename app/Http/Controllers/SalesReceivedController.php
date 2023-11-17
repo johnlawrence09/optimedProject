@@ -127,7 +127,6 @@ class SalesReceivedController extends Controller
                 $data[] = $item;
                 
             }
-            dd($data);
         $customers = Client::where('deleted_at', '=', null)->get(['id', 'name']);
 
          //get warehouses assigned to user

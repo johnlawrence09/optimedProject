@@ -296,7 +296,8 @@
                       <div class="form-check">
                         <label class="checkbox checkbox-outline-primary">
                           <input type="checkbox" v-model="product.is_variant">
-                          <h5>{{$t('ProductHasMultiVariants')}}</h5>
+                          <!-- <h5>{{$t('ProductHasMultiVariants')}}</h5> -->
+                          <h5>This Product has Multi Variants</h5>
                           <span class="checkmark"></span>
                         </label>
                       </div>
@@ -319,7 +320,8 @@
                       <div class="form-check">
                         <label class="checkbox checkbox-outline-primary">
                           <input type="checkbox" v-model="product.is_imei">
-                          <h5>{{$t('Product_Has_Imei_Serial_number')}}</h5>
+                          <!-- <h5>{{$t('Product_Has_Imei_Serial_number')}}</h5> -->
+                          <h5>This Product has Imei/Serial Number</h5>
                           <span class="checkmark"></span>
                         </label>
                       </div>
@@ -332,7 +334,20 @@
                       <div class="form-check">
                         <label class="checkbox checkbox-outline-primary">
                           <input type="checkbox" v-model="product.is_expire">
-                          <h5>Is Expired</h5>
+                          <h5>This Product has Expiry</h5>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </ValidationProvider>
+                  </b-col>
+
+                  <!-- Product_Has_Qoutation -->
+                  <b-col md="12 mb-2">
+                    <ValidationProvider rules vid="product" v-slot="x">
+                      <div class="form-check">
+                        <label class="checkbox checkbox-outline-primary">
+                          <input type="checkbox" v-model="product.is_quotation">
+                          <h5>This Product is for Quotation</h5>
                           <span class="checkmark"></span>
                         </label>
                       </div>
@@ -395,6 +410,7 @@
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import VueTagsInput from "@johmun/vue-tags-input";
 import NProgress from "nprogress";
+import { exportDefaultSpecifier } from "babel-types";
 
 export default {
   metaInfo: {
@@ -434,7 +450,8 @@ export default {
         note: "",
         is_variant: false,
         is_imei: false,
-        is_expire: false
+        is_expire: false,
+        is_quotation: false,
       },
       code_exist: ""
     };
@@ -448,6 +465,7 @@ export default {
   methods: {
     //------------- Submit Validation Create Product
     Submit_Product() {
+      console.log(this.product, this.price);
       this.$refs.Create_Product.validate().then(success => {
         if (!success) {
           this.makeToast(
@@ -455,11 +473,19 @@ export default {
             this.$t("Please_fill_the_form_correctly"),
             this.$t("Failed")
           );
+        } else if (this.product.cost >= this.product.price) {
+          this.makeToast(
+            "danger",
+            this.$t("Selling price must be greater than its cost price"),
+            this.$t("Failed")
+          );
         } else {
           this.Create_Product();
-        }
+        } 
       });
     },
+
+    
 
     //------ Toast
     makeToast(variant, msg, title) {
@@ -539,7 +565,7 @@ export default {
       NProgress.set(0.1);
       var self = this;
       self.SubmitProcessing = true;
-
+      
       if (self.product.is_variant && self.variants.length <= 0) {
         self.product.is_variant = false;
       }
@@ -567,15 +593,29 @@ export default {
       axios
         .post("Products", self.data)
         .then(response => {
+          if(response.data.exist == true) {
+                NProgress.done();
+                self.SubmitProcessing = false;
+                
+                this.makeToast(
+                "danger",
+                this.$t("Data has already exist"),
+                this.$t("Failed")
+              );
+
+          } else if(response.data.exist == false)  {
+                NProgress.done();
+                self.SubmitProcessing = false;
+
+                this.$router.push({ name: "index_products" });
+                this.makeToast(
+                "success",
+                this.$t("Successfully_Created"),
+                this.$t("Success")
+              );
+          }
           // Complete the animation of theprogress bar.
-          NProgress.done();
-          self.SubmitProcessing = false;
-          this.$router.push({ name: "index_products" });
-          this.makeToast(
-            "success",
-            this.$t("Successfully_Created"),
-            this.$t("Success")
-          );
+         
         })
         .catch(error => {
           // Complete the animation of theprogress bar.

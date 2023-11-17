@@ -2398,6 +2398,7 @@ export default {
         },
         //---- Delete sales by selection
         delete_by_selected() {
+            console.log(this.selectedIds);
             this.$swal({
                 title: this.$t("Delete.Title"),
                 text: this.$t("Delete.Text"),

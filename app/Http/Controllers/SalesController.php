@@ -636,7 +636,7 @@ class SalesController extends BaseController
 
     public function delete_by_selection(Request $request)
     {
-
+        
         $this->authorizeForUser($request->user('api'), 'delete', Sale::class);
 
         \DB::transaction(function () use ($request) {
@@ -646,8 +646,10 @@ class SalesController extends BaseController
             foreach ($selectedIds as $sale_id) {
 
                 $current_Sale = Sale::findOrFail($sale_id);
+               
                 $old_sale_details = SaleDetail::where('sale_id', $sale_id)->get();
-                $shipment_data =  Shipment::where('sale_id', $id)->first();
+                
+                $shipment_data =  Shipment::where('sale_id', $sale_id)->first();
 
                 // Check If User Has Permission view All Records
                 if (!$view_records) {

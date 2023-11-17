@@ -337,7 +337,7 @@ export default {
 
     //----------------------------------Create new currency ----------------\\
     Create_Currency() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       axios
         .post("currencies", {
           name: this.currency.name,
@@ -345,14 +345,35 @@ export default {
           symbol: this.currency.symbol
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          Fire.$emit("Event_Currency");
 
-          this.makeToast(
+          if(response.data.exist == true) {
+            // NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+          } else if (response.data.exist == false) {
+            self.SubmitProcessing = false;
+            Fire.$emit("Event_Currency");
+
+            this.makeToast(
             "success",
             this.$t("Create.TitleCurrency"),
             this.$t("Success")
-          );
+            );
+          }
+
+          // this.SubmitProcessing = false;
+          // Fire.$emit("Event_Currency");
+
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Create.TitleCurrency"),
+          //   this.$t("Success")
+          // );
         })
         .catch(error => {
           this.SubmitProcessing = false;
@@ -370,14 +391,35 @@ export default {
           symbol: this.currency.symbol
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          Fire.$emit("Event_Currency");
 
-          this.makeToast(
+          if(response.data.exist == true) {
+            // NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+          } else if (response.data.exist == false) {
+            self.SubmitProcessing = false;
+            Fire.$emit("Event_Currency");
+
+            this.makeToast(
             "success",
             this.$t("Update.TitleCurrency"),
             this.$t("Success")
-          );
+            );
+          }
+
+          // this.SubmitProcessing = false;
+          // Fire.$emit("Event_Currency");
+
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Update.TitleCurrency"),
+          //   this.$t("Success")
+          // );
         })
         .catch(error => {
           this.SubmitProcessing = false;

@@ -2011,7 +2011,7 @@ export default {
 
     //------------------------ Create Permissions -------------------\\
     Create_Permission() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       NProgress.start();
       NProgress.set(0.1);
       axios
@@ -2020,17 +2020,41 @@ export default {
           permissions: this.permissions
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          NProgress.done();
-          this.makeToast(
+
+          if(response.data.exist == true) {
+            // NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Duplicate permission key"),
+              this.$t("Failed")
+              );
+          } else if (response.data.exist == false) {
+            self.SubmitProcessing = false;
+            Fire.$emit("Event_Currency");
+
+            this.makeToast(
             "success",
             this.$t("Create.TitleRole"),
             this.$t("Success")
-          );
+            );
 
-          this.$router.push({
+            this.$router.push({
             name: "groupPermission"
           });
+          }
+          // this.SubmitProcessing = false;
+          // NProgress.done();
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Create.TitleRole"),
+          //   this.$t("Success")
+          // );
+
+          // this.$router.push({
+          //   name: "groupPermission"
+          // });
         })
         .catch(error => {
           this.SubmitProcessing = false;

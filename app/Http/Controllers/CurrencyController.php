@@ -6,7 +6,7 @@ use App\Models\Currency;
 use App\utils\helpers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use DB;
 class CurrencyController extends Controller
 {
 
@@ -54,19 +54,28 @@ class CurrencyController extends Controller
     {
         $this->authorizeForUser($request->user('api'), 'create', Currency::class);
 
-        request()->validate([
-            'code' => 'required',
-            'name' => 'required',
-            'symbol' => 'required',
-        ]);
+        $existingRecord = DB::table('currencies')
+        ->where('name', $request['name'])
+        ->Where('deleted_at', null)
+        ->count();
 
-        Currency::create([
-            'name' => $request['name'],
-            'code' => $request['code'],
-            'symbol' => $request['symbol'],
-        ]);
-
-        return response()->json(['success' => true]);
+        if($existingRecord < 1) {
+            request()->validate([
+                'code' => 'required',
+                'name' => 'required',
+                'symbol' => 'required',
+            ]);
+    
+            Currency::create([
+                'name' => $request['name'],
+                'code' => $request['code'],
+                'symbol' => $request['symbol'],
+            ]);
+    
+            return response()->json(['exist' => false]);
+        }else {
+            return response()->json(['exist' => true]);
+        }
 
     }
 
@@ -83,19 +92,31 @@ class CurrencyController extends Controller
     {
         $this->authorizeForUser($request->user('api'), 'update', Currency::class);
 
-        request()->validate([
-            'code' => 'required',
-            'name' => 'required',
-            'symbol' => 'required',
-        ]);
+        $existingRecord = DB::table('currencies')
+        ->where('name', $request['name'])
+        ->where('deleted_at', '=', NULL)
+        ->where('id', '!=', $id)
+        ->count();
 
-        Currency::whereId($id)->update([
-            'name' => $request['name'],
-            'code' => $request['code'],
-            'symbol' => $request['symbol'],
-        ]);
+        if($existingRecord < 1) {
+            request()->validate([
+                'code' => 'required',
+                'name' => 'required',
+                'symbol' => 'required',
+            ]);
+    
+            Currency::whereId($id)->update([
+                'name' => $request['name'],
+                'code' => $request['code'],
+                'symbol' => $request['symbol'],
+            ]);
+    
+            return response()->json(['exist' => false]);
+        }else {
+            return response()->json(['exist' => true]);
+        }
 
-        return response()->json(['success' => true]);
+        
 
     }
 

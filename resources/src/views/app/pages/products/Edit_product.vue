@@ -581,14 +581,35 @@ export default {
       axios
         .post("Products/" + this.product.id, self.data)
         .then(response => {
-          NProgress.done();
-          self.SubmitProcessing = false;
-          this.$router.push({ name: "index_products" });
-          this.makeToast(
-            "success",
-            this.$t("Successfully_Updated"),
-            this.$t("Success")
-          );
+          if(response.data.exist == true) {
+                NProgress.done();
+                self.SubmitProcessing = false;
+                
+                this.makeToast(
+                "danger",
+                this.$t("Data has already exist"),
+                this.$t("Failed")
+              );
+
+          } else if(response.data.exist == false)  {
+                NProgress.done();
+                self.SubmitProcessing = false;
+
+                this.$router.push({ name: "index_products" });
+                this.makeToast(
+                "success",
+                this.$t("Successfully_Updated"),
+                this.$t("Success")
+              );
+          }
+          // NProgress.done();
+          // self.SubmitProcessing = false;
+          // this.$router.push({ name: "index_products" });
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Successfully_Updated"),
+          //   this.$t("Success")
+          // );
         })
         .catch(error => {
           if (error.errors.code.length > 0) {

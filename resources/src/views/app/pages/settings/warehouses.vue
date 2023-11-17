@@ -375,7 +375,7 @@ export default {
 
     //------------------------------- Create Warehouse ------------------------\\
     Create_Warehouse() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       axios
         .post("warehouses", {
           name: this.warehouse.name,
@@ -386,13 +386,24 @@ export default {
           city: this.warehouse.city
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          Fire.$emit("Event_Warehouse");
-          this.makeToast(
+          
+          if(response.data.exist == true) {
+        
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+          } else if (response.data.exist == false) {
+            // self.SubmitProcessing = false;
+            Fire.$emit("Event_Warehouse");
+
+            this.makeToast(
             "success",
-            this.$t("Create.TitleWarhouse"),
+            this.$t("Create.TitleBrand"),
             this.$t("Success")
-          );
+            );
+          }
         })
         .catch(error => {
           this.SubmitProcessing = false;
@@ -402,7 +413,7 @@ export default {
 
     //------------------------------- Update Warehouse ------------------------\\
     Update_Warehouse() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       axios
         .put("warehouses/" + this.warehouse.id, {
           name: this.warehouse.name,
@@ -413,14 +424,35 @@ export default {
           city: this.warehouse.city
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          Fire.$emit("Event_Warehouse");
 
-          this.makeToast(
+          if(response.data.exist == true) {
+            NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+          } else if (response.data.exist == false) {
+            self.SubmitProcessing = false;
+            Fire.$emit("Event_Warehouse");
+
+            this.makeToast(
             "success",
             this.$t("Update.TitleWarhouse"),
             this.$t("Success")
-          );
+            );
+          }
+
+          // this.SubmitProcessing = false;
+          // Fire.$emit("Event_Warehouse");
+
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Update.TitleWarhouse"),
+          //   this.$t("Success")
+          // );
         })
         .catch(error => {
           this.SubmitProcessing = false;

@@ -6,6 +6,7 @@ use App\Models\Unit;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class UnitsController extends BaseController
 {
@@ -78,30 +79,45 @@ class UnitsController extends BaseController
 
     public function store(Request $request)
     {
+
         $this->authorizeForUser($request->user('api'), 'create', Unit::class);
 
-        request()->validate([
-            'name' => 'required',
-            'ShortName' => 'required',
-        ]);
+        $existingRecord = DB::table('units')
+        ->where('name', $request['name'])
+        ->Where('deleted_at', null)
+        ->count();
 
-        if ($request->base_unit == '') {
-            $operator = '*';
-            $operator_value = 1;
+
+        if($existingRecord < 1) {
+            request()->validate([
+                'name' => 'required',
+                'ShortName' => 'required',
+            ]);
+    
+            if ($request->base_unit == '') {
+                $operator = '*';
+                $operator_value = 1;
+            } else {
+                $operator = $request->operator;
+                $operator_value = $request->operator_value;
+            }
+    
+            Unit::create([
+                'name' => $request['name'],
+                'ShortName' => $request['ShortName'],
+                'base_unit' => $request['base_unit'],
+                'operator' => $operator,
+                'operator_value' => $operator_value,
+            ]);
+    
+            return response()->json(['exist' => false]);
         } else {
-            $operator = $request->operator;
-            $operator_value = $request->operator_value;
+            return response()->json(['exist' => true]);
         }
 
-        Unit::create([
-            'name' => $request['name'],
-            'ShortName' => $request['ShortName'],
-            'base_unit' => $request['base_unit'],
-            'operator' => $operator,
-            'operator_value' => $operator_value,
-        ]);
 
-        return response()->json(['success' => true]);
+
+       
 
     }
 
@@ -111,30 +127,42 @@ class UnitsController extends BaseController
     {
         $this->authorizeForUser($request->user('api'), 'update', Unit::class);
 
-        request()->validate([
-            'name' => 'required',
-            'ShortName' => 'required',
-        ]);
+        $existingRecord = DB::table('units')
+        ->where('name', $request['name'])
+        ->where('deleted_at', '=', NULL)
+        ->Where('id','!=', $id )
+        ->count();
 
-        if ($request->base_unit == '' || $request->base_unit == $id) {
-            $operator = '*';
-            $operator_value = 1;
-            $base_unit = null;
-        } else {
-            $operator = $request->operator;
-            $operator_value = $request->operator_value;
-            $base_unit = $request['base_unit'];
+        if($existingRecord < 1) {
+            request()->validate([
+                'name' => 'required',
+                'ShortName' => 'required',
+            ]);
+    
+            if ($request->base_unit == '' || $request->base_unit == $id) {
+                $operator = '*';
+                $operator_value = 1;
+                $base_unit = null;
+            } else {
+                $operator = $request->operator;
+                $operator_value = $request->operator_value;
+                $base_unit = $request['base_unit'];
+            }
+    
+            Unit::whereId($id)->update([
+                'name' => $request['name'],
+                'ShortName' => $request['ShortName'],
+                'base_unit' => $base_unit,
+                'operator' => $operator,
+                'operator_value' => $operator_value,
+            ]);
+    
+            return response()->json(['exist' => false]);
+        }else {
+            return response()->json(['exist' => true]);
         }
 
-        Unit::whereId($id)->update([
-            'name' => $request['name'],
-            'ShortName' => $request['ShortName'],
-            'base_unit' => $base_unit,
-            'operator' => $operator,
-            'operator_value' => $operator_value,
-        ]);
-
-        return response()->json(['success' => true]);
+        
 
     }
 

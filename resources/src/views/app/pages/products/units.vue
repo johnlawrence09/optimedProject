@@ -402,14 +402,33 @@ export default {
           operator_value: this.unit.operator_value
         })
         .then(response => {
-           this.SubmitProcessing = false;
-          Fire.$emit("Event_Unit");
+          if(response.data.exist == true) {
+                self.SubmitProcessing = false;
+                
+                this.makeToast(
+                "danger",
+                this.$t("Data has already exist"),
+                this.$t("Failed")
+              );
 
-          this.makeToast(
-            "success",
-            this.$t("Create.TitleUnit"),
-            this.$t("Success")
+          } else if(response.data.exist == false)  {
+                this.SubmitProcessing = false;
+                Fire.$emit("Event_Unit");
+
+                this.makeToast(
+                "success",
+                this.$t("Create.TitleUnit"),
+                this.$t("Success")
           );
+          }
+          //  this.SubmitProcessing = false;
+          // Fire.$emit("Event_Unit");
+
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Create.TitleUnit"),
+          //   this.$t("Success")
+          // );
         })
         .catch(error => {
            this.SubmitProcessing = false;
@@ -419,7 +438,6 @@ export default {
 
     //--------------- Send Request with axios ( Update Unit) --------------------\\
     Update_Unit() {
-       this.SubmitProcessing = true;
       this.setToStrings();
       axios
         .put("units/" + this.unit.id, {
@@ -430,14 +448,27 @@ export default {
           operator_value: this.unit.operator_value
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          Fire.$emit("Event_Unit");
+          if(response.data.exist == true) {
+              NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
 
-          this.makeToast(
-            "success",
-            this.$t("Update.TitleUnit"),
-            this.$t("Success")
-          );
+          } else if(response.data.exist == false) {
+            this.SubmitProcessing = false;
+            Fire.$emit("Event_Unit");
+
+            this.makeToast(
+              "success",
+              this.$t("Update.TitleUnit"),
+              this.$t("Success")
+            );
+          }
+          
         })
         .catch(error => {
           this.SubmitProcessing = false;

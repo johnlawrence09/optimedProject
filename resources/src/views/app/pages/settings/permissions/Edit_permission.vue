@@ -1999,7 +1999,7 @@ export default {
 
     //------------------------ Update Permissions -------------------\\
     Update_Permission() {
-       this.SubmitProcessing = true;
+      //  this.SubmitProcessing = true;
       NProgress.start();
       NProgress.set(0.1);
       let id = this.$route.params.id;
@@ -2009,16 +2009,40 @@ export default {
           permissions: this.permissions
         })
         .then(response => {
-          this.SubmitProcessing = false;
-          NProgress.done();
-          this.makeToast(
+
+          if(response.data.exist == true) {
+            // NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+          } else if (response.data.exist == false) {
+            self.SubmitProcessing = false;
+            Fire.$emit("Event_Currency");
+
+            this.makeToast(
             "success",
             this.$t("Update.TitleRole"),
             this.$t("Success")
-          );
+            );
 
-          this.$router.push({ name: "groupPermission" });
-          this.$store.dispatch("refreshUserPermissions");
+            this.$router.push({ name: "groupPermission" });
+            this.$store.dispatch("refreshUserPermissions");
+          }
+
+          // this.SubmitProcessing = false;
+          // NProgress.done();
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Update.TitleRole"),
+          //   this.$t("Success")
+          // );
+
+          // this.$router.push({ name: "groupPermission" });
+          // this.$store.dispatch("refreshUserPermissions");
         })
         .catch(error => {
           this.SubmitProcessing = false;

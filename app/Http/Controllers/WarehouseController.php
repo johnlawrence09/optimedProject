@@ -61,56 +61,68 @@ class WarehouseController extends Controller
     {
         $this->authorizeForUser($request->user('api'), 'create', Warehouse::class);
 
-        request()->validate([
-            'name' => 'required',
-        ]);
+        $existingRecord = DB::table('warehouses')
+        ->where('name', $request['name'])
+        ->Where('deleted_at', null)
+        ->count();
 
-        \DB::transaction(function () use ($request) {
-
-            $Warehouse = new Warehouse;
-            $Warehouse->name = $request['name'];
-            $Warehouse->mobile = $request['mobile'];
-            $Warehouse->country = $request['country'];
-            $Warehouse->city = $request['city'];
-            $Warehouse->zip = $request['zip'];
-            $Warehouse->email = $request['email'];
-            $Warehouse->save();
-
-            $products = Product::where('deleted_at', '=', null)
-                ->pluck('id')
-                ->toArray();
-
-            if ($products) {
-                foreach ($products as $product) {
-                    $product_warehouse = [];
-                    $Product_Variants = ProductVariant::where('product_id', $product)
-                        ->where('deleted_at', null)
-                        ->get();
-
-                    if ($Product_Variants->isNotEmpty()) {
-                        foreach ($Product_Variants as $product_variant) {
-
+        if($existingRecord < 1) {
+            request()->validate([
+                'name' => 'required',
+            ]);
+    
+            \DB::transaction(function () use ($request) {
+    
+                $Warehouse = new Warehouse;
+                $Warehouse->name = $request['name'];
+                $Warehouse->mobile = $request['mobile'];
+                $Warehouse->country = $request['country'];
+                $Warehouse->city = $request['city'];
+                $Warehouse->zip = $request['zip'];
+                $Warehouse->email = $request['email'];
+                $Warehouse->save();
+    
+                $products = Product::where('deleted_at', '=', null)
+                    ->pluck('id')
+                    ->toArray();
+    
+                if ($products) {
+                    foreach ($products as $product) {
+                        $product_warehouse = [];
+                        $Product_Variants = ProductVariant::where('product_id', $product)
+                            ->where('deleted_at', null)
+                            ->get();
+    
+                        if ($Product_Variants->isNotEmpty()) {
+                            foreach ($Product_Variants as $product_variant) {
+    
+                                $product_warehouse[] = [
+                                    'product_id' => $product,
+                                    'warehouse_id' => $Warehouse->id,
+                                    'product_variant_id' => $product_variant->id,
+                                ];
+                            }
+                        } else {
                             $product_warehouse[] = [
                                 'product_id' => $product,
                                 'warehouse_id' => $Warehouse->id,
-                                'product_variant_id' => $product_variant->id,
+                                'product_variant_id' => null,
                             ];
                         }
-                    } else {
-                        $product_warehouse[] = [
-                            'product_id' => $product,
-                            'warehouse_id' => $Warehouse->id,
-                            'product_variant_id' => null,
-                        ];
+    
+                        product_warehouse::insert($product_warehouse);
                     }
-
-                    product_warehouse::insert($product_warehouse);
                 }
-            }
+    
+            }, 10);
+    
+            return response()->json(['exist' => false]);
+        }else {
+            return response()->json(['exist' => true]);
 
-        }, 10);
+        }
 
-        return response()->json(['success' => true]);
+       
     }
 
     //------------ function show -----------\\
@@ -126,19 +138,31 @@ class WarehouseController extends Controller
     {
         $this->authorizeForUser($request->user('api'), 'update', Warehouse::class);
 
-        request()->validate([
-            'name' => 'required',
-        ]);
+        $existingRecord = DB::table('warehouses')
+        ->where('name', $request['name'])
+        ->where('deleted_at', '=', NULL)
+        ->where('id', '!=', $id)
+        ->count();
 
-        Warehouse::whereId($id)->update([
-            'name' => $request['name'],
-            'mobile' => $request['mobile'],
-            'country' => $request['country'],
-            'city' => $request['city'],
-            'zip' => $request['zip'],
-            'email' => $request['email'],
-        ]);
-        return response()->json(['success' => true]);
+        if($existingRecord < 1) {
+            request()->validate([
+                'name' => 'required',
+            ]);
+    
+            Warehouse::whereId($id)->update([
+                'name' => $request['name'],
+                'mobile' => $request['mobile'],
+                'country' => $request['country'],
+                'city' => $request['city'],
+                'zip' => $request['zip'],
+                'email' => $request['email'],
+            ]);
+            return response()->json(['exist' => false]);
+        } else {
+            return response()->json(['exist' => true]);
+        }
+
+        
     }
 
     //----------- Delete  Warehouse --------------\\

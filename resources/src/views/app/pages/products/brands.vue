@@ -363,14 +363,26 @@ export default {
       axios
         .post("brands", self.data)
         .then(response => {
-          self.SubmitProcessing = false;
-          Fire.$emit("Event_Brand");
+          if(response.data.exist == true) {
+              NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
 
-          this.makeToast(
-            "success",
-            this.$t("Create.TitleBrand"),
-            this.$t("Success")
-          );
+          } else if(response.data.exist == false) {
+            this.SubmitProcessing = false;
+            Fire.$emit("Event_Brand");
+
+            this.makeToast(
+              "success",
+              this.$t("Create.TitleUnit"),
+              this.$t("Success")
+            );
+          }
         })
         .catch(error => {
            self.SubmitProcessing = false;
@@ -390,14 +402,26 @@ export default {
       axios
         .post("brands/" + self.brand.id, self.data)
         .then(response => {
-           self.SubmitProcessing = false;
-          Fire.$emit("Event_Brand");
+          if(response.data.exist == true) {
+            NProgress.done();
+              self.SubmitProcessing = false;
+                
+              this.makeToast(
+              "danger",
+              this.$t("Data has already exist"),
+              this.$t("Failed")
+              );
+          } else if (response.data.exist == false) {
+            self.SubmitProcessing = false;
+            Fire.$emit("Event_Brand");
 
-          this.makeToast(
+            this.makeToast(
             "success",
             this.$t("Update.TitleBrand"),
             this.$t("Success")
-          );
+            );
+          }
+           
         })
         .catch(error => {
            self.SubmitProcessing = false;
