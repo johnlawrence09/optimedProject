@@ -61,25 +61,19 @@
       <b-modal hide-footer size="md" id="New_warehouse_location" :title="editmode?$t('Edit'):$t('Add')">
         <b-form @submit.prevent="Submit_Warehouse_Location">
           <b-row>
-            <!-- Code category -->
-            <!-- <b-col md="12">
-              <validation-provider
-                name="Code category"
-                :rules="{ required: true}"
-                v-slot="validationContext"
-              >
-                <b-form-group :label="$t('Codecategorie') + ' ' + '*'">
-                  <b-form-input
-                    :placeholder="$t('Enter_Code_category')"
-                    :state="getValidationState(validationContext)"
-                    aria-describedby="Code-feedback"
-                    label="Code"
-                    v-model="category.code"
-                  ></b-form-input>
-                  <b-form-invalid-feedback id="Code-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+
+            <b-col md="12">
+               <b-form-group class="mt-2" :label="$t('Add Warehouse')">
+                  <v-select
+                    v-model="warehouse.id"
+                    @input="warehouse.id"
+                    :reduce="label => label.value"
+                    :placeholder="$t('PleaseSelect')"
+                    :options="warehouses.map(warehouses => ({label: warehouses.name, value: warehouses.id}))"
+                  />
                 </b-form-group>
-              </validation-provider>
-            </b-col> -->
+            </b-col>
+            {{ warehouses }}
 
             <!-- Name category -->
             <b-col md="12">
@@ -107,7 +101,7 @@
                     <div class="spinner sm spinner-primary mt-3"></div>
                   </div>
             </b-col>
-
+            {{ warehouse }}
           </b-row>
         </b-form>
       </b-modal>
@@ -140,8 +134,14 @@ export default {
       totalRows: "",
       search: "",
       limit: "10",
+      warehouses:[],
       warehouse_locations: [],
       editmode: false,
+
+      warehouse : {
+        id: "",
+        name: "",
+      },
 
       warehouse_location: {
         id: "",
@@ -253,6 +253,20 @@ export default {
       });
     },
 
+    GetElements() {
+            axios
+                .get("Get_Warehouses/All")
+                .then((response) => {
+                    this.warehouses = response.data.warehouses;
+                  
+                })
+                .catch((response) => {
+                    setTimeout(() => {
+                        this.isLoading = false;
+                    }, 500);
+                });
+        },
+
     //------------------------------ Modal  (create category) -------------------------------\\
     New_warehouse_location() {
       this.reset_Form();
@@ -307,10 +321,12 @@ export default {
 
     //----------------------------------Create new Category ----------------\\
     Create_Warehouse_Location() {
+      console.log('test');
       this.SubmitProcessing = true;
       axios
         .post("warehouse_locations", {
           name: this.warehouse_location.name,
+          warehouse_id: this.warehouse.id
         })
         .then(response => {
           this.SubmitProcessing = false;
@@ -437,10 +453,13 @@ export default {
     }
   }, //end Methods
 
+  
+
   //----------------------------- Created function-------------------
 
   created: function() {
     this.Get_Warehouse_Locations(1);
+    this.GetElements();
 
     Fire.$on("Event_Warehouse_Location", () => {
       setTimeout(() => {

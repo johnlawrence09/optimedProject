@@ -58,6 +58,7 @@ class WarehouseLocationController extends Controller
 
         WarehouseLocation::create([
             'name' => $request['name'],
+            'warehouse_id' => $request['warehouse_id']
         ]);
         return response()->json(['success' => true]);
     }

@@ -49,7 +49,7 @@
                                         :rules="{ required: true }"
                                     >
                                         <b-form-group
-                                            slot-scope="{ valid, errors }"
+                                            slot-scope="{ validpurchases, errors }"
                                             label="SO Refecence *"
                                         >
                                             <v-select
@@ -236,7 +236,7 @@
                                                         Remaining Qty
                                                     </th>
                                                     <th scope="col">
-                                                        Receive Qty
+                                                        Release Qty
                                                     </th>
                                                     <th scope="col">
                                                         Lot Number
@@ -359,7 +359,7 @@
                                                                     "
                                                                 />
                                                                 <b-input-group-append>
-                                                                    <span
+                                                                    <span 
                                                                         class="btn btn-primary btn-sm"
                                                                         @click="
                                                                             increment(
@@ -1093,6 +1093,7 @@ export default {
             },
             purchases: [],
             warehouse_locations: [],
+          
         };
     },
     computed: {
@@ -1392,7 +1393,6 @@ export default {
                 .get("Products/Sales/" + id + "?stock=" + 0)
                 .then((response) => {
                     this.products = response.data.products;
-                    console.log(this.products);
                     this.purchase.warehouse_id = response.data.warehouse_id;
                     this.purchase.supplier_id = response.data.provider_id;
                     NProgress.done();
@@ -1409,7 +1409,7 @@ export default {
             axios
                 .get("Products/Warehouse/" + id + "?stock=" + 0)
                 .then((response) => {
-                    this.products = response.data;
+
                     NProgress.done();
                 })
                 .catch((error) => {});
@@ -1446,9 +1446,10 @@ export default {
         //-----------------------------------increment QTY ------------------------------\\
 
         increment(detail, id) {
+            
             for (var i = 0; i < this.details.length; i++) {
                 if (this.details[i].detail_id == id) {
-                    if (detail.quantity_balance > this.details[i].quantity) {
+                    if (detail.quantity_balance > this.details[i].quantity || detail.order_quantity > this.details[i].quantity  ) {
                         this.formatNumber(this.details[i].quantity++, 2);
                     } else {
                         this.makeToast(
@@ -1692,7 +1693,7 @@ export default {
                 .then((response) => {
                     this.suppliers = response.data.suppliers;
                     this.warehouses = response.data.warehouses;
-                    this.purchases = response.data.purchases;
+                    this.purchases = response.data.purchases
                     this.warehouse_locations =
                         response.data.warehouse_locations;
                     this.isLoading = false;

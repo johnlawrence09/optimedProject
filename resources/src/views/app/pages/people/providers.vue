@@ -740,7 +740,7 @@ export default {
 
     //---------------------------- Create Provider  -----------------------\\
     Create_Provider() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       axios
         .post("providers", {
           name: this.provider.name,
@@ -751,14 +751,38 @@ export default {
           adresse: this.provider.adresse
         })
         .then(response => {
-          Fire.$emit("Event_Provider");
 
-          this.makeToast(
-            "success",
-            this.$t("Create.TitleSupplier"),
-            this.$t("Success")
-          );
-          this.SubmitProcessing = false;
+          if(response.data.exist == true) {
+                NProgress.done();
+                self.SubmitProcessing = false;
+                
+                this.makeToast(
+                "danger",
+                this.$t("Data has already exist"),
+                this.$t("Failed")
+              );
+
+          } else if(response.data.exist == false)  {
+                NProgress.done();
+                self.SubmitProcessing = false;
+
+                Fire.$emit("Event_Provider");
+
+                this.makeToast(
+                  "success",
+                  this.$t("Create.TitleSupplier"),
+                  this.$t("Success")
+                );
+                this.SubmitProcessing = false;
+          }
+          // Fire.$emit("Event_Provider");
+
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Create.TitleSupplier"),
+          //   this.$t("Success")
+          // );
+          // this.SubmitProcessing = false;
         })
         .catch(error => {
           this.makeToast("danger", this.$t("InvalidData"), this.$t("Failed"));
@@ -768,7 +792,7 @@ export default {
 
     //--------------------------- Update Provider -----------------------\\
     Update_provider() {
-      this.SubmitProcessing = true;
+      // this.SubmitProcessing = true;
       axios
         .put("providers/" + this.provider.id, {
           name: this.provider.name,
@@ -779,14 +803,39 @@ export default {
           adresse: this.provider.adresse
         })
         .then(response => {
-          Fire.$emit("Event_Provider");
 
-          this.makeToast(
-            "success",
-            this.$t("Update.TitleSupplier"),
-            this.$t("Success")
-          );
-          this.SubmitProcessing = false;
+          if(response.data.exist == true) {
+                // NProgress.done();
+                // self.SubmitProcessing = false;
+                
+                this.makeToast(
+                "danger",
+                this.$t("Data has already exist"),
+                this.$t("Failed")
+              );
+
+          } else if(response.data.exist == false)  {
+                // NProgress.done();
+                // self.SubmitProcessing = false;
+
+                Fire.$emit("Event_Provider");
+
+                this.makeToast(
+                  "success",
+                  this.$t("Update.TitleSupplier"),
+                  this.$t("Success")
+                );
+                this.SubmitProcessing = false;
+          }
+
+          // Fire.$emit("Event_Provider");
+
+          // this.makeToast(
+          //   "success",
+          //   this.$t("Update.TitleSupplier"),
+          //   this.$t("Success")
+          // );
+          // this.SubmitProcessing = false;
         })
         .catch(error => {
           this.makeToast("danger", this.$t("InvalidData"), this.$t("Failed"));

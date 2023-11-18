@@ -296,6 +296,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------------------------------------------\\
 
     Route::resource('purchase_receives', 'PurchaseReceiveController');
+    Route::post('purchase_receipt/delete/by_selection', 'PurchaseReceiveController@delete_by_selection');
 
 
     //------------------------------- Payments  Purchases --------------------------\\

@@ -66,20 +66,35 @@ class ProvidersController extends BaseController
     {
         $this->authorizeForUser($request->user('api'), 'create', Provider::class);
 
-        request()->validate([
-            'name' => 'required',
-            'email' => 'required',
-        ]);
-        Provider::create([
-            'name' => $request['name'],
-            'code' => $this->getNumberOrder(),
-            'adresse' => $request['adresse'],
-            'phone' => $request['phone'],
-            'email' => $request['email'],
-            'country' => $request['country'],
-            'city' => $request['city'],
-        ]);
-        return response()->json(['success' => true]);
+        $address = trim($request['country']) . trim($request['city']) . trim($request['adresse']);
+
+        $existingRecord =  DB::table('providers')
+        ->where('name', trim($request['name']))
+        ->whereRaw("CONCAT(trim(country),trim(city) , trim(adresse)) = ?", [$address])
+        ->Where('deleted_at', null)
+        ->count();
+
+
+        if($existingRecord < 1) {
+            request()->validate([
+                'name' => 'required',
+                'email' => 'required',
+            ]);
+            Provider::create([
+                'name' => $request['name'],
+                'code' => $this->getNumberOrder(),
+                'adresse' => $request['adresse'],
+                'phone' => $request['phone'],
+                'email' => $request['email'],
+                'country' => $request['country'],
+                'city' => $request['city'],
+            ]);
+            return response()->json(['exist' => false]);
+        } else {
+            return response()->json(['exist' => true]);
+        }
+       
+        
 
     }
 
@@ -96,20 +111,35 @@ class ProvidersController extends BaseController
     {
         $this->authorizeForUser($request->user('api'), 'update', Provider::class);
 
-        request()->validate([
-            'name' => 'required',
-            'email' => 'required',
-        ]);
+        $address = trim($request['country']) . trim($request['city']) . trim($request['adresse']);
+        
+        $existingRecord =  DB::table('providers')
+        ->where('name', trim($request['name']))
+        ->whereRaw("CONCAT(trim(country),trim(city) , trim(adresse)) = ?", [$address])
+        ->Where('deleted_at', null)
+        ->where('id', '!=', $id)
+        ->count();
 
-        Provider::whereId($id)->update([
-            'name' => $request['name'],
-            'adresse' => $request['adresse'],
-            'phone' => $request['phone'],
-            'email' => $request['email'],
-            'country' => $request['country'],
-            'city' => $request['city'],
-        ]);
-        return response()->json(['success' => true]);
+        if($existingRecord > 1) {
+            request()->validate([
+                'name' => 'required',
+                'email' => 'required',
+            ]);
+    
+            Provider::whereId($id)->update([
+                'name' => $request['name'],
+                'adresse' => $request['adresse'],
+                'phone' => $request['phone'],
+                'email' => $request['email'],
+                'country' => $request['country'],
+                'city' => $request['city'],
+            ]);
+            return response()->json(['exist' => false]);
+        } else {
+            return response()->json(['exist' => true]);
+        }
+
+        
 
     }
 

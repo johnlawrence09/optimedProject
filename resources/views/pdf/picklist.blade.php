@@ -140,10 +140,7 @@
     <title>Document</title>
   </head>
   <body>
-
-      <h1>TEST</h1>
-
-    <!-- <main class="main-container">
+    <main class="main-container">
       <header>
         <img class="logo" src="img/optimed-logo.jpg.png" alt="optimed-logo" />
       </header>
@@ -156,26 +153,27 @@
            
             <p>SHIP TO :</p>
             <div class="address">
-              <p class="sub-adress">{{ shipTo }}</p>
+              <p class="sub-adress">{{ $shipTo }}</p>
             </div>
           </div>
           <div class="customer-name">
             <p class="number">Customer name</p>
-            <p class="number"><strong>: {{ client }}</strong></p>
+            <p class="number"><strong>:{{ $client }} </strong></p>
           </div>
         </div>
         <div class="right-text">
           <div class="so-number">
             <p class="number">SO Number</p>
-            <p class="number"><strong>: {{ referrence }}</strong></p>
+            <p class="number"><strong>:{{ $ref }}</strong></p>
           </div>
           <div class="order-date">
             <p class="number">Order Date</p>
-            <p class="number"><strong>: {{ date }} </strong></p>
+            <p class="number"><strong>: {{ $date }}  </strong></p>
           </div>
         </div>
       </div>
       <table>
+        
         <tr>
           <th>Released</th>
           <th>Qty</th>
@@ -184,18 +182,21 @@
           <th>Expiration Date</th>
           <th>Location</th>
         </tr>
-       
         <tr>
-          <tbody>
-            @foreach($details as $detail)
-                <td></td>
-                <td>{{ $detail->quantity }}</td>
-                <td>{{ $detail->unit }}</td>
-                <td>{{ $detail->product_name }}</td>
-                <td>{{ $detail->expiration_date}}</td>
-                <td>{{ $detail->warehouse }}</td>
-            @endforeach
-          </tbody>
+          
+        <tbody>
+          <tr>
+            <td></td>
+            <td>{{ $lists['quantity_receive'] ?? '' }} </td>
+            <td>{{ $lists['unit'] ?? '' }} </td>
+            <td>{{ $lists['name'] ?? '' }} </td>
+            <td>{{ $lists['expiration'] ?? '' }} </td>
+            <td>{{ $lists['warehouse'] ?? '' }} </td>
+        </tr>
+      </tbody>
+
+
+
         </tr>
       </table>
       <footer>
@@ -217,6 +218,6 @@
           </div>
         </div>
       </footer>
-    </main> -->
+    </main>
   </body>
 </html>

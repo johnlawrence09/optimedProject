@@ -302,7 +302,7 @@
                     <div class="form-check">
                       <label class="checkbox checkbox-outline-primary">
                         <input type="checkbox" v-model="product.is_variant">
-                        <h5>{{$t('ProductHasMultiVariants')}}</h5>
+                        <h5>This Product has Multi Variant</h5>
                         <span class="checkmark"></span>
                       </label>
                     </div>
@@ -324,7 +324,7 @@
                       <div class="form-check">
                         <label class="checkbox checkbox-outline-primary">
                           <input type="checkbox" v-model="product.is_imei">
-                          <h5>{{$t('Product_Has_Imei_Serial_number')}}</h5>
+                          <h5>This Product has Imei/Serial Number</h5>
                           <span class="checkmark"></span>
                         </label>
                       </div>
@@ -337,7 +337,19 @@
                       <div class="form-check">
                         <label class="checkbox checkbox-outline-primary">
                           <input type="checkbox" v-model="product.is_expire">
-                          <h5>Is Expire</h5>
+                          <h5>This Product has Expiry</h5>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </ValidationProvider>
+                  </b-col>
+
+                  <b-col md="12 mb-2">
+                    <ValidationProvider rules vid="product" v-slot="x">
+                      <div class="form-check">
+                        <label class="checkbox checkbox-outline-primary">
+                          <input type="checkbox" v-model="product.is_quotation">
+                          <h5>This Product is for Quotation</h5>
                           <span class="checkmark"></span>
                         </label>
                       </div>
@@ -436,7 +448,9 @@ export default {
         image: "",
         note: "",
         is_variant: false,
-        is_imei: false
+        is_imei: false,
+        is_expire: false,
+        is_quotation: false,
       },
       code_exist: ""
     };
@@ -509,6 +523,7 @@ export default {
       axios
         .get(`Products/${id}/edit`)
         .then(response => {
+
           this.product = response.data.product;
           this.variants = response.data.product.ProductVariant;
           this.images = response.data.product.images;

@@ -39,6 +39,13 @@
                         <i class="i-Billing"></i>
                         {{ $t("print") }}
                     </button>
+                    <button
+                        @click="printPicklist()"
+                        class="btn btn-warning btn-icon ripple btn-sm"
+                    >
+                        <i class="i-Billing"></i>
+                        {{ $t("Print Picklist") }}
+                    </button>
                     <!-- <button
               v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_delete')"
               @click="Delete_Purchase()"
@@ -389,6 +396,15 @@ export default {
         //------------------------------ Print -------------------------\\
         print() {
             this.$htmlToPaper("print_Invoice");
+        },
+
+        printPicklist() {
+            let id = this.$route.params.id;
+            console.log(id);
+
+            axios.get(`print_picklist/${id}`,)
+           
+            
         },
 
         //------------------------------Formetted Numbers -------------------------\\

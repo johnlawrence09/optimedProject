@@ -122,7 +122,7 @@
                                         {{ $t("SaleDetail") }}
                                     </b-dropdown-item>
                                 </b-navbar-nav>
-                                <b-navbar-nav>
+                                <!-- <b-navbar-nav>
                                     <b-dropdown-item
                                     v-if ="props.row.statut !== 'pending' && props.row.statut !== 'ordered' "
                                         title="Show"
@@ -135,7 +135,7 @@
                                         ></i>
                                         {{ $t("Show Picklist") }}
                                     </b-dropdown-item>
-                                </b-navbar-nav>
+                                </b-navbar-nav> -->
 
                                 <b-dropdown-item
                                     title="Edit"
@@ -269,12 +269,14 @@
                                 </b-dropdown-item>
                             </b-dropdown>
                         </div>
+                        {{ props.row.statut }}
                     </span>
+                   
                     <div v-else-if="props.column.field == 'statut'">
                         <span
-                            v-if="props.row.statut == 'received'"
+                            v-if="props.row.statut == 'For delivery'"
                             class="badge badge-outline-success"
-                            >{{ $t("Delivered") }}</span
+                            >{{ $t("For Delivery") }}</span
                         >
                         <span
                             v-else-if="props.row.statut == 'pending'"
@@ -291,7 +293,7 @@
                             v-else-if="props.row.statut == 'partial'"
                             class="badge badge-outline-primary"
                         >
-                            Partial</span
+                            Partial Delivery</span
                         >
                         <span
                             v-else-if="props.row.statut == 'revoked'"

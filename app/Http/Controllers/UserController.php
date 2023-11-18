@@ -143,7 +143,6 @@ class UserController extends BaseController
 
     public function store(Request $request)
     {
-        dd($request);
         $this->authorizeForUser($request->user('api'), 'create', User::class);
         $this->validate($request, [
             'email' => 'required|unique:users',

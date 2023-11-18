@@ -79,7 +79,7 @@
                         Set status to ordered
                     </button>
                     <button
-                        @click="Edit_Status('revoked', $route.params.id)"
+                        @click="Edit_Status('completed', $route.params.id)"
                         class="btn btn-danger btn-icon ripple btn-sm"
                         v-if="purchase.statut === 'partial'"
                     >
@@ -140,9 +140,9 @@
                                     >{{ $t("partial") }}</span
                                 >
                                 <span
-                                    v-else-if="purchase.statut == 'revoked'"
-                                    class="badge badge-outline-danger"
-                                    >Revoked</span
+                                    v-else-if="purchase.statut == 'completed'"
+                                    class="badge badge-outline-success"
+                                    >Received</span
                                 >
                                 <span
                                     v-else

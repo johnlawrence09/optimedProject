@@ -115,7 +115,6 @@ class ProductsController extends BaseController
 
         $categories = Category::where('deleted_at', null)->get(['id', 'name']);
         $brands = Brand::where('deleted_at', null)->get(['id', 'name']);
-
         return response()->json([
             'warehouses' => $warehouses,
             'categories' => $categories,
@@ -659,7 +658,7 @@ class ProductsController extends BaseController
         }
 
         $data[] = $item;
-
+        
         return response()->json($data[0]);
 
     }
@@ -1283,7 +1282,6 @@ class ProductsController extends BaseController
             $data[] = $item;
         }
 
-     
  
         return response()->json([
             'warehouse_id'  => $purchase->warehouse_id,
@@ -1685,6 +1683,7 @@ class ProductsController extends BaseController
 
         $item['is_imei'] = $Product->is_imei?true:false;
         $item['is_expire'] = $Product->is_expire?true:false;
+        $item['is_quotation'] = $Product->mos?true:false;
 
         $data = $item;
         $categories = Category::where('deleted_at', null)->get(['id', 'name']);
@@ -1700,6 +1699,7 @@ class ProductsController extends BaseController
             ->where('base_unit', null)
             ->get();
 
+       
         return response()->json([
             'product' => $data,
             'categories' => $categories,

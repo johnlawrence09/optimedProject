@@ -593,6 +593,7 @@ export default {
       axios
         .post("Products", self.data)
         .then(response => {
+          
           if(response.data.exist == true) {
                 NProgress.done();
                 self.SubmitProcessing = false;

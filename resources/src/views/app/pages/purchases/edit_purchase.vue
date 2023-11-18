@@ -64,7 +64,7 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col>
-
+                
                  <!-- Product -->
                 <b-col md="12" class="mb-5">
                   <h6>{{$t('ProductName')}}</h6>
@@ -696,29 +696,30 @@ export default {
     //------  get Result Value Search Products
 
     getResultValue(result) {
-      return result.code + " " + "(" + result.name + ")";
+      console.log(result);
+      return result.barcode + " " + "(" + result.name + ")";
     },
 
     //------  Submit Search Products
     SearchProduct(result) {
-      this.product = {};
-      if (
-        this.details.length > 0 &&
-        this.details.some(detail => detail.code === result.code)
-      ) {
-        this.makeToast("warning", this.$t("AlreadyAdd"), this.$t("Warning"));
-      } else {
-        this.product.code = result.code;
-        this.product.quantity = 1;
-        this.product.no_unit = 1;
-        this.product.stock = result.qte_purchase;
-        this.product.product_variant_id = result.product_variant_id;
-        this.Get_Product_Details(result.id);
-      }
+            this.product = {};
+            if (
+              this.details.length > 0 &&
+              this.details.some(detail => detail.product_id === result.id)
+            ) {
+              this.makeToast("warning", this.$t("AlreadyAdd"), this.$t("Warning"));
+            } else {
+              this.product.code = result.code;
+              this.product.quantity = 1;
+              this.product.no_unit = 1;
+              this.product.stock = result.qte_purchase;
+              this.product.product_variant_id = result.product_variant_id;
+              this.Get_Product_Details(result.id);
+            }
 
-      this.search_input= '';
-      this.$refs.product_autocomplete.value = "";
-      this.product_filter = [];
+            this.search_input= '';
+            this.$refs.product_autocomplete.value = "";
+            this.product_filter = [];
     },
 
     //---------------------- Event Select Warehouse ------------------------------\\

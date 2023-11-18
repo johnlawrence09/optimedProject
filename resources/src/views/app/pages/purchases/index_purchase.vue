@@ -132,7 +132,7 @@
                 <b-dropdown-item 
                   v-if="props.row.statut === 'partial'"
                   title="Cancel" 
-                  @click="Edit_Status('revoke', props.row.id)"
+                  @click="Edit_Status('completed', props.row.id)"
                 >
                   <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
                   Cancel Remaining
@@ -167,9 +167,9 @@
               class="badge badge-outline-primary">
             Partial</span>
             <span 
-              v-else-if="props.row.statut == 'revoked'" 
-              class="badge badge-outline-danger">
-            Revoked</span>
+              v-else-if="props.row.statut == 'completed'" 
+              class="badge badge-outline-success">
+            Completed</span>
           </div>
 
           <div v-else-if="props.column.field == 'payment_status'">
@@ -292,7 +292,7 @@
     </b-sidebar>
 
     <!-- Modal Show Payments-->
-    <b-modal hide-footer size="lg" id="Show_payment" :title="$t('ShowPayment')">
+    <b-modal hide-footer size="lg" id="Show_payment" :title="$t('Paymen History')">
       <b-row>
         <b-col lg="12" md="12" sm="12" class="mt-3">
           <div class="table-responsive">
@@ -461,7 +461,7 @@
             <!-- Payment choice -->
             <b-col lg="6" md="12" sm="12">
               <validation-provider name="Payment choice" :rules="{ required: true}">
-                <b-form-group slot-scope="{ valid, errors }" :label="$t('Paymentchoice')">
+                <b-form-group slot-scope="{ valid, errors }" :label="$t('Mode of Payment')">
                   <v-select
                     :class="{'is-invalid': !!errors.length}"
                     :state="errors[0] ? false : (valid ? true : null)"
@@ -472,11 +472,9 @@
                     :options="
                           [
                           {label: 'Cash', value: 'Cash'},
-                          {label: 'credit card', value: 'credit card'},
-                          {label: 'cheque', value: 'cheque'},
-                          {label: 'Western Union', value: 'Western Union'},
-                          {label: 'bank transfer', value: 'bank transfer'},
-                          {label: 'other', value: 'other'},
+                          {label: 'Credit card', value: 'credit card'},
+                          {label: 'Cheque', value: 'cheque'},
+                          {label: 'Bank transfer', value: 'bank transfer'},
                           ]"
                   ></v-select>
                   <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
@@ -954,6 +952,7 @@ export default {
         )
         .then(response => {
           this.purchases = response.data.purchases;
+          console.log(this.purchases);
           this.suppliers = response.data.suppliers;
           this.warehouses = response.data.warehouses;
           this.totalRows = response.data.totalRows;
@@ -1371,6 +1370,7 @@ export default {
     },
 
     Edit_Status(status, id) {
+      console.log(status, id);
       this.paymentProcessing = true;
       NProgress.start();
       NProgress.set(0.1);

@@ -10,6 +10,7 @@ use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\PurchaseReceive;
 use App\Models\PurchaseReceiveDetail;
+use App\Models\PaymentPurchase;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\Unit;
@@ -65,6 +66,8 @@ class PurchaseReceiveController extends Controller
                     return $query->where('user_id', '=', Auth::user()->id);
                 }
             });
+        
+      
 
         //Multiple Filter
         $Filtred = $helpers->filter($Purchases, $columns, $param, $request)
@@ -609,6 +612,90 @@ class PurchaseReceiveController extends Controller
 
     }
 
+    public function delete_by_selection(Request $request)
+    {
+
+        $this->authorizeForUser($request->user('api'), 'delete', Purchase::class);
+
+        \DB::transaction(function () use ($request) {
+            $role = Auth::user()->roles()->first();
+            $view_records = Role::findOrFail($role->id)->inRole('record_view');
+            $selectedIds = $request->selectedIds;
+
+            foreach ($selectedIds as $purchase_receives_id) {
+                $current_Purchase_receive = PurchaseReceive::findOrFail($purchase_receives_id);
+                $old_purchase_receive_details = PurchaseReceiveDetail::where('purchase_receive_id', $purchase_receives_id)->get();
+                // Check If User Has Permission view All Records
+                if (!$view_records) {
+                    // Check If User->id === current_Purchase->id
+                    $this->authorizeForUser($request->user('api'), 'check_record', $current_Purchase_receive);
+                }
+                foreach ($old_purchase_receive_details as $key => $value) {
+               
+                    //check if detail has purchase_unit_id Or Null
+                    if($value['purchase_unit_id'] !== null){
+                        $unit = Unit::where('id', $value['purchase_unit_id'])->first();
+                    }else{
+                        $product_unit_purchase_id = Product::with('unitPurchase')
+                        ->where('id', $value['product_id'])
+                        ->first();
+                        $unit = Unit::where('id', $product_unit_purchase_id['unitPurchase']->id)->first();
+                    }
+    
+                    if ($current_Purchase_receive->statut == "received") {
+    
+                        if ($value['product_variant_id'] !== null) {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Purchase_receive->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->where('product_variant_id', $value['product_variant_id'])
+                                ->first();
+    
+                            if ($unit && $product_warehouse) {
+                                if ($unit->operator == '/') {
+                                    $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
+                                } else {
+                                    $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
+                                }
+    
+                                $product_warehouse->save();
+                            }
+    
+                        } else {
+                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                ->where('warehouse_id', $current_Purchase_receive->warehouse_id)
+                                ->where('product_id', $value['product_id'])
+                                ->first();
+    
+                            if ($unit && $product_warehouse) {
+                                if ($unit->operator == '/') {
+                                    $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
+                                } else {
+                                    $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
+                                }
+    
+                                $product_warehouse->save();
+                            }
+                        }
+                    }
+                }
+    
+                $current_Purchase_receive->details()->delete();
+                $current_Purchase_receive->update([
+                    'deleted_at' => Carbon::now(),
+                ]);
+
+                // PaymentPurchase::where('purchase_id', $purchase_id)->update([
+                //     'deleted_at' => Carbon::now(),
+                // ]);
+            }
+
+        }, 10);
+        return response()->json(['success' => true, 'message' => 'Purchase Receipt Deleted !!']);
+
+    }
+
+
     public function Purchase_Receive_pdf(Request $request, $id)
     {
         $details = array();
@@ -699,4 +786,6 @@ class PurchaseReceiveController extends Controller
         return $pdf->download('Purchase.pdf');
 
     }
+
+    
 }

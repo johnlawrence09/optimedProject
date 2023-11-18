@@ -149,22 +149,22 @@
             </div> -->
             <div v-else-if="props.column.field == 'Ref'">
               <router-link
-                :to="'/app/purchase_receives/detail/'+props.row.id"
+                :to="'/app/sales_receipt/detail/'+props.row.id"
               >
                 <span class="ul-btn__text ml-1">{{props.row.Ref}}</span>
               </router-link>
             </div>
             <div v-else-if="props.column.field == 'purchase_ref'">
               <router-link
-                :to="'/app/purchases/detail/'+props.row.purchase_id"
+                :to="'/app/sales/detail/'+ props.row.sales_id"
               >
-                <span class="ul-btn__text ml-1">{{props.row.purchase_ref}}</span>
+                <span class="ul-btn__text ml-1">{{props.row.sales_ref}}</span>
               </router-link>
             </div>
           </template>
         </vue-good-table>
       </div>
-  
+      
       <!-- Sidebar Filter -->
       <b-sidebar id="sidebar-right" :title="$t('Filter')" bg-variant="white" right shadow>
         <div class="px-3 py-2">
@@ -190,6 +190,7 @@
                   :reduce="label => label.value"
                   :placeholder="$t('Choose_Supplier')"
                   v-model="Filter_Supplier"
+                  
                   :options="suppliers.map(suppliers => ({label: suppliers.name, value: suppliers.id}))"
                 />
               </b-form-group>
@@ -904,7 +905,8 @@
           )
           .then(response => {
             this.purchases = response.data.sales;
-            this.suppliers = response.data.customers;
+            console.log(this.purchases);
+            this.suppliers = response.data.suppliers;
             this.warehouses = response.data.warehouses;
             this.totalRows = response.data.totalRows;
   

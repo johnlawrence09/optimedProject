@@ -74,7 +74,7 @@
                 <b-navbar-nav>
                   <b-dropdown-item title="Show" :to="'/app/purchase_receives/detail/'+props.row.id">
                     <i class="nav-icon i-Eye font-weight-bold mr-2"></i>
-                    Purchase Receive Details
+                    Purchase Receipt Details
                   </b-dropdown-item>
                 </b-navbar-nav>
 
@@ -987,20 +987,20 @@ export default {
       }).then(result => {
         if (result.value) {
           // Start the progress bar.
-          NProgress.start();
-          NProgress.set(0.1);
+          // NProgress.start();
+          // NProgress.set(0.1);
           axios
-            .post("purchases/delete/by_selection", {
+            .post("purchase_receipt/delete/by_selection", {
               selectedIds: this.selectedIds
             })
             .then(() => {
               this.$swal(
                 this.$t("Delete.Deleted"),
-                this.$t("Delete.PurchaseDeleted"),
+                this.$t("Delete.PurchaseReceiptDeleted"),
                 "success"
               );
-
-              Fire.$emit("Delete_Purchase");
+              
+              Fire.$emit("Delete_PurchaseReceipt");
             })
             .catch(() => {
               // Complete the animation of theprogress bar.
@@ -1323,7 +1323,7 @@ export default {
   created: function() {
     this.Get_Purchases(1);
 
-    Fire.$on("Delete_Purchase", () => {
+    Fire.$on("Delete_PurchaseReceipt", () => {
       setTimeout(() => {
         this.Get_Purchases(this.serverParams.page);
         // Complete the animation of the  progress bar.
