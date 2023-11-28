@@ -105,6 +105,16 @@ const routes = [
                                 /* webpackChunkName: "units" */ "./views/app/pages/products/units"
                             ),
                     },
+
+                     // mappings
+                     {
+                        name: "mappings",
+                        path: "mappings",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "units" */ "./views/app/pages/products/mappings"
+                            ),
+                    },
                 ],
             },
 

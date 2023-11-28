@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ShipmentsExport;
 use App\Models\Shipment;
 use App\Models\Sale;
+use App\Models\SalesReceive;
 use App\utils\helpers;
 use Carbon\Carbon;
 use DB;
@@ -79,7 +80,7 @@ class ShipmentController extends BaseController
             $item['sale_id'] = $shipment['sale']['id'];
             $item['warehouse_name'] = $shipment['sale']['warehouse']->name;
             $item['customer_name'] = $shipment['sale']['client']->name;
-            
+
             $data[] = $item;
         }
 
@@ -89,7 +90,7 @@ class ShipmentController extends BaseController
         ]);
     }
 
-   
+
 
     //----------- Store new Shipment -------\\
 
@@ -106,19 +107,24 @@ class ShipmentController extends BaseController
 
             $shipment->user_id = Auth::user()->id;
             $shipment->sale_id = $request['sale_id'];
-            $shipment->delivered_to = $request['delivered_to'];
+            $shipment->customer_name = $request['customer_name'];
             $shipment->shipping_address = $request['shipping_address'];
             $shipment->shipping_details = $request['shipping_details'];
             $shipment->status = $request['status'];
+            $shipment->phone_number = $request['phone_number'];
+            $shipment->email = $request['email'];
             $shipment->save();
 
             $sale = Sale::findOrFail($request['sale_id']);
             $sale->update([
-                'shipping_status' => $request['status'],
+                'statut' => $request['status'],
             ]);
 
+            $saleReceive = SalesReceive::where('sale_id', '=', $request['sale_id'])
+            ->update(['statut' => $request['status']]);
+
         }, 10);
-       
+
         return response()->json(['success' => true]);
 
     }
@@ -199,7 +205,7 @@ class ShipmentController extends BaseController
 
     }
 
-   
+
 
     //----------- Export Excel ALL Shipments-------\\
 
@@ -228,6 +234,6 @@ class ShipmentController extends BaseController
        return $code;
    }
 
-    
+
 
 }

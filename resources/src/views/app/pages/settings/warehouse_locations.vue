@@ -15,9 +15,9 @@
         @on-search="onSearch"
         :search-options="{
         enabled: true,
-        placeholder: $t('Search_this_table'),  
+        placeholder: $t('Search_this_table'),
       }"
-        :select-options="{ 
+        :select-options="{
           enabled: true ,
           clearSelectionText: '',
         }"
@@ -65,15 +65,15 @@
             <b-col md="12">
                <b-form-group class="mt-2" :label="$t('Add Warehouse')">
                   <v-select
-                    v-model="warehouse.id"
+                    v-model="warehouse_location.warehouse_id"
                     @input="warehouse.id"
                     :reduce="label => label.value"
                     :placeholder="$t('PleaseSelect')"
                     :options="warehouses.map(warehouses => ({label: warehouses.name, value: warehouses.id}))"
+                    :disabled="editmode"
                   />
                 </b-form-group>
             </b-col>
-            {{ warehouses }}
 
             <!-- Name category -->
             <b-col md="12">
@@ -101,7 +101,7 @@
                     <div class="spinner sm spinner-primary mt-3"></div>
                   </div>
             </b-col>
-            {{ warehouse }}
+
           </b-row>
         </b-form>
       </b-modal>
@@ -155,6 +155,12 @@ export default {
         {
           label: "Name",
           field: "name",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
+          label: "Warehouse",
+          field: "warehouse.name",
           tdClass: "text-left",
           thClass: "text-left"
         },
@@ -258,7 +264,7 @@ export default {
                 .get("Get_Warehouses/All")
                 .then((response) => {
                     this.warehouses = response.data.warehouses;
-                  
+
                 })
                 .catch((response) => {
                     setTimeout(() => {
@@ -326,7 +332,7 @@ export default {
       axios
         .post("warehouse_locations", {
           name: this.warehouse_location.name,
-          warehouse_id: this.warehouse.id
+          warehouse_id: this.warehouse_location.warehouse_id
         })
         .then(response => {
           this.SubmitProcessing = false;
@@ -347,7 +353,7 @@ export default {
     Update_Warehouse_Location() {
       this.SubmitProcessing = true;
       axios
-        .put("warehouse_locations/" + this.category.id, {
+        .put("warehouse_locations/" + this.warehouse_location.id, {
           name: this.warehouse_location.name,
         })
         .then(response => {
@@ -453,7 +459,7 @@ export default {
     }
   }, //end Methods
 
-  
+
 
   //----------------------------- Created function-------------------
 

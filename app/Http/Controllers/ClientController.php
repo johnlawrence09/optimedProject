@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Exports\ClientsExport;
 use App\Models\Client;
+use App\Models\SalesReceive;
 use App\utils\helpers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -94,7 +95,18 @@ class ClientController extends BaseController
 
     public function show($id){
         //
-        
+        $client = DB::table('clients')
+        ->join('sales_receives', 'clients.id', '=', 'sales_receives.client_id')
+        ->where('sales_receives.sale_id', '=', $id)
+        ->select(
+            DB::raw('CONCAT(clients.adresse, ", ", clients.city, ", ", clients.country) AS full_address'),
+            'sales_receives.sale_id', 'sales_receives.ref',
+            'clients.*'
+        )
+        ->get();
+        return response()->json(['client' => $client]);
+
+
     }
 
     //------------- Update Customer -------------\\
@@ -103,7 +115,7 @@ class ClientController extends BaseController
     {
         $this->authorizeForUser($request->user('api'), 'update', Client::class);
         $this->validate($request, [
-            
+
             'email' => 'required|unique:clients',
             'email' => Rule::unique('clients')->ignore($id)->where(function ($query) {
                 return $query->where('deleted_at', '=', null);
@@ -218,7 +230,7 @@ class ClientController extends BaseController
             } else {
                 return null;
             }
-           
+
             $rules = array('email' => 'required|email|unique:clients');
             //-- Create New Client
             foreach ($data as $key => $value) {
@@ -226,7 +238,7 @@ class ClientController extends BaseController
 
                 $validator = Validator::make($input, $rules);
                 if (!$validator->fails()) {
-                    
+
                     Client::create([
                         'name' => $value['name'] == '' ? null : $value['name'],
                         'code' => $this->getNumberOrder(),

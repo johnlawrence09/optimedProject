@@ -110,7 +110,18 @@
                                 </template>
                                 <b-navbar-nav>
                                     <b-dropdown-item
-                                    v-if ="props.row.statut !== 'pending' && props.row.statut !== 'ordered' "
+                                    v-if="props.row.statut === 'Shipped' || props.row.statut === 'completed' && props.row.statut !== 'Delivered'  "
+                                    title="Ordered"
+                                    @click="Edit_Status('delivered', props.row.id)"
+                                >
+                                    <i
+                                        class="nav-icon i-Pen-2 font-weight-bold mr-2"
+                                    ></i>
+                                    Set status to Delivered
+                                    </b-dropdown-item>
+
+                                    <b-dropdown-item
+                                    v-if ="props.row.statut !== 'pending' || props.row.statut === 'For delivery' || props.row.statut === 'delivered' || props.row.statut === 'completed' "
                                         title="Show"
                                         :to="
                                             '/app/sales/detail/' + props.row.id
@@ -122,27 +133,13 @@
                                         {{ $t("SaleDetail") }}
                                     </b-dropdown-item>
                                 </b-navbar-nav>
-                                <!-- <b-navbar-nav>
-                                    <b-dropdown-item
-                                    v-if ="props.row.statut !== 'pending' && props.row.statut !== 'ordered' "
-                                        title="Show"
-                                        :to="
-                                            '/app/sales/picklist/' + props.row.id
-                                        "
-                                    >
-                                        <i
-                                            class="nav-icon i-Eye font-weight-bold mr-2"
-                                        ></i>
-                                        {{ $t("Show Picklist") }}
-                                    </b-dropdown-item>
-                                </b-navbar-nav> -->
 
                                 <b-dropdown-item
                                     title="Edit"
                                     v-if="
                                         currentUserPermissions.includes(
                                             'Sales_edit'
-                                        )
+                                        ) && props.row.statut !== 'Shipped' && props.row.statut === 'Delivered'
                                     "
                                     :to="'/app/sales/edit/' + props.row.id"
                                 >
@@ -172,7 +169,7 @@
                                     v-if="
                                         currentUserPermissions.includes(
                                             'payment_sales_add'
-                                        )
+                                        ) && props.row.statut !== 'completed' && props.row.payment_statut !== 'paid'
                                     "
                                     @click="New_Payment(props.row)"
                                 >
@@ -186,7 +183,7 @@
                                     v-if="
                                         currentUserPermissions.includes(
                                             'shipment'
-                                        ) && props.row.statut !== 'pending'
+                                        ) && props.row.statut !== 'pending' && props.row.statut !== 'Shipped' && props.row.statut !== 'completed' && props.row.statut !== 'delivered'
                                     "
                                     @click="Edit_Shipment(props.row.id)"
                                 >
@@ -232,20 +229,9 @@
                                 </b-dropdown-item>
 
                                 <b-dropdown-item
-                                    v-if="props.row.statut === 'pending'"
-                                    title="Ordered"
-                                    @click="editStatus('ordered', props.row.id)"
-                                >
-                                    <i
-                                        class="nav-icon i-Pen-2 font-weight-bold mr-2"
-                                    ></i>
-                                    Set status to ordered
-                                </b-dropdown-item>
-
-                                <b-dropdown-item
                                     v-if="props.row.statut === 'partial'"
                                     title="Cancel"
-                                    @click="Edit_Status('revoke', props.row.id)"
+                                    @click="Edit_Status('completed', props.row.id)"
                                 >
                                     <i
                                         class="nav-icon i-Pen-2 font-weight-bold mr-2"
@@ -269,9 +255,8 @@
                                 </b-dropdown-item>
                             </b-dropdown>
                         </div>
-                        {{ props.row.statut }}
                     </span>
-                   
+
                     <div v-else-if="props.column.field == 'statut'">
                         <span
                             v-if="props.row.statut == 'For delivery'"
@@ -279,16 +264,31 @@
                             >{{ $t("For Delivery") }}</span
                         >
                         <span
+                            v-else-if="props.row.statut == 'Shipped'"
+                            class="badge badge-outline-warning"
+                            >{{ $t("Shipped") }}</span
+                        >
+
+                        <span
                             v-else-if="props.row.statut == 'pending'"
                             class="badge badge-outline-info"
                             >{{ $t("Pending") }}</span
                         >
-                        <span
-                            v-else-if="props.row.statut == 'ordered'"
+                        <!-- <span
+                            v-else-if="props.row.statut == 'delivered'"
                             class="badge badge-outline-warning"
                         >
-                            {{ $t("Ordered") }}</span
+                            {{ $t("Delivered") }}</span
+                        > -->
+
+                        <span
+                            v-else-if="props.row.statut == 'delivered'"
+                           >
+                            <b-badge variant="success">Delivered</b-badge>
+                          </span
                         >
+
+
                         <span
                             v-else-if="props.row.statut == 'partial'"
                             class="badge badge-outline-primary"
@@ -296,10 +296,10 @@
                             Partial Delivery</span
                         >
                         <span
-                            v-else-if="props.row.statut == 'revoked'"
-                            class="badge badge-outline-danger"
+                            v-else-if="props.row.statut == 'completed'"
+                            class="badge badge-outline-warning"
                         >
-                            Revoked</span
+                            Completed</span
                         >
                     </div>
 
@@ -338,7 +338,7 @@
                         >
 
                         <span
-                            v-else-if="props.row.shipping_status == 'delivered'"
+                            v-else-if="props.row.shipping_status == 'Delivered'"
                             class="badge badge-outline-success"
                             >{{ $t("Delivered") }}</span
                         >
@@ -775,11 +775,11 @@
                                         :options="[
                                             { label: 'Cash', value: 'Cash' },
                                             {
-                                                label: 'credit card',
+                                                label: 'Credit card',
                                                 value: 'credit card',
                                             },
                                             {
-                                                label: 'cheque',
+                                                label: 'Cheque',
                                                 value: 'cheque',
                                             },
                                             {
@@ -787,8 +787,12 @@
                                                 value: 'Western Union',
                                             },
                                             {
-                                                label: 'bank transfer',
+                                                label: 'Bank transfer',
                                                 value: 'bank transfer',
+                                            },
+                                            {
+                                                label: 'G-Cash',
+                                                value: 'G-Cash',
                                             },
                                             { label: 'other', value: 'other' },
                                         ]"
@@ -861,79 +865,62 @@
                 hide-footer
                 size="md"
                 id="modal_shipment"
-                :title="$t('Edit')"
+                :title="$t('Ship')"
             >
+            <div v-for="(customer, index) in clients" :key="index">
                 <b-form @submit.prevent="Submit_Shipment">
-                    <b-row>
+                    <b-row >
                         <!-- Status  -->
                         <b-col md="12">
-                            <validation-provider
-                                name="Status"
-                                :rules="{ required: true }"
-                            >
-                                <b-form-group
-                                    slot-scope="{ valid, errors }"
-                                    :label="$t('Status') + ' ' + '*'"
-                                >
-                                    <v-select
-                                        :class="{
-                                            'is-invalid': !!errors.length,
-                                        }"
-                                        :state="
-                                            errors[0]
-                                                ? false
-                                                : valid
-                                                ? true
-                                                : null
-                                        "
-                                        v-model="shipment.status"
-                                        :reduce="(label) => label.value"
-                                        :placeholder="$t('Choose_Status')"
-                                        :options="[
-                                            {
-                                                label: 'Ordered',
-                                                value: 'ordered',
-                                            },
-                                            {
-                                                label: 'Packed',
-                                                value: 'packed',
-                                            },
-                                            {
-                                                label: 'Shipped',
-                                                value: 'shipped',
-                                            },
-                                            {
-                                                label: 'Delivered',
-                                                value: 'delivered',
-                                            },
-                                            {
-                                                label: 'Cancelled',
-                                                value: 'cancelled',
-                                            },
-                                        ]"
-                                    ></v-select>
-                                    <b-form-invalid-feedback>{{
-                                        errors[0]
-                                    }}</b-form-invalid-feedback>
-                                </b-form-group>
-                            </validation-provider>
+                            <b-form-group :label="$t('Status' + '*')">
+                                <b-form-input
+                                    readonly
+                                    label="delivered_to"
+                                    v-model="shipped"
+                                    :placeholder="$t('delivered_to')"
+                                ></b-form-input>
+                            </b-form-group>
+
                         </b-col>
 
                         <b-col md="12">
-                            <b-form-group :label="$t('delivered_to')">
+                            <b-form-group :label="$t('Customer Name')">
                                 <b-form-input
-                                    label="delivered_to"
-                                    v-model="shipment.delivered_to"
+
+                                    label="Customer Name"
+                                    v-model="customer.name"
                                     :placeholder="$t('delivered_to')"
                                 ></b-form-input>
                             </b-form-group>
                         </b-col>
 
                         <b-col md="12">
-                            <b-form-group :label="$t('Adress')">
+                            <b-form-group :label="$t('Contact Number')">
+                                <b-form-input
+
+                                    label="delivered_to"
+                                    v-model="customer.phone"
+                                    :placeholder="$t('Tel no.')"
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
+                        <b-col md="12">
+                            <b-form-group :label="$t('Email Address')">
+                                <b-form-input
+
+                                    label="delivered_to"
+                                    v-model="customer.email"
+                                    :placeholder="$t('Email Address')"
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
+                        <b-col md="12">
+                            <b-form-group :label="$t('Adress (Bldg, Zone, Street, Barangay, Municipality)')">
                                 <textarea
-                                    v-model="shipment.shipping_address"
-                                    rows="4"
+                                    v-model="customer.full_address"
+                                    rows="3"
                                     class="form-control"
                                     :placeholder="$t('Enter_Address')"
                                 ></textarea>
@@ -945,7 +932,7 @@
                                 :label="$t('Please_provide_any_details')"
                             >
                                 <textarea
-                                    v-model="shipment.shipping_details"
+                                    v-model="shipping_details"
                                     rows="4"
                                     class="form-control"
                                     :placeholder="
@@ -974,6 +961,7 @@
                         </b-col>
                     </b-row>
                 </b-form>
+            </div>
             </b-modal>
         </validation-observer>
 
@@ -1267,7 +1255,9 @@ export default {
             Filter_shipping: "",
             customers: [],
             warehouses: [],
-            shipment: {},
+            shipped: "Shipped",
+            clients: {},
+            shipping_details: "",
             sales: [],
             sale_due: "",
             due: 0,
@@ -1963,7 +1953,8 @@ export default {
             }
         },
 
-        editStatus(status, id) {
+        Edit_Status(status, id) {
+            console.log("test", id);
             this.paymentProcessing = true;
             NProgress.start();
             NProgress.set(0.1);
@@ -1977,7 +1968,7 @@ export default {
                     setTimeout(() => NProgress.done(), 500);
                     this.makeToast(
                         "success",
-                        "Purchase status edited successfully",
+                        "Sale status edited successfully",
                         "Success"
                     );
                     Fire.$emit("Edit_Status_Purchase");
@@ -2272,14 +2263,13 @@ export default {
             };
         },
 
-        //---------------------- Get_Data_Create  ------------------------------\\
+        //---------------------- Get_Data_Create  ------------------------------\
 
-        Get_shipment_by_sale(sale_id) {
+        Get_client_by_sale(sale_id) {
             axios
-                .get("/shipments/" + sale_id)
+                .get("/clients/" + sale_id)
                 .then((response) => {
-                    this.shipment = response.data.shipment;
-
+                    this.clients = response.data.client
                     setTimeout(() => {
                         NProgress.done();
                         this.$bvModal.show("modal_shipment");
@@ -2311,12 +2301,14 @@ export default {
             self.Submit_Processing_shipment = true;
             axios
                 .post("shipments", {
-                    Ref: self.shipment.Ref,
-                    sale_id: self.shipment.sale_id,
-                    shipping_address: self.shipment.shipping_address,
-                    delivered_to: self.shipment.delivered_to,
-                    shipping_details: self.shipment.shipping_details,
-                    status: self.shipment.status,
+                    Ref: self.clients[0].ref,
+                    sale_id: self.clients[0].sale_id,
+                    shipping_address: self.clients[0].full_address,
+                    customer_name: self.clients[0].name,
+                    phone_number: self.clients[0].phone,
+                    email: self.clients[0].email,
+                    shipping_details: self.shipping_details,
+                    status: self.shipped,
                 })
                 .then((response) => {
                     this.makeToast(
@@ -2339,15 +2331,16 @@ export default {
 
         //------------------------------ Show Modal (Edit shipment) -------------------------------\\
         Edit_Shipment(sale_id) {
+        console.log(sale_id);
             NProgress.start();
             NProgress.set(0.1);
-            this.reset_Form_shipment();
-            this.Get_shipment_by_sale(sale_id);
+            // this.reset_Form_shipment();
+            this.Get_client_by_sale(sale_id);
         },
 
         //-------------------------------- Reset Form -------------------------------\\
         reset_Form_shipment() {
-            this.shipment = {
+            this.client = {
                 id: "",
                 date: "",
                 Ref: "",
@@ -2442,6 +2435,7 @@ export default {
     },
     //----------------------------- Created function-------------------\\
     created() {
+
         this.Get_Sales(1);
         Fire.$on("Create_Facture_sale", () => {
             setTimeout(() => {

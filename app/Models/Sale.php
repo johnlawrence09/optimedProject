@@ -40,7 +40,7 @@ class Sale extends Model
 
     private static function generateReference()
     {
-        $code = 'SO';
+        $code = 'SO-';
         $year = date('y');
         $dayOfYear = date('z') + 1;
 

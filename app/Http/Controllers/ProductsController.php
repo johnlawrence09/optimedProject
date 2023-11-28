@@ -17,7 +17,7 @@ use App\Models\Unit;
 use App\Models\Warehouse;
 use App\utils\helpers;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -78,7 +78,7 @@ class ProductsController extends BaseController
             ->limit($perPage)
             ->orderBy($order, $dir)
             ->get();
-        
+
 
         foreach ($products as $product) {
             $item['id'] = $product->id;
@@ -128,7 +128,7 @@ class ProductsController extends BaseController
 
     public function store(Request $request)
     {
-       
+
         $this->authorizeForUser($request->user('api'), 'create', Product::class);
 
         $existingRecord = DB::table('products')
@@ -139,7 +139,7 @@ class ProductsController extends BaseController
                             ->count();
 
         if($existingRecord < 1) {
-             
+
                 $this->validate($request, [
                     'name' => 'required',
                     'note' => 'required',
@@ -152,12 +152,12 @@ class ProductsController extends BaseController
                     'code.unique' => 'This code already used. Generate Now',
                     'code.required' => 'This field is required',
                 ]);
-        
+
                 \DB::transaction(function () use ($request) {
-    
+
                     //-- Create New Product
                     $Product = new Product;
-    
+
                     //-- Field Required
                     $Product->name = $request['name'];
                     $Product->Type_barcode = $request['Type_barcode'];
@@ -176,7 +176,8 @@ class ProductsController extends BaseController
                     $Product->is_imei = $request['is_imei'] == 'true' ? 1 : 0;
                     $Product->is_expire = $request['is_expire'] == 'true' ? 1 : 0;
                     $Product->mos = $request['is_quotation'] == 'true' ? 1 : 0;
-    
+                    $Product->is_warranty = $request['is_warranty'] == 'true' ? 1 : 0;
+
                     if ($request['images']) {
                         $files = $request['images'];
                         foreach ($files as $file) {
@@ -191,10 +192,10 @@ class ProductsController extends BaseController
                     } else {
                         $filename = 'no-image.png';
                     }
-    
+
                     $Product->image = $filename;
                     $Product->save();
-    
+
                     // Store Variants Product
                     if ($request['is_variant'] == 'true') {
                         foreach ($request['variants'] as $variant) {
@@ -205,7 +206,7 @@ class ProductsController extends BaseController
                         }
                         ProductVariant::insert($Product_variants_data);
                     }
-    
+
                     //--Store Product Warehouse
                     $warehouses = Warehouse::where('deleted_at', null)->pluck('id')->toArray();
                     if ($warehouses) {
@@ -215,7 +216,7 @@ class ProductsController extends BaseController
                         foreach ($warehouses as $warehouse) {
                             if ($request['is_variant'] == 'true') {
                                 foreach ($Product_variants as $product_variant) {
-    
+
                                     $product_warehouse[] = [
                                         'product_id' => $Product->id,
                                         'warehouse_id' => $warehouse,
@@ -231,16 +232,16 @@ class ProductsController extends BaseController
                         }
                         product_warehouse::insert($product_warehouse);
                     }
-    
+
                 }, 10);
-    
+
                 return response()->json(['exist' => false]);
 
         } else {
             return response()->json(['exist' => true]);
-        }            
+        }
 
-       
+
 
     }
 
@@ -260,7 +261,7 @@ class ProductsController extends BaseController
 
     if($existingRecord < 1) {
                         $this->authorizeForUser($request->user('api'), 'update', Product::class);
-                        
+
                             $this->validate($request, [
                                 'name' => 'required',
                                 'Type_barcode' => 'required',
@@ -486,9 +487,9 @@ class ProductsController extends BaseController
                             }, 10);
 
                             return response()->json(['exist' => false]);
-                    
 
-        
+
+
         } else {
             return response()->json(['exist' => true]);
         }
@@ -658,7 +659,7 @@ class ProductsController extends BaseController
         }
 
         $data[] = $item;
-        
+
         return response()->json($data[0]);
 
     }
@@ -687,7 +688,7 @@ class ProductsController extends BaseController
                 }
             }
             if ($existingItemIndex !== null) {
-                
+
                 if ($product_warehouse['product']['unitSale']->operator == '/') {
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
@@ -695,7 +696,7 @@ class ProductsController extends BaseController
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $data[$existingItemIndex]['qte_purchase'] += round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
@@ -726,14 +727,15 @@ class ProductsController extends BaseController
                     $item['Variant'] = null;
                     $item['code'] = $product_warehouse['product']->code . ' ('. $product_warehouse['product']->name .')';;
                 }
-    
+
                 $item['id'] = $product_warehouse->product_id;
                 $item['name'] = $product_warehouse['product']->name;
                 $item['barcode'] = $product_warehouse['product']->code;
                 $item['Type_barcode'] = $product_warehouse['product']->Type_barcode;
                 $firstimage = explode(',', $product_warehouse['product']->image);
                 $item['image'] = $firstimage[0];
-    
+                $item['is_warranty'] = $product_warehouse['product']->is_warranty;
+
                 if ($product_warehouse['product']['unitSale']->operator == '/') {
                     $item['qte_sale'] = $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
@@ -741,17 +743,17 @@ class ProductsController extends BaseController
                     $item['qte_sale'] = $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $item['qte_purchase'] = round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
                     $item['qte_purchase'] = round($product_warehouse->qte / $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 }
-    
+
                 $item['qte'] = $product_warehouse->qte;
                 $item['unitSale'] = $product_warehouse['product']['unitSale']->ShortName;
                 $item['unitPurchase'] = $product_warehouse['product']['unitPurchase']->ShortName;
-    
+
                 if ($product_warehouse['product']->TaxNet !== 0.0) {
                     //Exclusive
                     if ($product_warehouse['product']->tax_method == '1') {
@@ -766,9 +768,9 @@ class ProductsController extends BaseController
                 }
                 $data[] = $item;
             }
-            
+
             // dd($data);
-           
+
         }
 
         return response()->json($data);
@@ -797,7 +799,7 @@ class ProductsController extends BaseController
                 }
             }
             if ($existingItemIndex !== null) {
-                
+
                 if ($product_warehouse['product']['unitSale']->operator == '/') {
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
@@ -805,7 +807,7 @@ class ProductsController extends BaseController
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $data[$existingItemIndex]['qte_purchase'] += round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
@@ -844,7 +846,7 @@ class ProductsController extends BaseController
                         $item['code'] = $item['code'] . ' - ' . $product_warehouse->expiration_date;
                     }
                 }
-    
+
                 $item['id'] = $product_warehouse->product_id;
                 $item['name'] = $product_warehouse['product']->name;
                 $item['barcode'] = $product_warehouse['product']->code;
@@ -853,7 +855,7 @@ class ProductsController extends BaseController
                 $item['image'] = $firstimage[0];
                 $item['expiration_date'] = $product_warehouse->expiration_date;
                 $item['lot_number'] = $product_warehouse->lot_number;
-    
+
                 if ($product_warehouse['product']['unitSale']->operator == '/') {
                     $item['qte_sale'] = $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
@@ -861,17 +863,17 @@ class ProductsController extends BaseController
                     $item['qte_sale'] = $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $item['qte_purchase'] = round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
                     $item['qte_purchase'] = round($product_warehouse->qte / $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 }
-    
+
                 $item['qte'] = $product_warehouse->qte;
                 $item['unitSale'] = $product_warehouse['product']['unitSale']->ShortName;
                 $item['unitPurchase'] = $product_warehouse['product']['unitPurchase']->ShortName;
-    
+
                 if ($product_warehouse['product']->TaxNet !== 0.0) {
                     //Exclusive
                     if ($product_warehouse['product']->tax_method == '1') {
@@ -886,9 +888,9 @@ class ProductsController extends BaseController
                 }
                 $data[] = $item;
             }
-            
+
             // dd($data);
-           
+
         }
 
         return response()->json($data);
@@ -917,7 +919,7 @@ class ProductsController extends BaseController
                 }
             }
             if ($existingItemIndex !== null) {
-                
+
                 if ($product_warehouse['product']['unitSale']->operator == '/') {
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
@@ -925,7 +927,7 @@ class ProductsController extends BaseController
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $data[$existingItemIndex]['qte_purchase'] += round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
@@ -962,7 +964,7 @@ class ProductsController extends BaseController
                         $item['code'] = $item['code'] . ' - ' . $product_warehouse->expiration_date;
                     }
                 }
-    
+
                 $item['id'] = $product_warehouse->product_id;
                 $item['name'] = $product_warehouse['product']->name;
                 $item['barcode'] = $product_warehouse['product']->code;
@@ -979,17 +981,17 @@ class ProductsController extends BaseController
                     $item['qte_sale'] = $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $item['qte_purchase'] = round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
                     $item['qte_purchase'] = round($product_warehouse->qte / $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 }
-    
+
                 $item['qte'] = $product_warehouse->qte;
                 $item['unitSale'] = $product_warehouse['product']['unitSale']->ShortName;
                 $item['unitPurchase'] = $product_warehouse['product']['unitPurchase']->ShortName;
-    
+
                 if ($product_warehouse['product']->TaxNet !== 0.0) {
                     //Exclusive
                     if ($product_warehouse['product']->tax_method == '1') {
@@ -1004,9 +1006,9 @@ class ProductsController extends BaseController
                 }
                 $data[] = $item;
             }
-            
+
             // dd($data);
-           
+
         }
 
         return response()->json($data);
@@ -1035,7 +1037,7 @@ class ProductsController extends BaseController
                 }
             }
             if ($existingItemIndex !== null) {
-                
+
                 if ($product_warehouse['product']['unitSale']->operator == '/') {
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte * $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price / $product_warehouse['product']['unitSale']->operator_value;
@@ -1043,7 +1045,7 @@ class ProductsController extends BaseController
                     $data[$existingItemIndex]['qte_sale'] += $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $data[$existingItemIndex]['qte_purchase'] += round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
@@ -1080,7 +1082,7 @@ class ProductsController extends BaseController
                         $item['code'] = $item['code'] . ' - ' . $product_warehouse->expiration_date;
                     }
                 }
-    
+
                 $item['id'] = $product_warehouse->product_id;
                 $item['name'] = $product_warehouse['product']->name;
                 $item['barcode'] = $product_warehouse['product']->code;
@@ -1097,17 +1099,17 @@ class ProductsController extends BaseController
                     $item['qte_sale'] = $product_warehouse->qte / $product_warehouse['product']['unitSale']->operator_value;
                     $price = $product_warehouse['product']->price * $product_warehouse['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($product_warehouse['product']['unitPurchase']->operator == '/') {
                     $item['qte_purchase'] = round($product_warehouse->qte * $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 } else {
                     $item['qte_purchase'] = round($product_warehouse->qte / $product_warehouse['product']['unitPurchase']->operator_value, 5);
                 }
-    
+
                 $item['qte'] = $product_warehouse->qte;
                 $item['unitSale'] = $product_warehouse['product']['unitSale']->ShortName;
                 $item['unitPurchase'] = $product_warehouse['product']['unitPurchase']->ShortName;
-    
+
                 if ($product_warehouse['product']->TaxNet !== 0.0) {
                     //Exclusive
                     if ($product_warehouse['product']->tax_method == '1') {
@@ -1122,9 +1124,9 @@ class ProductsController extends BaseController
                 }
                 $data[] = $item;
             }
-            
+
             // dd($data);
-           
+
         }
 
         return response()->json($data);
@@ -1144,8 +1146,8 @@ class ProductsController extends BaseController
                 }
             })
             ->get();
-          
-      
+
+
         foreach ($product_warehouse_data as $product_warehouse) {
 
             if ($product_warehouse->product_variant_id) {
@@ -1198,7 +1200,7 @@ class ProductsController extends BaseController
             }
 
             $data[] = $item;
-        
+
 
         }
 
@@ -1212,7 +1214,7 @@ class ProductsController extends BaseController
         $data = [];
         $purchase = Purchase::find($id);
         $product_ids = PurchaseDetail::where('is_receive', 0)->where('purchase_id', $id)->pluck('product_id');
-         
+
         $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
             ->whereIn('product_id', $product_ids)
             ->where('deleted_at', '=', null)
@@ -1221,12 +1223,12 @@ class ProductsController extends BaseController
                      return $query->where('qte', '>', 0);
                  }
              })->get();
-        
+
         $purchase_details = PurchaseDetail::where('is_receive', 0)
             ->where('purchase_id', $purchase->id)
             ->with('product', 'productVariant')
             ->get();
-        
+
         foreach ($purchase_details as $purchase_detail) {
             if($purchase_detail->product_variant_id) {
                 $item['product_variant_id'] = $purchase_detail->product_variant_id;
@@ -1243,8 +1245,8 @@ class ProductsController extends BaseController
             $item['barcode'] = $purchase_detail['product']->code;
             $item['is_expire'] = $purchase_detail['product']->is_expire;
             $item['Type_barcode'] = $purchase_detail['product']->Type_barcode;
-            $item['quantity_balance'] = $purchase_detail->quantity - $purchase_detail->quantity_receive; 
-            $item['order_quantity'] = $purchase_detail->quantity; 
+            $item['quantity_balance'] = $purchase_detail->quantity - $purchase_detail->quantity_receive;
+            $item['order_quantity'] = $purchase_detail->quantity;
             $firstimage = explode(',', $purchase_detail['product']->image);
             $item['image'] = $firstimage[0];
 
@@ -1282,7 +1284,7 @@ class ProductsController extends BaseController
             $data[] = $item;
         }
 
- 
+
         return response()->json([
             'warehouse_id'  => $purchase->warehouse_id,
             'provider_id'   => $purchase->provider_id,
@@ -1298,7 +1300,7 @@ class ProductsController extends BaseController
             $sale = Sale::find($id);
             $product_ids = SaleDetail::where('is_receive', 0)->where('sale_id', $id)->pluck('product_id');
 
-             
+
             $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
                 ->whereIn('product_id', $product_ids)
                 ->where('deleted_at', '=', null)
@@ -1308,7 +1310,7 @@ class ProductsController extends BaseController
                      }
                  })->get();
 
-            
+
             $sale_details = SaleDetail::where('is_receive', 0)
                 ->where('sale_id', $sale->id)
                 ->with('product.ProductWarehouse', 'productVariant')
@@ -1333,8 +1335,8 @@ class ProductsController extends BaseController
                 $item['barcode'] = $sale_detail['product']->code;
                 $item['is_expire'] = $sale_detail['product']->is_expire;
                 $item['Type_barcode'] = $sale_detail['product']->Type_barcode;
-                $item['quantity_balance'] = $sale_detail->quantity - $sale_detail->quantity_receive; 
-                $item['order_quantity'] = $sale_detail->quantity; 
+                $item['quantity_balance'] = $sale_detail->quantity - $sale_detail->quantity_receive;
+                $item['order_quantity'] = $sale_detail->quantity;
                 $firstimage = explode(',', $sale_detail['product']->image);
                 $item['image'] = $firstimage[0];
 
@@ -1346,7 +1348,7 @@ class ProductsController extends BaseController
                     $item['qte_sale'] = $sale_detail->quantity_receive / $sale_detail['product']['unitSale']->operator_value;
                     $price = $sale_detail['product']->price * $sale_detail['product']['unitSale']->operator_value;
                 }
-    
+
                 if ($sale_detail['product']['unitPurchase']->operator == '/') {
                     $item['qte_purchase'] = round($sale_detail->quantity_receive * $sale_detail['product']['unitPurchase']->operator_value, 5);
                 } else {
@@ -1360,7 +1362,7 @@ class ProductsController extends BaseController
                 $item['qte'] = $sale_detail->quantity_receive;
                 $item['unitSale'] = $sale_detail['product']['unitSale']->ShortName;
                 $item['unitPurchase'] = $sale_detail['product']['unitPurchase']->ShortName;
-    
+
                 if ($sale_detail['product']->TaxNet !== 0.0) {
                     //Exclusive
                     if ($sale_detail['product']->tax_method == '1') {
@@ -1375,8 +1377,8 @@ class ProductsController extends BaseController
                 }
 
                 $data[] = $item;
-               
-               
+
+
             }
             return response()->json([
                 'warehouse_id'  => $sale->warehouse_id,
@@ -1397,7 +1399,7 @@ class ProductsController extends BaseController
             ->where('deleted_at', '=', null)
             ->first();
 
-      
+
 
         $data = [];
         $item['id'] = $Product_data['id'];
@@ -1414,6 +1416,7 @@ class ProductsController extends BaseController
 
         $item['is_imei'] = $Product_data['is_imei'];
         $item['is_expire'] = $Product_data['is_expire'];
+        $item['is_warranty'] = $Product_data['is_warranty'];
 
         if ($Product_data['unitSale']->operator == '/') {
             $price = $Product_data['price'] / $Product_data['unitSale']->operator_value;
@@ -1472,7 +1475,7 @@ class ProductsController extends BaseController
 
         $data[] = $item;
 
-     
+
         // Show Product in the table
         // dd($data);
 
@@ -1523,7 +1526,7 @@ class ProductsController extends BaseController
         $data_collection = $collection->slice($offSet, $perPage)->values();
 
         $products = new LengthAwarePaginator($data_collection, count($data), $perPage, Paginator::resolveCurrentPage(), array('path' => Paginator::resolveCurrentPath()));
-       
+
          //get warehouses assigned to user
          $user_auth = auth()->user();
          if($user_auth->is_all_warehouses){
@@ -1532,7 +1535,7 @@ class ProductsController extends BaseController
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          }
- 
+
         return response()->json([
             'products' => $products,
             'warehouses' => $warehouses,
@@ -1571,7 +1574,7 @@ class ProductsController extends BaseController
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          }
-        
+
         return response()->json(['warehouses' => $warehouses]);
 
     }
@@ -1684,6 +1687,7 @@ class ProductsController extends BaseController
         $item['is_imei'] = $Product->is_imei?true:false;
         $item['is_expire'] = $Product->is_expire?true:false;
         $item['is_quotation'] = $Product->mos?true:false;
+        $item['is_warranty'] = $Product->is_warranty?true:false;
 
         $data = $item;
         $categories = Category::where('deleted_at', null)->get(['id', 'name']);
@@ -1694,12 +1698,12 @@ class ProductsController extends BaseController
                               ->where('deleted_at', null)
                               ->get();
 
-      
+
         $units = Unit::where('deleted_at', null)
             ->where('base_unit', null)
             ->get();
 
-       
+
         return response()->json([
             'product' => $data,
             'categories' => $categories,

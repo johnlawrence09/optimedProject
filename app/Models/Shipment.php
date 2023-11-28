@@ -10,7 +10,7 @@ class Shipment extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'user_id','date','Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
+        'user_id','date','Ref', 'sale_id', 'customer_name', 'shipping_address', 'status', 'shipping_details','phone_number','email'
 
     ];
 
@@ -28,5 +28,10 @@ class Shipment extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    public function saleReceive()
+    {
+        return $this->belongsTo('App\Models\SalesReceive','sale_id','sale_id' );
     }
 }

@@ -344,12 +344,26 @@
                     </ValidationProvider>
                   </b-col>
 
+                  <!-- Product_Has_is_quotation -->
                   <b-col md="12 mb-2">
                     <ValidationProvider rules vid="product" v-slot="x">
                       <div class="form-check">
                         <label class="checkbox checkbox-outline-primary">
                           <input type="checkbox" v-model="product.is_quotation">
                           <h5>This Product is for Quotation</h5>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </ValidationProvider>
+                  </b-col>
+
+                   <!-- Product_Has_Warranty -->
+                   <b-col md="12 mb-2">
+                    <ValidationProvider rules vid="product" v-slot="x">
+                      <div class="form-check">
+                        <label class="checkbox checkbox-outline-primary">
+                          <input type="checkbox" v-model="product.is_warranty">
+                          <h5>This Product has Warranty</h5>
                           <span class="checkmark"></span>
                         </label>
                       </div>
@@ -451,6 +465,7 @@ export default {
         is_imei: false,
         is_expire: false,
         is_quotation: false,
+        is_warranty: false,
       },
       code_exist: ""
     };
@@ -500,7 +515,7 @@ export default {
       );
     },
 
-   
+
 
     //------ event upload Image Success
     uploadImageSuccess(formData, index, fileList, imageArray) {
@@ -525,6 +540,7 @@ export default {
         .then(response => {
 
           this.product = response.data.product;
+          console.log(this.product);
           this.variants = response.data.product.ProductVariant;
           this.images = response.data.product.images;
           this.categories = response.data.categories;
@@ -599,7 +615,7 @@ export default {
           if(response.data.exist == true) {
                 NProgress.done();
                 self.SubmitProcessing = false;
-                
+
                 this.makeToast(
                 "danger",
                 this.$t("Data has already exist"),

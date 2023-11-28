@@ -96,4 +96,9 @@ class SalesReceive extends Model
     {
         return $this->hasMany('App\Models\SaleDetail','sale_id','sale_id');
     }
+
+    public function shipment()
+    {
+        return $this->hasMany('App\Models\Shipment','sale_id','sale_id');
+    }
 }

@@ -359,7 +359,7 @@
                                                                     "
                                                                 />
                                                                 <b-input-group-append>
-                                                                    <span 
+                                                                    <span
                                                                         class="btn btn-primary btn-sm"
                                                                         @click="
                                                                             increment(
@@ -421,7 +421,7 @@
                                                                 v-slot="validationContext"
                                                             > -->
                                                             <span>
-                                                                {{ 
+                                                                {{
                                                                     detail.expiration_date
                                                                 }}
                                                             </span>
@@ -1093,7 +1093,7 @@ export default {
             },
             purchases: [],
             warehouse_locations: [],
-          
+
         };
     },
     computed: {
@@ -1335,7 +1335,7 @@ export default {
         // Submit Search Products
 
         SearchProduct(result) {
-          
+
             this.product = {};
             if (result.quantity_balance === 0) {
                 this.makeToast(
@@ -1446,7 +1446,7 @@ export default {
         //-----------------------------------increment QTY ------------------------------\\
 
         increment(detail, id) {
-            
+
             for (var i = 0; i < this.details.length; i++) {
                 if (this.details[i].detail_id == id) {
                     if (detail.quantity_balance > this.details[i].quantity || detail.order_quantity > this.details[i].quantity  ) {
@@ -1638,7 +1638,7 @@ export default {
                         );
 
                         this.SubmitProcessing = false;
-                        this.$router.push({ name: "index_sales" });
+                        this.$router.push({ name: "index_sales_receipt" });
                     })
                     .catch((error) => {
                         // Complete the animation of theprogress bar.

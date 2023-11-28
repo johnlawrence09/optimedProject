@@ -29,34 +29,6 @@
                   </validation-provider>
                 </b-col>
 
-                <!-- Code Product"-->
-                <!-- <b-col md="6" class="mb-2">
-                  <validation-provider
-                    name="Code Product"
-                    :rules="{ required: true}"
-                  >
-                    <b-form-group slot-scope="{ valid, errors }" :label="$t('CodeProduct') + ' ' + '*'">
-                      <div class="input-group">
-                        <b-form-input
-                          :class="{'is-invalid': !!errors.length}"
-                          :state="errors[0] ? false : (valid ? true : null)"
-                          aria-describedby="CodeProduct-feedback"
-                          type="text"
-                          v-model="product.code"
-                        ></b-form-input>
-                        <b-form-invalid-feedback id="CodeProduct-feedback">{{ errors[0] }}</b-form-invalid-feedback>
-                      </div>
-                        <span>{{$t('Scan_your_barcode_and_select_the_correct_symbology_below')}}</span>
-                        <b-alert
-                          show
-                          variant="danger"
-                          class="error mt-1"
-                          v-if="code_exist !=''"
-                        >{{code_exist}}</b-alert>
-                    </b-form-group>
-                  </validation-provider>
-                </b-col> -->
-
                 <!-- Category -->
                 <b-col md="6" class="mb-2">
                   <validation-provider name="category" :rules="{ required: true}">
@@ -279,15 +251,26 @@
                   </validation-provider>
                 </b-col>
 
+                <!-- Description -->
                 <b-col md="12" class="mb-2">
-                  <b-form-group :label="$t('Description')">
-                    <textarea
-                      rows="4"
-                      class="form-control"
-                      :placeholder="$t('Afewwords')"
-                      v-model="product.note"
-                    ></textarea>
-                  </b-form-group>
+                    <validation-provider
+                        name="Description"
+                        :rules="{ required: true, min: 3, max: 2000 }"
+                        v-slot="validationContext"
+                    >
+                        <b-form-group :label="$t('Description') + ' ' + '*'">
+                        <b-textarea
+                            rows="4"
+                            :state="getValidationState(validationContext)"
+                            aria-describedby="Description-feedback"
+                            :placeholder="$t('Enter the Description')"
+                            v-model="product.note"
+                        ></b-textarea>
+                        <b-form-invalid-feedback id="Description-feedback">
+                            {{ validationContext.errors[0] }}
+                        </b-form-invalid-feedback>
+                        </b-form-group>
+                    </validation-provider>
                 </b-col>
 
                  <!-- Multiple Variants -->
@@ -353,7 +336,20 @@
                       </div>
                     </ValidationProvider>
                   </b-col>
-                  
+
+                   <!-- Product_Has_Warranty -->
+                   <b-col md="12 mb-2">
+                    <ValidationProvider rules vid="product" v-slot="x">
+                      <div class="form-check">
+                        <label class="checkbox checkbox-outline-primary">
+                          <input type="checkbox" v-model="product.is_warranty">
+                          <h5>This Product has Warranty</h5>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </ValidationProvider>
+                  </b-col>
+
               </b-row>
             </b-card>
           </b-col>
@@ -388,7 +384,7 @@
                       />
                     </div>
                   </b-col>
-                 
+
                 </b-row>
               </div>
             </b-card>
@@ -452,6 +448,7 @@ export default {
         is_imei: false,
         is_expire: false,
         is_quotation: false,
+        is_warranty: false
       },
       code_exist: ""
     };
@@ -465,7 +462,6 @@ export default {
   methods: {
     //------------- Submit Validation Create Product
     Submit_Product() {
-      console.log(this.product, this.price);
       this.$refs.Create_Product.validate().then(success => {
         if (!success) {
           this.makeToast(
@@ -481,11 +477,11 @@ export default {
           );
         } else {
           this.Create_Product();
-        } 
+        }
       });
     },
 
-    
+
 
     //------ Toast
     makeToast(variant, msg, title) {
@@ -565,7 +561,7 @@ export default {
       NProgress.set(0.1);
       var self = this;
       self.SubmitProcessing = true;
-      
+
       if (self.product.is_variant && self.variants.length <= 0) {
         self.product.is_variant = false;
       }
@@ -593,11 +589,11 @@ export default {
       axios
         .post("Products", self.data)
         .then(response => {
-          
+
           if(response.data.exist == true) {
                 NProgress.done();
                 self.SubmitProcessing = false;
-                
+
                 this.makeToast(
                 "danger",
                 this.$t("Data has already exist"),
@@ -616,7 +612,7 @@ export default {
               );
           }
           // Complete the animation of theprogress bar.
-         
+
         })
         .catch(error => {
           // Complete the animation of theprogress bar.

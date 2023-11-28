@@ -23,7 +23,7 @@ class WarehouseLocationController extends Controller
         $dir = $request->SortType;
         $helpers = new helpers();
 
-        $warehouse_locations = WarehouseLocation::where('deleted_at', '=', null)
+        $warehouse_locations = WarehouseLocation::with('warehouse')->where('deleted_at', '=', null)
 
         // Search With Multiple Param
             ->where(function ($query) use ($request) {
@@ -67,7 +67,7 @@ class WarehouseLocationController extends Controller
 
     public function show($id){
         //
-    
+
     }
 
     //-------------- Update Category ---------------\\

@@ -841,6 +841,21 @@
                             </b-form-group>
                         </b-col>
 
+                        <!-- Warranty Year -->
+                        <b-col lg="12" md="12" sm="12" v-show="product.is_warranty">
+                            <b-form-group
+                                :label="$t('Add product Warranty Year')"
+                            >
+                                <b-form-input
+                                    label="Add product Warranty Year"
+                                    v-model="detail.warranty_year"
+                                    :placeholder="
+                                        $t('Add product Warranty Year')
+                                    "
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
                         <b-col md="12">
                             <b-form-group>
                                 <b-button
@@ -898,6 +913,8 @@ export default {
                 tax_percent: "",
                 tax_method: "",
                 imei_number: "",
+                warranty_year: "",
+
             },
             purchases: [],
             purchase: {
@@ -939,6 +956,8 @@ export default {
                 product_variant_id: "",
                 is_imei: "",
                 imei_number: "",
+                warranty_year: "",
+                is_warranty:""
             },
         };
     },
@@ -1013,6 +1032,7 @@ export default {
             this.detail.tax_percent = detail.tax_percent;
             this.detail.is_imei = detail.is_imei;
             this.detail.imei_number = detail.imei_number;
+            this.detail.warranty_year = detail.warranty_year;
 
             setTimeout(() => {
                 NProgress.done();
@@ -1056,6 +1076,7 @@ export default {
                     this.details[i].purchase_unit_id =
                         this.detail.purchase_unit_id;
                     this.details[i].imei_number = this.detail.imei_number;
+                    this.details[i].warranty_year = parseInt(this.detail.warranty_year, 10);
 
                     if (this.details[i].discount_Method == "2") {
                         //Fixed
@@ -1238,7 +1259,7 @@ export default {
 
             this.details.push(this.product);
 
-            if (this.product.is_imei) {
+            if (this.product.is_imei || this.product.is_warranty) {
                 this.Modal_Updat_Detail(this.product);
             }
         },
@@ -1482,6 +1503,8 @@ export default {
                 this.product.purchase_unit_id = response.data.purchase_unit_id;
                 this.product.is_imei = response.data.is_imei;
                 this.product.imei_number = "";
+                this.product.is_warranty = response.data.is_warranty;
+                this.product.warranty_year = "";
                 this.add_product();
                 this.Calcul_Total();
             });

@@ -66,8 +66,8 @@ class PurchaseReceiveController extends Controller
                     return $query->where('user_id', '=', Auth::user()->id);
                 }
             });
-        
-      
+
+
 
         //Multiple Filter
         $Filtred = $helpers->filter($Purchases, $columns, $param, $request)
@@ -91,13 +91,13 @@ class PurchaseReceiveController extends Controller
                 });
             });
 
-       
+
 
         $totalRows = $Filtred->count();
         if($perPage == "-1"){
             $perPage = $totalRows;
         }
-      
+
         $Purchases = $Filtred->offset($offSet)
             ->limit($perPage)
             ->orderBy($order, $dir)
@@ -137,7 +137,7 @@ class PurchaseReceiveController extends Controller
          }else{
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
-         } 
+         }
 
 
         return response()->json([
@@ -155,13 +155,13 @@ class PurchaseReceiveController extends Controller
 
          //get warehouses assigned to user
          $user_auth = auth()->user();
-       
+
          if($user_auth->is_all_warehouses){
              $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
          }else{
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
-         } 
+         }
 
         $purchases = Purchase::whereIn('statut', ['ordered', 'partial'])->get(['id', 'Ref']);
 
@@ -188,7 +188,7 @@ class PurchaseReceiveController extends Controller
             'warehouse_id' => 'required',
         ]);
 
-        
+
 
         \DB::transaction(function () use ($request) {
             $order = new PurchaseReceive;
@@ -262,7 +262,7 @@ class PurchaseReceiveController extends Controller
                                 ->where('product_variant_id', $value['product_variant_id'])
                                 ->first();
                         }
-                        
+
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
@@ -274,7 +274,7 @@ class PurchaseReceiveController extends Controller
                         }
 
                     } else {
-                        
+
                         if($value['expiration_date'] !== null) {
                         $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                             ->where('warehouse_id', $order->warehouse_id)
@@ -411,7 +411,7 @@ class PurchaseReceiveController extends Controller
 
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
                 $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
-                $data['product_variant_id'] = $detail->product_variant_id;                
+                $data['product_variant_id'] = $detail->product_variant_id;
 
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
@@ -429,7 +429,7 @@ class PurchaseReceiveController extends Controller
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
                 $data['product_variant_id'] = null;
                 $data['code'] = $detail['product']['code'];
-             
+
 
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
@@ -491,8 +491,8 @@ class PurchaseReceiveController extends Controller
             $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
             $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
         }
-     
-        
+
+
         $suppliers = Provider::where('deleted_at', '=', null)->get(['id', 'name']);
 
 
@@ -504,7 +504,7 @@ class PurchaseReceiveController extends Controller
             'purchases' => $purchases
         ]);
     }
- 
+
     public function show(Request $request, $id)
     {
 
@@ -517,7 +517,7 @@ class PurchaseReceiveController extends Controller
 
         $details = array();
 
-        
+
 
         // Check If User Has Permission view All Records
         // if (!$view_records) {
@@ -563,11 +563,11 @@ class PurchaseReceiveController extends Controller
                     ->where('id', $detail->product_variant_id)->first();
 
                 $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
-           
+
             } else {
                 $data['code'] = $detail['product']['code'];
             }
-            
+
             $data['expiration_date'] = $detail->expiration_date ? $detail->expiration_date : 'N/A';
             $data['quantity'] = $detail->quantity;
             $data['total'] = $detail->total;
@@ -599,7 +599,7 @@ class PurchaseReceiveController extends Controller
             $data['imei_number'] = $detail->imei_number;
 
             $details[] = $data;
-         
+
         }
 
         $company = Setting::where('deleted_at', '=', null)->first();
@@ -631,7 +631,7 @@ class PurchaseReceiveController extends Controller
                     $this->authorizeForUser($request->user('api'), 'check_record', $current_Purchase_receive);
                 }
                 foreach ($old_purchase_receive_details as $key => $value) {
-               
+
                     //check if detail has purchase_unit_id Or Null
                     if($value['purchase_unit_id'] !== null){
                         $unit = Unit::where('id', $value['purchase_unit_id'])->first();
@@ -641,45 +641,45 @@ class PurchaseReceiveController extends Controller
                         ->first();
                         $unit = Unit::where('id', $product_unit_purchase_id['unitPurchase']->id)->first();
                     }
-    
+
                     if ($current_Purchase_receive->statut == "received") {
-    
+
                         if ($value['product_variant_id'] !== null) {
                             $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                                 ->where('warehouse_id', $current_Purchase_receive->warehouse_id)
                                 ->where('product_id', $value['product_id'])
                                 ->where('product_variant_id', $value['product_variant_id'])
                                 ->first();
-    
+
                             if ($unit && $product_warehouse) {
                                 if ($unit->operator == '/') {
                                     $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
                                 } else {
                                     $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
                                 }
-    
+
                                 $product_warehouse->save();
                             }
-    
+
                         } else {
                             $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                                 ->where('warehouse_id', $current_Purchase_receive->warehouse_id)
                                 ->where('product_id', $value['product_id'])
                                 ->first();
-    
+
                             if ($unit && $product_warehouse) {
                                 if ($unit->operator == '/') {
                                     $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
                                 } else {
                                     $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
                                 }
-    
+
                                 $product_warehouse->save();
                             }
                         }
                     }
                 }
-    
+
                 $current_Purchase_receive->details()->delete();
                 $current_Purchase_receive->update([
                     'deleted_at' => Carbon::now(),
@@ -787,5 +787,5 @@ class PurchaseReceiveController extends Controller
 
     }
 
-    
+
 }

@@ -117,13 +117,13 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     //------------------------------- Employee Experience ----------------\\
     //--------------------------------------------------------------------\\
-    
+
     Route::resource('work_experience', 'hrm\EmployeeExperienceController');
 
 
     //------------------------------- Employee Accounts bank ----------------\\
     //--------------------------------------------------------------------\\
-    
+
     Route::resource('employee_account', 'hrm\EmployeeAccountController');
 
 
@@ -161,7 +161,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post("attendances/delete/by_selection", "hrm\AttendancesController@delete_by_selection");
 
 
-    
+
     //------------------------------- Request leave  -----------------------\\
     //----------------------------------------------------------------\\
 
@@ -200,7 +200,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('clients/delete/by_selection', 'ClientController@delete_by_selection');
 
 
-    
+
 
 
     //------------------------------- Providers --------------------------\\
@@ -247,7 +247,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     Route::resource('categories', 'CategorieController');
     Route::post('categories/delete/by_selection', 'CategorieController@delete_by_selection');
-    
+
 
     //------------------------------- Units --------------------------\\
     //------------------------------------------------------------------\\
@@ -260,6 +260,11 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------------------------------------------\\
     Route::resource('brands', 'BrandsController');
     Route::post('brands/delete/by_selection', 'BrandsController@delete_by_selection');
+
+    //------------------------------- Brands--------------------------\\
+    //------------------------------------------------------------------\\
+    Route::resource('mappings', 'MappingsController');
+    Route::post('mappings/delete/by_selection', 'MappingsController@delete_by_selection');
 
     //------------------------------- Currencies --------------------------\\
     //------------------------------------------------------------------\\
@@ -437,14 +442,14 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('getRoleswithoutpaginate', 'PermissionsController@getRoleswithoutpaginate');
     Route::post('roles/delete/by_selection', 'PermissionsController@delete_by_selection');
 
-    
+
     //------------------------------- Settings ------------------------\\
-    //------------------------------------------------------------------\\    
+    //------------------------------------------------------------------\\
     Route::resource('settings', 'SettingsController');
 
     Route::put('pos_settings/{id}', 'SettingsController@update_pos_settings');
     Route::get('get_pos_Settings', 'SettingsController@get_pos_Settings');
-    
+
     Route::put('SMTP/{id}', 'SettingsController@updateSMTP');
     Route::post('SMTP', 'SettingsController@CreateSMTP');
     Route::get('getSettings', 'SettingsController@getSettings');
@@ -458,7 +463,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     //------------------------------- Backup --------------------------\\
     //------------------------------------------------------------------\\
-    
+
     Route::get("GetBackup", "ReportController@GetBackup");
     Route::get("GenerateBackup", "ReportController@GenerateBackup");
     Route::delete("DeleteBackup/{name}", "ReportController@DeleteBackup");
@@ -479,7 +484,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('payment_Return_Purchase_PDF/{id}', 'PaymentPurchaseReturnsController@payment_return');
     Route::get('payment_Sale_PDF/{id}', 'PaymentSalesController@payment_sale');
     Route::get('Sales/Print_Invoice/{id}', 'SalesController@Print_Invoice_POS');
-   
 
-    
+
+
     Route::get('Products/filter/{id}/{input}', 'ProductsController@Filter_Products');

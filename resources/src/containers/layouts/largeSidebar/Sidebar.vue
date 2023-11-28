@@ -152,7 +152,7 @@
                             currentUserPermissions &&
                             (currentUserPermissions.includes('Sales_view') ||
                                 currentUserPermissions.includes('Sales_add') ||
-                                currentUserPermissions.includes('shipment') || 
+                                currentUserPermissions.includes('shipment') ||
                                 currentUserPermissions.includes('Picklist') )
                         "
                         class="nav-item"
@@ -525,6 +525,14 @@
                             <span class="item-name">{{ $t("Units") }}</span>
                         </router-link>
                     </li>
+                    <li
+                        class="nav-item"
+                    >
+                        <router-link tag="a" class to="/app/products/Mappings">
+                            <i class="nav-icon i-Files"></i>
+                            <span class="item-name">{{ $t("Mappings") }}</span>
+                        </router-link>
+                    </li>
                 </ul>
 
                 <ul
@@ -788,7 +796,7 @@
                             <span class="item-name">{{ $t("ListSales") }}</span>
                         </router-link>
                     </li>
-                    <li
+                    <!-- <li
                         class="nav-item"
                         v-if="
                             currentUserPermissions &&
@@ -799,7 +807,7 @@
                             <i class="nav-icon i-Files"></i>
                             <span class="item-name">{{ $t("Picklist") }}</span>
                         </router-link>
-                    </li>
+                    </li> -->
                     <li
                         class="nav-item"
                         v-if="
@@ -812,7 +820,7 @@
                             <span class="item-name">{{ $t("Shipments") }}</span>
                         </router-link>
                     </li>
-                    
+
                 </ul>
                 <!-- Sales Receipt -->
                 <ul

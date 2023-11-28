@@ -67,23 +67,23 @@
                         <i class="i-Close-Window"></i>
                         {{ $t("Del") }}
                     </button>
-                    <button
+                    <!-- <button
                         @click="Edit_Status('`ordered`', $route.params.id)"
                         class="btn btn-warning btn-icon ripple btn-sm"
                         v-if="sale.statut === 'pending'"
                     >
                         <i class="i-Edit"></i>
                         Set status to ordered
-                    </button>
+                    </button> -->
                     <button
-                        @click="Edit_Status('revoked', $route.params.id)"
+                        @click="Edit_Status('completed', $route.params.id)"
                         class="btn btn-danger btn-icon ripple btn-sm"
                         v-if="sale.statut === 'partial'"
                     >
                         <i class="i-Edit"></i>
                         Cancel remaining
                     </button>
-                   
+
                 </b-col>
             </b-row>
             <div class="invoice" id="print_Invoice">
@@ -139,10 +139,11 @@
                             <div>
                                 {{ $t("warehouse") }} : {{ sale.warehouse }}
                             </div>
+
                             <div>
                                 {{ $t("Status") }} :
                                 <span
-                                    v-if="sale.statut == 'received'"
+                                    v-if="sale.statut == 'delivered'"
                                     class="badge badge-outline-success"
                                     >{{ $t("Delivered") }}</span
                                 >
@@ -151,20 +152,22 @@
                                     class="badge badge-outline-info"
                                     >{{ $t("Pending") }}</span
                                 >
+
                                 <span
-                                    v-else-if="sale.statut == 'partial'"
-                                    class="badge badge-outline-primary"
-                                    >{{ $t("partial") }}</span
-                                >
-                                <span
-                                    v-else-if="sale.statut == 'revoked'"
-                                    class="badge badge-outline-danger"
-                                    >Revoked</span
-                                >
-                                <span
-                                    v-else
+                                    v-else-if="sale.statut == 'completed'"
                                     class="badge badge-outline-warning"
-                                    >{{ $t("Ordered") }}</span
+                                    >Completed</span
+                                >
+
+                                <span
+                                    v-else-if="sale.statut == 'For delivery'"
+                                    class="badge badge-outline-success"
+                                    >For delivery</span
+                                >
+                                <span
+                                    v-else-if="sale.statut == 'Shipped'"
+                                    class="badge badge-outline-warning"
+                                    >{{ $t("Shipped") }}</span
                                 >
                             </div>
                             <div
@@ -238,7 +241,7 @@
                                                 {{ currentUser.currency }}
                                                 {{
                                                     formatNumber(
-                                                        detail.Net_price,
+                                                        detail.Net_price ?? 0,
                                                         3
                                                     )
                                                 }}
@@ -504,8 +507,8 @@ export default {
             this.$htmlToPaper("print_Invoice");
         },
 
-       
-       
+
+
 
         //--------------------------------- Send Sale in Email ------------------------------\\
         Sale_Email() {

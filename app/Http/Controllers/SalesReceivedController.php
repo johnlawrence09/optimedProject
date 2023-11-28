@@ -12,6 +12,7 @@ use App\Models\SalesReceive;
 use App\Models\SalesReceiveDetail;
 use App\Models\Role;
 use App\Models\Setting;
+use App\Models\Shipment;
 use App\Models\Unit;
 use App\Models\UserWarehouse;
 use App\Models\Warehouse;
@@ -97,12 +98,12 @@ class SalesReceivedController extends Controller
           if($perPage == "-1"){
               $perPage = $totalRows;
           }
-        
+
           $Sales = $Filtred->offset($offSet)
               ->limit($perPage)
               ->orderBy($order, $dir)
               ->get();
-        
+
               foreach ($Sales as $Sale) {
 
                 $item['id'] = $Sale->id;
@@ -124,9 +125,9 @@ class SalesReceivedController extends Controller
                 $item['payment_status'] = $Sale->payment_statut;
                 $item['sales_id'] = $Sale->sale_id;
                 $item['sales_ref'] = $Sale->sale->Ref;
-    
+
                 $data[] = $item;
-                
+
             }
 
 
@@ -139,7 +140,7 @@ class SalesReceivedController extends Controller
          }else{
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
-         } 
+         }
         return response()->json([
             'totalRows' => $totalRows,
             'sales' => $data,
@@ -156,19 +157,19 @@ class SalesReceivedController extends Controller
 
          //get warehouses assigned to user
          $user_auth = auth()->user();
-       
+
          if($user_auth->is_all_warehouses){
              $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
          }else{
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
-         } 
+         }
 
         $sales = Sale::whereIn('statut', ['pending', 'partial'])->whereNull('deleted_at')->get(['id', 'Ref']);
-       
+
 
         $client = Client::where('deleted_at', '=', null)->get(['id', 'name']);
-        
+
         $warehouse_locations = WarehouseLocation::where('deleted_at', '=', null)->get(['id', 'name']);
 
         return response()->json([
@@ -181,14 +182,14 @@ class SalesReceivedController extends Controller
 
     public function store(Request $request)
     {
-        
+
     //  $this->authorizeForUser($request->user('api'), 'create', Purchase::class);
         request()->validate([
             'client_id' => 'required',
             'warehouse_id' => 'required',
         ]);
 
-        
+
 
         \DB::transaction(function () use ($request) {
             $order = new SalesReceive;
@@ -202,14 +203,14 @@ class SalesReceivedController extends Controller
             $order->TaxNet = $request->TaxNet;
             $order->discount = $request->discount;
             $order->shipping = $request->shipping;
-            $order->statut = 'for delivery';
+            $order->statut = 'For delivery';
             $order->payment_statut = 'unpaid';
             $order->notes = $request->notes;
             $order->user_id = Auth::user()->id;
 
             $order->save();
-         
-          
+
+
             $data = $request['details'];
             foreach ($data as $key => $value) {
                 $unit = Unit::where('id', $value['sale_unit_id'])->first();
@@ -230,8 +231,8 @@ class SalesReceivedController extends Controller
                 'lot_number' =>  $value['lot_number'],
             ];
 
-            
-                if ($order->statut == "for delivery") {
+
+                if ($order->statut == "For delivery") {
                     $sale_detail = SaleDetail::find($value['sale_detail_id']);
                     if($sale_detail->quantity > $sale_detail->quantity_receive) {
                     $sale_detail->quantity_receive = $sale_detail->quantity_receive + $value['quantity'];
@@ -240,7 +241,7 @@ class SalesReceivedController extends Controller
                     }
                     $sale_detail->save();
                     }
-                   
+
                     if ($value['product_variant_id'] !== null) {
                         if($value['expiration_date'] !== null) {
                             $product_warehouse = product_warehouse::where('deleted_at', '=', null)
@@ -264,12 +265,12 @@ class SalesReceivedController extends Controller
                                 ->where('warehouse_id', $order->warehouse_id)
                                 ->where('product_id', $value['product_id'])
                                 ->where('product_variant_id', $value['product_variant_id'])
-                                ->first(); 
-                                
-                                
+                                ->first();
+
+
                         }
-                        
-                       
+
+
 
                         if ($unit && $product_warehouse) {
                             if ($unit->operator == '/') {
@@ -281,7 +282,7 @@ class SalesReceivedController extends Controller
                         }
 
                     } else {
-                        
+
                         if($value['expiration_date'] !== null) {
                         $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                             ->where('warehouse_id', $order->warehouse_id)
@@ -317,9 +318,9 @@ class SalesReceivedController extends Controller
                     }
                 }
             }
-            
+
             SalesReceiveDetail::insert($orderDetails);
-           
+
             $sale = Sale::where('id', $order->sale_id)
             ->with(['details' => function ($query) {
                 // Add a query for the 'details' relationship here
@@ -419,7 +420,7 @@ class SalesReceivedController extends Controller
 
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
                 $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
-                $data['product_variant_id'] = $detail->product_variant_id;                
+                $data['product_variant_id'] = $detail->product_variant_id;
 
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
@@ -437,7 +438,7 @@ class SalesReceivedController extends Controller
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
                 $data['product_variant_id'] = null;
                 $data['code'] = $detail['product']['code'];
-             
+
 
                 if ($unit && $unit->operator == '/') {
                     $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
@@ -499,8 +500,8 @@ class SalesReceivedController extends Controller
             $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
             $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
         }
-     
-        
+
+
         $suppliers = Provider::where('deleted_at', '=', null)->get(['id', 'name']);
 
 
@@ -512,17 +513,16 @@ class SalesReceivedController extends Controller
             'purchases' => $purchases
         ]);
     }
- 
+
     public function show(Request $request, $id)
     {
-    
+
         // $this->authorizeForUser($request->user('api'), 'view', Purchase::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
-        $sale = SalesReceive::with('detailsRecieved.product.unitPurchase', 'sale')
+        $sale = SalesReceive::with('detailsRecieved.product.unitPurchase', 'sale','shipment')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
-
 
         $details = array();
 
@@ -566,11 +566,11 @@ class SalesReceivedController extends Controller
                     ->where('id', $detail->product_variant_id)->first();
 
                 $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
-           
+
             } else {
                 $data['code'] = $detail['product']['code'];
             }
-            
+
             $data['expiration_date'] = $detail->expiration_date ? $detail->expiration_date : 'N/A';
             $data['quantity'] = $detail->quantity;
             $data['total'] = $detail->total;
@@ -602,14 +602,15 @@ class SalesReceivedController extends Controller
 
             $details[] = $data;
         }
-    
-        
+
         $company = Setting::where('deleted_at', '=', null)->first();
+        $customer = Shipment::where('sale_id','=', $sale->sale_id)->where('deleted_at','=', null)->first();
 
         return response()->json([
             'details' => $details,
             'sale' => $sale_data,
             'company' => $company,
+            'customer' => $customer
         ]);
 
     }
@@ -618,7 +619,8 @@ class SalesReceivedController extends Controller
     {
         $details = array();
         $helpers = new helpers();
-        $Purchase_data = PurchaseReceive::with('details.product.unitPurchase')
+        $Purchase_data = PurchaseReceive::with('details.product.unitPurchase
+        ')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
 
@@ -707,54 +709,102 @@ class SalesReceivedController extends Controller
 
     public function picklist (Request $request, $id)
      {
-       
-        $role = Auth::user()->roles()->first();
-       
-        $view_records = Role::findOrFail($role->id)->inRole('record_view');
+
+        $sale_receipt_data = SalesReceive::with('detailsRecieved.product.unitPurchase', 'detailsRecieved.product.ProductMapping.warehouse_location', 'warehouse', 'client', 'sale.shipment')
+            ->where('deleted_at', '=', null)
+            ->findOrFail($id);
 
 
-        $sale_receipt_data = SalesReceive::with('detailsRecieved.product.unit','warehouse','client','sale.shipment')
-        ->where('deleted_at','=', null)->findOrFail($id);
-        
-       
-        $shipTo = $sale_receipt_data['sale']['shipment']->shipping_address;
-        $client = $sale_receipt_data['client']->name;
-        $ref = $sale_receipt_data->Ref;
-        $date = $sale_receipt_data->date;
+        $sale_receipt_info = [
+            'date' => $sale_receipt_data['date'] ?? null,
+            'number' => $sale_receipt_data['Ref'] ?? null,
+            'status' => $sale_receipt_data['statut'] ?? null,
+            'payment_status' => $sale_receipt_data['payment_statut'] ?? null,
+            'warehouse' => $sale_receipt_data['warehouse']['name'] ?? null
+        ];
+        $customer_info = [
+            'name' => $sale_receipt_data['client']['name'],
+            'phone' => $sale_receipt_data['client']['phone'],
+            'address' => $sale_receipt_data['sale']['shipment']['shipping_address'] ?? null,
+            'email' => $sale_receipt_data['client']['email'],
+        ];
 
-        foreach($sale_receipt_data['detailsRecieved'] as $data) {
-            $list['quantity_receive'] = $data['quantity'];
-            $list['unit'] = $data['product']['unit']->ShortName;
-            $list['name'] = $data['product']->name;
-            $list['expiration'] = $data->expiration_date == null?'n/a':$data->expiration_date;
 
+        $details = [];
+
+        foreach ($sale_receipt_data['detailsRecieved'] as $data) {
+            $item = [
+                'code' => $data['product']['code'],
+                'name' => $data['product']['name'],
+                'is_imei' => $data['product']['is_imei'],
+                'imei_number' => $data['product']['imei_number'],
+                'quantity' => $data['quantity'],
+                'unit_purchase' => $data['product']['unitPurchase']->ShortName,
+                'expiration' => $data->expiration_date == null ? 'n/a' : $data->expiration_date,
+                'location' => $data['product']['ProductMapping']['warehouse_location']['name']
+            ];
+
+            $details[] = $item;
         }
-            $list['warehouse'] =  $sale_receipt_data['warehouse']->name;
+        $setting = Setting::where('deleted_at', '=', null)->first();
 
-            $pdf = \PDF::loadView('pdf.picklist', [ 
-            'lists' => $list,
-            'shipTo' => $shipTo,
-            'client' => $client,
-            'ref' => $ref,
-            'date' => $date,
-            
+        $pdf = \PDF::loadView('pdf.picklist_pdf', [
+            'details' => $details,
+            'sale_receipt_info' => $sale_receipt_info,
+            'customer_info' => $customer_info,
+            'setting' => $setting
         ]);
+
+        return $pdf->download('Picklist.pdf');
+
+        // $role = Auth::user()->roles()->first();
+
+        // $view_records = Role::findOrFail($role->id)->inRole('record_view');
+
+
+        // $sale_receipt_data = SalesReceive::with('detailsRecieved.product.unit','warehouse','client','sale.shipment')
+        // ->where('deleted_at','=', null)->findOrFail($id);
+
+        // $shipTo = $sale_receipt_data['sale']['shipment']->shipping_address;
+        // $client = $sale_receipt_data['client']->name;
+        // $ref = $sale_receipt_data->Ref;
+        // $date = $sale_receipt_data->date;
+
+        // foreach($sale_receipt_data['detailsRecieved'] as $data) {
+        //     $list['quantity_receive'] = $data['quantity'];
+        //     $list['unit'] = $data['product']['unit']->ShortName;
+        //     $list['name'] = $data['product']->name;
+        //     $list['expiration'] = $data->expiration_date == null?'n/a':$data->expiration_date;
+
+        // }
+        //     $list['warehouse'] =  $sale_receipt_data['warehouse']->name;
+
+        //     $pdf = \PDF::loadView('pdf.picklist', [
+        //     'lists' => $list,
+        //     'shipTo' => $shipTo,
+        //     'client' => $client,
+        //     'ref' => $ref,
+        //     'date' => $date,
+
+        // ]);
+
+        // return $pdf->download('salereceipt.pdf');
         // $pdf = \PDF::loadView('pdf.purchase_pdf', [
         //     'symbol' => $symbol,
         //     'setting' => $settings,
         //     'purchase' => $purchase,
         //     'details' => $details,
         // ]);
-        
-        return $pdf->download('salereceipt.pdf');
+
+
 
         // $pdf = PDF::loadView('pdf.picklist')->setOptions(['defaultFont' => 'sans-serif']);
 
-       
+
 
         //   return $pdf->download('picklist.pdf');
 
-      
+
 
     }
 

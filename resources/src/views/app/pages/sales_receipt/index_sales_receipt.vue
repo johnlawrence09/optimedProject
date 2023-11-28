@@ -1,6 +1,7 @@
 <template>
     <div class="main-content">
       <breadcumb page="List Sale Receipt" folder="Sale Receipt"/>
+
       <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
       <div v-else>
         <vue-good-table
@@ -16,7 +17,7 @@
           placeholder: $t('Search_this_table'),
           enabled: true,
         }"
-          :select-options="{ 
+          :select-options="{
             enabled: true ,
             clearSelectionText: '',
           }"
@@ -54,7 +55,7 @@
               <span class="ul-btn__text ml-1">{{$t('Add')}}</span>
             </router-link>
           </div>
-  
+
           <template slot="table-row" slot-scope="props">
             <span v-if="props.column.field == 'actions'">
               <div>
@@ -72,12 +73,12 @@
                     <span class="_dot _r_block-dot bg-dark"></span>
                   </template>
                   <b-navbar-nav>
-                    <b-dropdown-item title="Show" :to="'/app/purchase_receives/detail/'+props.row.id">
+                    <b-dropdown-item title="Show" :to="'/app/sales_receipt/detail/'+props.row.id">
                       <i class="nav-icon i-Eye font-weight-bold mr-2"></i>
                       Sale Receive Details
                     </b-dropdown-item>
                   </b-navbar-nav>
-  
+
                   <!-- <b-dropdown-item
                     title="Edit"
                     v-if="currentUserPermissions.includes('Purchases_edit')"
@@ -86,7 +87,7 @@
                     <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
                     {{$t('EditPurchase')}}
                   </b-dropdown-item> -->
-  
+
                   <!-- <b-dropdown-item
                     v-if="currentUserPermissions.includes('payment_purchases_view')"
                     @click="Show_Payments(props.row.id , props.row)"
@@ -94,7 +95,7 @@
                     <i class="nav-icon i-Money-Bag font-weight-bold mr-2"></i>
                     {{$t('ShowPayment')}}
                   </b-dropdown-item> -->
-  
+
                   <!-- <b-dropdown-item
                     v-if="currentUserPermissions.includes('payment_purchases_add')"
                     @click="New_Payment(props.row)"
@@ -102,17 +103,17 @@
                     <i class="nav-icon i-Add font-weight-bold mr-2"></i>
                     {{$t('AddPayment')}}
                   </b-dropdown-item> -->
-  
+
                   <b-dropdown-item title="PDF" @click="Invoice_PDF(props.row , props.row.id)">
                     <i class="nav-icon i-File-TXT font-weight-bold mr-2"></i>
                     {{$t('DownloadPdf')}}
                   </b-dropdown-item>
-  
+
                   <!-- <b-dropdown-item title="Email" @click="Purchase_Email(props.row , props.row.id)">
                     <i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i>
                     {{$t('EmailPurchase')}}
                   </b-dropdown-item> -->
-  
+
                   <!-- <b-dropdown-item
                     title="Delete"
                     v-if="currentUserPermissions.includes('Purchases_delete')"
@@ -135,7 +136,7 @@
               >{{$t('Pending')}}</span>
               <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
             </div>
-  
+
             <div v-else-if="props.column.field == 'payment_status'">
               <span
                 v-if="props.row.payment_status == 'paid'"
@@ -164,7 +165,7 @@
           </template>
         </vue-good-table>
       </div>
-      
+
       <!-- Sidebar Filter -->
       <b-sidebar id="sidebar-right" :title="$t('Filter')" bg-variant="white" right shadow>
         <div class="px-3 py-2">
@@ -175,27 +176,28 @@
                 <b-form-input type="date" v-model="Filter_date"></b-form-input>
               </b-form-group>
             </b-col>
-  
+
             <!-- Reference -->
             <b-col md="12">
-              <b-form-group :label="$t('Reference')">
+              <b-form-group :label="$t('Referece')">
                 <b-form-input label="Reference" :placeholder="$t('Reference')" v-model="Filter_Ref"></b-form-input>
               </b-form-group>
             </b-col>
-  
+
             <!-- Supplier  -->
+
             <b-col md="12">
-              <b-form-group :label="$t('Supplier')">
+              <b-form-group :label="$t('Customer')">
                 <v-select
                   :reduce="label => label.value"
                   :placeholder="$t('Choose_Supplier')"
                   v-model="Filter_Supplier"
-                  
+
                   :options="suppliers.map(suppliers => ({label: suppliers.name, value: suppliers.id}))"
                 />
               </b-form-group>
             </b-col>
-  
+
             <!-- warehouse -->
             <b-col md="12">
               <b-form-group :label="$t('warehouse')">
@@ -207,7 +209,7 @@
                 />
               </b-form-group>
             </b-col>
-  
+
             <!-- Status  -->
             <b-col md="12">
               <b-form-group :label="$t('Status')">
@@ -224,7 +226,7 @@
                 ></v-select>
               </b-form-group>
             </b-col>
-  
+
             <!-- Payment Status  -->
             <b-col md="12">
               <b-form-group :label="$t('PaymentStatus')">
@@ -241,7 +243,7 @@
                 ></v-select>
               </b-form-group>
             </b-col>
-  
+
             <b-col md="6" sm="12">
               <b-button
                 @click="Get_Purchases(serverParams.page)"
@@ -262,7 +264,7 @@
           </b-row>
         </div>
       </b-sidebar>
-  
+
       <!-- Modal Show Payments-->
       <b-modal hide-footer size="lg" id="Show_payment" :title="$t('ShowPayment')">
         <b-row>
@@ -335,7 +337,7 @@
           </b-col>
         </b-row>
       </b-modal>
-  
+
       <!-- Modal Add Payment-->
       <validation-observer ref="Add_payment">
         <b-modal
@@ -365,7 +367,7 @@
                   </b-form-group>
                 </validation-provider>
               </b-col>
-  
+
               <!-- Reference  -->
               <b-col lg="6" md="12" sm="12">
                 <b-form-group :label="$t('Reference')">
@@ -377,7 +379,7 @@
                   ></b-form-input>
                 </b-form-group>
               </b-col>
-  
+
                <!-- Received  Amount  -->
               <b-col lg="6" md="12" sm="12">
                 <validation-provider
@@ -400,7 +402,7 @@
                 </b-form-group>
               </validation-provider>
             </b-col>
-  
+
               <!-- Paying Amount  -->
               <b-col lg="6" md="12" sm="12">
                 <validation-provider
@@ -421,7 +423,7 @@
                   </b-form-group>
                 </validation-provider>
               </b-col>
-  
+
               <!-- change Amount  -->
               <b-col lg="6" md="12" sm="12">
                 <label>{{$t('Change')}} :</label>
@@ -429,7 +431,7 @@
                   class="change_amount"
                 >{{parseFloat(facture.received_amount - facture.montant).toFixed(2)}}</p>
               </b-col>
-  
+
               <!-- Payment choice -->
               <b-col lg="6" md="12" sm="12">
                 <validation-provider name="Payment choice" :rules="{ required: true}">
@@ -455,7 +457,7 @@
                   </b-form-group>
                 </validation-provider>
               </b-col>
-  
+
               <!-- Note -->
               <b-col lg="12" md="12" sm="12" class="mt-3">
                 <b-form-group :label="$t('Note')">
@@ -478,18 +480,18 @@
       </validation-observer>
     </div>
   </template>
-  
+
   <script>
   import { mapActions, mapGetters } from "vuex";
   import NProgress from "nprogress";
   import jsPDF from "jspdf";
   import "jspdf-autotable";
-  
+
   export default {
     metaInfo: {
       title: "Purchases"
     },
-  
+
     data() {
       return {
         paymentProcessing: false,
@@ -546,7 +548,7 @@
         }
       };
     },
-  
+
      mounted() {
       this.$root.$on("bv::dropdown::show", bvEvent => {
         this.showDropdown = true;
@@ -555,7 +557,7 @@
         this.showDropdown = false;
       });
     },
-  
+
     computed: {
       ...mapGetters(["currentUserPermissions", "currentUser"]),
       columns() {
@@ -573,14 +575,14 @@
             thClass: "text-left"
           },
           {
-            label: this.$t("PO Reference"),
+            label: this.$t("SO Reference"),
             field: "purchase_ref",
             tdClass: "text-left",
             thClass: "text-left"
           },
           {
-            label: this.$t("Supplier"),
-            field: "provider_name",
+            label: this.$t("Customer"),
+            field: "client_name",
             tdClass: "text-left",
             thClass: "text-left"
           },
@@ -608,13 +610,13 @@
         ];
       }
     },
-  
+
     methods: {
-  
+
       updateParams(newProps) {
         this.serverParams = Object.assign({}, this.serverParams, newProps);
       },
-  
+
       //---- Event Page Change
       onPageChange({ currentPage }) {
         if (this.serverParams.page !== currentPage) {
@@ -622,7 +624,7 @@
           this.Get_Purchases(currentPage);
         }
       },
-  
+
       //---- Event Per Page Change
       onPerPageChange({ currentPerPage }) {
         if (this.limit !== currentPerPage) {
@@ -631,7 +633,7 @@
           this.Get_Purchases(1);
         }
       },
-  
+
       //---- Event Select Rows
       selectionChanged({ selectedRows }) {
         this.selectedIds = [];
@@ -639,7 +641,7 @@
           this.selectedIds.push(row.id);
         });
       },
-  
+
       //---- Event on Sort Change
       onSortChange(params) {
         let field = "";
@@ -658,12 +660,12 @@
         });
         this.Get_Purchases(this.serverParams.page);
       },
-  
+
       onSearch(value) {
         this.search = value.searchTerm;
         this.Get_Purchases(this.serverParams.page);
       },
-  
+
       //------ Validate Form Submit_Payment
       Submit_Payment() {
         this.$refs.Add_payment.validate().then(success => {
@@ -684,18 +686,18 @@
               this.$t("Warning")
             );
             this.facture.montant = 0;
-  
+
           }else if (!this.EditPaiementMode) {
               this.Create_Payment();
           } else {
               this.Update_Payment();
           }
-  
+
         });
       },
-  
+
         //---------- keyup paid Amount
-  
+
       Verified_paidAmount() {
         if (isNaN(this.facture.montant)) {
           this.facture.montant = 0;
@@ -706,7 +708,7 @@
             this.$t("Warning")
           );
           this.facture.montant = 0;
-        } 
+        }
         else if (this.facture.montant > this.due) {
           this.makeToast(
             "warning",
@@ -716,21 +718,21 @@
           this.facture.montant = 0;
         }
       },
-  
+
       //---------- keyup Received Amount
-  
+
       Verified_Received_Amount() {
         if (isNaN(this.facture.received_amount)) {
           this.facture.received_amount = 0;
-        } 
+        }
       },
-  
-  
+
+
       //---Validate State Fields
       getValidationState({ dirty, validated, valid = null }) {
         return dirty || validated ? valid : null;
       },
-  
+
       //------ Toast
       makeToast(variant, msg, title) {
         this.$root.$bvToast.toast(msg, {
@@ -739,7 +741,7 @@
           solid: true
         });
       },
-  
+
       //------ Reset Filter
       Reset_Filter() {
         this.search = "";
@@ -750,11 +752,11 @@
         this.Filter_date = "";
         (this.Filter_warehouse = ""), this.Get_Purchases(this.serverParams.page);
       },
-  
+
       //---------------------- Purchases PDF -------------------------------\\
       Purchase_Receive_PDF() {
         var self = this;
-  
+
         let pdf = new jsPDF("p", "pt");
         let columns = [
           { title: "Ref", dataKey: "Ref" },
@@ -770,7 +772,7 @@
         pdf.text("Purchase List", 40, 25);
         pdf.save("Purchase_Receipt_List.pdf");
       },
-  
+
       //----------------------- Purchases Excel -------------------------------\\
       Purchase_Excel() {
         // Start the progress bar.
@@ -798,13 +800,13 @@
             setTimeout(() => NProgress.done(), 500);
           });
       },
-  
+
       //--------------------------- Invoice Purchase -------------------------------\\
       Invoice_PDF(purchase, id) {
         // Start the progress bar.
         NProgress.start();
         NProgress.set(0.1);
-       
+
          axios
           .get("Purchase_Receive_PDF/" + id, {
             responseType: "blob", // important
@@ -827,13 +829,13 @@
             setTimeout(() => NProgress.done(), 500);
           });
       },
-  
+
       //------------------------------ Payment Purchase -------------------------------\\
       Payment_Purchase_PDF(facture, id) {
         // Start the progress bar.
         NProgress.start();
         NProgress.set(0.1);
-       
+
          axios
           .get("Payment_Purchase_PDF/" + id, {
             responseType: "blob", // important
@@ -856,7 +858,7 @@
             setTimeout(() => NProgress.done(), 500);
           });
       },
-  
+
       //---------------------------------------- Set To Strings-------------------------\\
       setToStrings() {
         // Simply replaces null values with strings=''
@@ -870,7 +872,7 @@
           this.Filter_Payment = "";
         }
       },
-  
+
       //------------------------------------------------ Get All Purchases -------------------------------\\
       Get_Purchases(page) {
         console.log(page);
@@ -905,11 +907,10 @@
           )
           .then(response => {
             this.purchases = response.data.sales;
-            console.log(this.purchases);
             this.suppliers = response.data.suppliers;
             this.warehouses = response.data.warehouses;
             this.totalRows = response.data.totalRows;
-  
+
             // Complete the animation of theprogress bar.
             NProgress.done();
             this.isLoading = false;
@@ -920,7 +921,7 @@
             this.isLoading = false;
           });
       },
-  
+
       //------------------------------Formetted Numbers -------------------------\\
       formatNumber(number, dec) {
         const value = (typeof number === "string"
@@ -934,9 +935,9 @@
         while (formated.length < dec) formated += "0";
         return `${value[0]}.${formated}`;
       },
-  
+
       //------------------------------- Remove Purchase -------------------------\\
-  
+
       Remove_Purchase(id) {
         this.$swal({
           title: this.$t("Delete.Title"),
@@ -974,9 +975,9 @@
           }
         });
       },
-  
+
       //---- Delete purchases by selection
-  
+
       delete_by_selected() {
         this.$swal({
           title: this.$t("Delete.Title"),
@@ -1002,7 +1003,7 @@
                   this.$t("Delete.PurchaseDeleted"),
                   "success"
                 );
-  
+
                 Fire.$emit("Delete_Purchase");
               })
               .catch(() => {
@@ -1017,7 +1018,7 @@
           }
         });
       },
-  
+
         //---------SMS notification
        Payment_Purchase_SMS(facture) {
         // Start the progress bar.
@@ -1042,9 +1043,9 @@
             this.makeToast("danger", this.$t("sms_config_invalid"), this.$t("Failed"));
           });
       },
-  
+
       //--------------------------------------------- Send Purchase to Email -------------------------------\\
-  
+
       EmailPayment(facture, purchase) {
         this.emailPayment.id = facture.id;
         this.emailPayment.to = purchase.provider_email;
@@ -1052,7 +1053,7 @@
         this.emailPayment.supplier_name = purchase.provider_name;
         this.Send_Email_Payment();
       },
-  
+
       Send_Email_Payment() {
         // Start the progress bar.
         NProgress.start();
@@ -1067,7 +1068,7 @@
           .then(response => {
             // Complete the animation of the  progress bar.
             setTimeout(() => NProgress.done(), 500);
-  
+
             this.makeToast(
               "success",
               this.$t("Send.TitleEmail"),
@@ -1080,7 +1081,7 @@
             this.makeToast("danger", this.$t("SMTPIncorrect"), this.$t("Failed"));
           });
       },
-  
+
       //---------------------------------------------------- Purchase Email -------------------------------\\
       Purchase_Email(purchase) {
         this.email.to = purchase.provider_email;
@@ -1088,7 +1089,7 @@
         this.email.supplier_name = purchase.provider_name;
         this.Send_Email(purchase.id);
       },
-  
+
       //--------------------------------------------- Send Purchase to Email -------------------------------\\
       Send_Email(id) {
         // Start the progress bar.
@@ -1116,7 +1117,7 @@
             this.makeToast("danger", this.$t("SMTPIncorrect"), this.$t("Failed"));
           });
       },
-  
+
       //----------------------------------------------------- Add Payment to Purchase -------------------------------\\
       New_Payment(purchase) {
         if (purchase.payment_status == "paid") {
@@ -1145,20 +1146,20 @@
           }, 500);
         }
       },
-  
+
       Number_Order_Payment() {
         axios
           .get("payment/purchase/Number/Order")
           .then(({ data }) => (this.facture.Ref = data));
       },
-  
+
       //------------------------------------------------ Edit Pyament -------------------------------\\
       Edit_Payment(facture) {
         // Start the progress bar.
         NProgress.start();
         NProgress.set(0.1);
         this.reset_form_payment();
-  
+
         this.facture.id        = facture.id;
         this.facture.Ref       = facture.Ref;
         this.facture.Reglement = facture.Reglement;
@@ -1175,7 +1176,7 @@
           this.$bvModal.show("Add_Payment");
         }, 500);
       },
-  
+
       //--------------------------------- Show All Payments by Purchase -------------------------------\\
       Show_Payments(id, purchase) {
         // Start the progress bar.
@@ -1186,7 +1187,7 @@
         this.purchase = purchase;
         this.Get_Payments(id);
       },
-  
+
       reset_form_payment() {
         this.facture = {
           id: "",
@@ -1199,7 +1200,7 @@
           notes: ""
         };
       },
-  
+
       //---------------------------------------- Create Payment --------------------------------------\\
       Create_Payment() {
         this.paymentProcessing = true;
@@ -1229,13 +1230,13 @@
               NProgress.done();
             });
       },
-  
+
       //------------------------------------------- Update Payment -------------------------------\\
       Update_Payment() {
         this.paymentProcessing = true;
         NProgress.start();
         NProgress.set(0.1);
-       
+
           axios
             .put("payment/purchase/" + this.facture.id, {
               purchase_id: this.purchase.id,
@@ -1260,9 +1261,9 @@
               NProgress.done();
             });
       },
-  
-    
-  
+
+
+
       //------------------------------------ Remove Payment -------------------------------\\
       Remove_Payment(id) {
         this.$swal({
@@ -1301,7 +1302,7 @@
           }
         });
       },
-  
+
       //----------------------------------------- Get All Payments  -------------------------------\\
       Get_Payments(id) {
         axios
@@ -1321,11 +1322,11 @@
           });
       }
     },
-  
+
     //-----------------------------Created function-------------------
     created: function() {
       this.Get_Purchases(1);
-  
+
       Fire.$on("Delete_Purchase", () => {
         setTimeout(() => {
           this.Get_Purchases(this.serverParams.page);
@@ -1333,7 +1334,7 @@
           NProgress.done();
         }, 500);
       });
-  
+
       Fire.$on("Create_Facture_purchase", () => {
         setTimeout(() => {
           this.Get_Purchases(this.serverParams.page);
@@ -1342,7 +1343,7 @@
           this.$bvModal.hide("Add_Payment");
         }, 500);
       });
-  
+
       Fire.$on("Update_Facture_purchase", () => {
         setTimeout(() => {
           this.Get_Payments(this.Purchase_id);
@@ -1352,7 +1353,7 @@
           this.$bvModal.hide("Add_Payment");
         }, 500);
       });
-  
+
       Fire.$on("Delete_Facture_purchase", () => {
         setTimeout(() => {
           this.Get_Payments(this.Purchase_id);

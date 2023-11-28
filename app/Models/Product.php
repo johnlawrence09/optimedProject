@@ -12,7 +12,7 @@ class Product extends Model
     protected $fillable = [
         'code', 'Type_barcode', 'name', 'cost', 'price', 'unit_id', 'unit_sale_id', 'unit_purchase_id',
         'stock_alert', 'category_id', 'sub_category_id', 'is_variant','is_imei',
-        'tax_method', 'image', 'brand_id', 'is_active', 'note',
+        'tax_method', 'image', 'brand_id', 'is_active', 'note','is_expire','is_warranty'
     ];
 
     protected static function boot()
@@ -104,6 +104,11 @@ class Product extends Model
     public function ProductWarehouse()
     {
         return $this->hasMany('App\Models\product_warehouse');
+    }
+
+    public function ProductMapping()
+    {
+        return $this->hasOne('App\Models\Mapping');
     }
 
 

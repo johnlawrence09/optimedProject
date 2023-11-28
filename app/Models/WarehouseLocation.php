@@ -15,4 +15,9 @@ class WarehouseLocation extends Model
         'name',
         'warehouse_id'
     ];
+
+    public function warehouse() {
+
+        return $this->belongsTo('App\Models\Warehouse');
+    }
 }

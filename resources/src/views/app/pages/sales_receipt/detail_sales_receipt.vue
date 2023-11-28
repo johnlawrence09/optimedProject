@@ -25,6 +25,7 @@
              <button @click="Purchase_SMS()" class="btn btn-secondary btn-icon ripple btn-sm">
               <i class="i-Speach-Bubble"></i>
               SMS
+
             </button> -->
                     <button
                         @click="Print_Purchase_PDF()"
@@ -40,7 +41,7 @@
                         {{ $t("print") }}
                     </button>
                     <button
-                        @click="printPicklist()"
+                        @click="Print_PickList_PDF()"
                         class="btn btn-warning btn-icon ripple btn-sm"
                     >
                         <i class="i-Billing"></i>
@@ -60,7 +61,7 @@
                 <div class="invoice-print">
                     <b-row class="justify-content-md-center">
                         <h4 class="font-weight-bold">
-                            Sale Receipt Detail : {{ purchase.Ref }}
+                            Sale Receipt : {{ purchase.Ref }}
                         </h4>
                     </b-row>
                     <hr />
@@ -69,10 +70,10 @@
                             <h5 class="font-weight-bold">
                                 {{ $t("Supplier_Info") }}
                             </h5>
-                            <div>{{ purchase.supplier_name }}</div>
-                            <div>{{ purchase.supplier_email }}</div>
-                            <div>{{ purchase.supplier_phone }}</div>
-                            <div>{{ purchase.supplier_adr }}</div>
+                            <div>{{ customer.customer_name }}</div>
+                            <div>{{ customer.email }}</div>
+                            <div>{{ customer.phone_number }}</div>
+                            <div>{{ customer.shipping_address }}</div>
                         </b-col>
                         <b-col lg="4" md="4" sm="12" class="mb-4">
                             <h5 class="font-weight-bold">
@@ -103,21 +104,34 @@
                             <div>
                                 {{ $t("Status") }} :
                                 <span
-                                    v-if="purchase.statut == 'received'"
+                                    v-if="purchase.statut == 'delivered'"
                                     class="badge badge-outline-success"
-                                    >{{ $t("Received") }}</span
+                                    >{{ $t("Delivered") }}</span
                                 >
                                 <span
                                     v-else-if="purchase.statut == 'pending'"
                                     class="badge badge-outline-info"
                                     >{{ $t("Pending") }}</span
                                 >
+
                                 <span
-                                    v-else
+                                    v-else-if="purchase.statut == 'completed'"
                                     class="badge badge-outline-warning"
-                                    >{{ $t("Ordered") }}</span
+                                    >Completed</span
+                                >
+
+                                <span
+                                    v-else-if="purchase.statut == 'For delivery'"
+                                    class="badge badge-outline-success"
+                                    >For delivery</span
+                                >
+                                <span
+                                    v-else-if="purchase.statut == 'Shipped'"
+                                    class="badge badge-outline-warning"
+                                    >{{ $t("Shipped") }}</span
                                 >
                             </div>
+
                             <div>
                                 {{ $t("warehouse") }} : {{ purchase.warehouse }}
                             </div>
@@ -347,6 +361,7 @@ export default {
             details: [],
             variants: [],
             company: {},
+            customer: {},
             email: {
                 to: "",
                 subject: "",
@@ -403,8 +418,41 @@ export default {
             console.log(id);
 
             axios.get(`print_picklist/${id}`,)
-           
-            
+
+
+        },
+
+        Print_PickList_PDF() {
+        // Start the progress bar.
+        NProgress.start();
+        NProgress.set(0.1);
+        let id = this.$route.params.id;
+        console.log(id);
+        axios
+            .get(`print_picklist/${id}`, {
+            responseType: "blob", // important
+            headers: {
+                "Content-Type": "application/json"
+            }
+            })
+
+            .then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute(
+                "download",
+                "purchase_" + this.purchase.Ref + ".pdf"
+            );
+            document.body.appendChild(link);
+            link.click();
+            // Complete the animation of the  progress bar.
+            setTimeout(() => NProgress.done(), 500);
+            })
+            .catch(() => {
+            // Complete the animation of the  progress bar.
+            setTimeout(() => NProgress.done(), 500);
+            });
         },
 
         //------------------------------Formetted Numbers -------------------------\\
@@ -429,8 +477,9 @@ export default {
                 .then((response) => {
                     this.purchase = response.data.sale;
                     this.details = response.data.details;
-                    console.log(this.details);
                     this.company = response.data.company;
+                    this.customer = response.data.customer;
+                    console.log(this.customer);
                     this.isLoading = false;
                 })
                 .catch((response) => {
