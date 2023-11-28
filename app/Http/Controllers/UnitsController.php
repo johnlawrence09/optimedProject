@@ -84,6 +84,8 @@ class UnitsController extends BaseController
 
         $existingRecord = DB::table('units')
         ->where('name', $request['name'])
+        ->where('base_unit', $request['base_unit'])
+        ->where('operator_value', $request['operator_value'])
         ->Where('deleted_at', null)
         ->count();
 
@@ -93,7 +95,7 @@ class UnitsController extends BaseController
                 'name' => 'required',
                 'ShortName' => 'required',
             ]);
-    
+
             if ($request->base_unit == '') {
                 $operator = '*';
                 $operator_value = 1;
@@ -101,7 +103,7 @@ class UnitsController extends BaseController
                 $operator = $request->operator;
                 $operator_value = $request->operator_value;
             }
-    
+
             Unit::create([
                 'name' => $request['name'],
                 'ShortName' => $request['ShortName'],
@@ -109,7 +111,7 @@ class UnitsController extends BaseController
                 'operator' => $operator,
                 'operator_value' => $operator_value,
             ]);
-    
+
             return response()->json(['exist' => false]);
         } else {
             return response()->json(['exist' => true]);
@@ -117,7 +119,7 @@ class UnitsController extends BaseController
 
 
 
-       
+
 
     }
 
@@ -138,7 +140,7 @@ class UnitsController extends BaseController
                 'name' => 'required',
                 'ShortName' => 'required',
             ]);
-    
+
             if ($request->base_unit == '' || $request->base_unit == $id) {
                 $operator = '*';
                 $operator_value = 1;
@@ -148,7 +150,7 @@ class UnitsController extends BaseController
                 $operator_value = $request->operator_value;
                 $base_unit = $request['base_unit'];
             }
-    
+
             Unit::whereId($id)->update([
                 'name' => $request['name'],
                 'ShortName' => $request['ShortName'],
@@ -156,13 +158,13 @@ class UnitsController extends BaseController
                 'operator' => $operator,
                 'operator_value' => $operator_value,
             ]);
-    
+
             return response()->json(['exist' => false]);
         }else {
             return response()->json(['exist' => true]);
         }
 
-        
+
 
     }
 
@@ -215,7 +217,7 @@ class UnitsController extends BaseController
         $units = Unit::where('base_unit', $product_unit_id->unit_id)
                         ->orWhere('id', $product_unit_id->unit_id)
                         ->get();
-        
+
         return response()->json($units);
     }
 

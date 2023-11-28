@@ -5,7 +5,7 @@
             v-if="isLoading"
             class="loading_page spinner spinner-primary mr-3"
         ></div>
-        <!-- {{ products }} -->
+        {{ product }}
         <validation-observer ref="create_sale" v-if="!isLoading">
             <b-form @submit.prevent="Submit_Sale">
                 <b-row>
@@ -1023,6 +1023,21 @@
                             </b-form-group>
                         </b-col>
 
+                         <!-- Warranty Year -->
+                         <b-col lg="12" md="12" sm="12" v-show="product.is_warranty">
+                            <b-form-group
+                                :label="$t('Add product Warranty Year')"
+                            >
+                                <b-form-input
+                                    label="Add product Warranty Year"
+                                    v-model="detail.warranty_year"
+                                    :placeholder="
+                                        $t('Add product Warranty Year')
+                                    "
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
                         <b-col md="12">
                             <b-form-group>
                                 <b-button
@@ -1125,6 +1140,8 @@ export default {
                 product_variant_id: "",
                 is_imei: "",
                 imei_number: "",
+                warranty_year: "",
+                is_warranty:""
             },
         };
     },
@@ -1292,6 +1309,7 @@ export default {
             this.detail.tax_percent = detail.tax_percent;
             this.detail.is_imei = detail.is_imei;
             this.detail.imei_number = detail.imei_number;
+            this.detail.warranty_year = detail.warranty_year;
 
             setTimeout(() => {
                 NProgress.done();
@@ -1340,6 +1358,7 @@ export default {
                     this.details[i].discount = this.detail.discount;
                     this.details[i].sale_unit_id = this.detail.sale_unit_id;
                     this.details[i].imei_number = this.detail.imei_number;
+                    this.details[i].warranty_year = parseInt(this.detail.warranty_year, 10);
 
                     if (this.details[i].discount_Method == "2") {
                         //Fixed
@@ -1478,11 +1497,11 @@ export default {
             // );
 
             // console.log(data1);
-           const exp =
-                result.expiration_date === null
-                    ? ""
-                    : `-- Expiration Date: ${result.expiration_date}`;
-            return `${result.code} ${result.name} ${exp}`;
+        //    const exp =
+        //         result.expiration_date === null
+        //             ? ""
+        //             : `-- Expiration Date: ${result.expiration_date}`;
+            return result.code;
         },
 
         //------------------------- Submit Search Product
@@ -1547,7 +1566,7 @@ export default {
             }
 
             this.details.push(this.product);
-            if (this.product.is_imei) {
+            if (this.product.is_imei || this.product.is_warranty) {
                 this.Modal_Updat_Detail(this.product);
             }
         },
@@ -1839,15 +1858,6 @@ export default {
                                 : 0,
                             GrandTotal: this.GrandTotal,
                             details: this.details,
-                            // payment: this.payment,
-                            // amount: parseFloat(this.payment.amount).toFixed(2),
-                            // received_amount: parseFloat(
-                            //     this.payment.received_amount
-                            // ).toFixed(2),
-                            // change: parseFloat(
-                            //     this.payment.received_amount -
-                            //         this.payment.amount
-                            // ).toFixed(2),
                         })
                         .then((response) => {
                             this.makeToast(
@@ -1898,6 +1908,8 @@ export default {
                 this.product.sale_unit_id = response.data.sale_unit_id;
                 this.product.is_imei = response.data.is_imei;
                 this.product.imei_number = "";
+                this.product.is_warranty = response.data.is_warranty;
+                this.product.warranty_year = "";
                 this.add_product();
                 this.Calcul_Total();
             });

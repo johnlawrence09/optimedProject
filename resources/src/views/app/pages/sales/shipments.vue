@@ -467,6 +467,7 @@ export default {
                 )
                 .then((response) => {
                     this.shipments = response.data.shipments;
+                    console.log(this.shipments);
                     this.totalRows = response.data.totalRows;
 
                     // Complete the animation of theprogress bar.

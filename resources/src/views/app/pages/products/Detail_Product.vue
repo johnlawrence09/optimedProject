@@ -176,7 +176,7 @@ export default {
   },
 
   methods: {
-   
+
 
     //------------------------------Formetted Numbers -------------------------\\
     formatNumber(number, dec) {
@@ -204,6 +204,7 @@ export default {
         .get(`Products/Detail/${id}`)
         .then(response => {
           this.product = response.data;
+          console.log(this.product);
           this.isLoading = false;
         })
         .catch(response => {

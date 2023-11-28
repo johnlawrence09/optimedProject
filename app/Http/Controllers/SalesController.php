@@ -212,6 +212,7 @@ class SalesController extends BaseController
                     'product_variant_id' => $value['product_variant_id'],
                     'total' => $value['subtotal'],
                     'imei_number' => $value['imei_number'],
+                    'warranty_year' => $value['warranty_year'],
                 ];
 
 
@@ -837,11 +838,12 @@ class SalesController extends BaseController
 
 
         $company = Setting::where('deleted_at', '=', null)->first();
-
+        $customer = Shipment::where('sale_id','=', $id)->where('deleted_at','=', null)->first();
         return response()->json([
             'details' => $details,
             'sale' => $sale_details,
             'company' => $company,
+            'customer' => $customer
         ]);
 
     }

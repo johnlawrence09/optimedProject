@@ -16,7 +16,7 @@
         placeholder: $t('Search_this_table'),
         enabled: true,
       }"
-        :select-options="{ 
+        :select-options="{
           enabled: true ,
           clearSelectionText: '',
         }"
@@ -103,7 +103,7 @@
                   {{$t('AddPayment')}}
                 </b-dropdown-item>
 
-                <b-dropdown-item 
+                <b-dropdown-item
                  v-if="props.row.statut !== 'pending'"
                   title="PDF"
                   @click="Invoice_PDF(props.row , props.row.id)">
@@ -111,27 +111,27 @@
                   {{$t('DownloadPdf')}}
                 </b-dropdown-item>
 
-                <b-dropdown-item 
+                <b-dropdown-item
                   v-if="props.row.statut === 'ordered'"
-                  title="Email" 
+                  title="Email"
                   @click="Purchase_Email(props.row , props.row.id)
                 ">
                   <i class="nav-icon i-Envelope-2 font-weight-bold mr-2"></i>
                   {{$t('EmailPurchase')}}
                 </b-dropdown-item>
 
-                <b-dropdown-item 
+                <b-dropdown-item
                   v-if="props.row.statut === 'pending'"
-                  title="Ordered" 
+                  title="Ordered"
                   @click="Edit_Status('ordered', props.row.id)"
                 >
                   <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
                   Set status to ordered
                 </b-dropdown-item>
 
-                <b-dropdown-item 
+                <b-dropdown-item
                   v-if="props.row.statut === 'partial'"
-                  title="Cancel" 
+                  title="Cancel"
                   @click="Edit_Status('completed', props.row.id)"
                 >
                   <i class="nav-icon i-Pen-2 font-weight-bold mr-2"></i>
@@ -158,16 +158,16 @@
               v-else-if="props.row.statut == 'pending'"
               class="badge badge-outline-info"
             >{{$t('Pending')}}</span>
-            <span 
-              v-else-if="props.row.statut == 'ordered'" 
+            <span
+              v-else-if="props.row.statut == 'ordered'"
               class="badge badge-outline-warning">
             {{$t('Ordered')}}</span>
-            <span 
-              v-else-if="props.row.statut == 'partial'" 
+            <span
+              v-else-if="props.row.statut == 'partial'"
               class="badge badge-outline-primary">
             Partial</span>
-            <span 
-              v-else-if="props.row.statut == 'completed'" 
+            <span
+              v-else-if="props.row.statut == 'completed'"
               class="badge badge-outline-success">
             Completed</span>
           </div>
@@ -292,7 +292,7 @@
     </b-sidebar>
 
     <!-- Modal Show Payments-->
-    <b-modal hide-footer size="lg" id="Show_payment" :title="$t('Paymen History')">
+    <b-modal hide-footer size="lg" id="Show_payment" :title="$t('Payment History')">
       <b-row>
         <b-col lg="12" md="12" sm="12" class="mt-3">
           <div class="table-responsive">
@@ -754,7 +754,7 @@ export default {
           this.$t("Warning")
         );
         this.facture.montant = 0;
-      } 
+      }
       else if (this.facture.montant > this.due) {
         this.makeToast(
           "warning",
@@ -770,7 +770,7 @@ export default {
     Verified_Received_Amount() {
       if (isNaN(this.facture.received_amount)) {
         this.facture.received_amount = 0;
-      } 
+      }
     },
 
 
@@ -852,7 +852,7 @@ export default {
       // Start the progress bar.
       NProgress.start();
       NProgress.set(0.1);
-     
+
        axios
         .get("Purchase_PDF/" + id, {
           responseType: "blob", // important
@@ -881,7 +881,7 @@ export default {
       // Start the progress bar.
       NProgress.start();
       NProgress.set(0.1);
-     
+
        axios
         .get("Payment_Purchase_PDF/" + id, {
           responseType: "blob", // important
@@ -1282,7 +1282,7 @@ export default {
       this.paymentProcessing = true;
       NProgress.start();
       NProgress.set(0.1);
-     
+
         axios
           .put("payment/purchase/" + this.facture.id, {
             purchase_id: this.purchase.id,
@@ -1308,7 +1308,7 @@ export default {
           });
     },
 
-  
+
 
     //------------------------------------ Remove Payment -------------------------------\\
     Remove_Payment(id) {
@@ -1361,7 +1361,7 @@ export default {
             NProgress.done();
             this.$bvModal.show("Show_payment");
           }, 500);
-          
+
         })
         .catch(() => {
           // Complete the animation of the  progress bar.

@@ -32,6 +32,8 @@ class ProductsController extends BaseController
 
     //------------ Get ALL Products --------------\\
 
+
+
     public function index(request $request)
     {
         $this->authorizeForUser($request->user('api'), 'view', Product::class);
@@ -213,6 +215,7 @@ class ProductsController extends BaseController
                         $Product_variants = ProductVariant::where('product_id', $Product->id)
                             ->where('deleted_at', null)
                             ->get();
+
                         foreach ($warehouses as $warehouse) {
                             if ($request['is_variant'] == 'true') {
                                 foreach ($Product_variants as $product_variant) {
@@ -230,10 +233,14 @@ class ProductsController extends BaseController
                                 ];
                             }
                         }
+
+
                         product_warehouse::insert($product_warehouse);
                     }
+                    // dd($product_warehouse);
 
                 }, 10);
+
 
                 return response()->json(['exist' => false]);
 

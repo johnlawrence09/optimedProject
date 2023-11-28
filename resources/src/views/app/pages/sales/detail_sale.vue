@@ -174,7 +174,10 @@
                                 v-for="(item, i) in sale.receipts"
                                 :key="item.id"
                             >
-                                <div>
+                                <div v-if="customer == null">
+                                    DR Reference# : {{ sale.receipts[0].Ref }}
+                                </div>
+                                <div v-else>
                                     DR Reference#{{ i + 1 }} :
                                     <router-link
                                         :to="
@@ -434,6 +437,7 @@ export default {
             details: [],
             variants: [],
             company: {},
+            customer:[],
             email: {
                 to: "",
                 subject: "",
@@ -587,6 +591,7 @@ export default {
                 .get(`sales/${id}`)
                 .then((response) => {
                     this.sale = response.data.sale;
+                    this.customer = response.data.customer;
                     this.details = response.data.details;
                     this.company = response.data.company;
                     this.isLoading = false;

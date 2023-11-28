@@ -68,7 +68,7 @@
                     <b-row class="mt-5">
                         <b-col lg="4" md="4" sm="12" class="mb-4">
                             <h5 class="font-weight-bold">
-                                {{ $t("Supplier_Info") }}
+                                {{ $t("Customer_Info") }}
                             </h5>
                             <div>{{ customer.customer_name }}</div>
                             <div>{{ customer.email }}</div>

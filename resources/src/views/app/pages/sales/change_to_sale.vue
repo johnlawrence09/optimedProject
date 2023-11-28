@@ -6,7 +6,6 @@
             class="loading_page spinner spinner-primary mr-3"
         ></div>
 
-        {{ products }}
         <validation-observer ref="create_sale" v-if="!isLoading">
             <b-form @submit.prevent="Submit_Sale">
                 <b-row>
