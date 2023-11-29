@@ -203,6 +203,9 @@
                                             <th scope="col">
                                                 {{ $t("ProductName") }}
                                             </th>
+                                            <th scope="col" v-show="details[0].warranty_year > 0">
+                                                Year of Warranty
+                                            </th>
                                             <th scope="col">
                                                 {{ $t("Net_Unit_Price") }}
                                             </th>
@@ -240,6 +243,24 @@
                                                     {{ detail.imei_number }}
                                                 </p>
                                             </td>
+                                            <span v-show="detail.warranty_year > 0">
+                                                <td v-if="detail.warranty_year == 1">
+                                                    {{
+                                                        formatNumber(
+                                                            detail.warranty_year,
+                                                            0
+                                                        )
+                                                    }} year
+                                                </td>
+                                                <td v-else>
+                                                    {{
+                                                        formatNumber(
+                                                            detail.warranty_year,
+                                                            0
+                                                        )
+                                                    }} years
+                                                </td>
+                                            </span>
                                             <td>
                                                 {{ currentUser.currency }}
                                                 {{

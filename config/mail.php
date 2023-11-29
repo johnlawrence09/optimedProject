@@ -34,7 +34,7 @@ return [
     */
 
     'mailers' => [
-    
+
         'ses' => [
             'transport' => 'ses',
         ],
@@ -60,6 +60,16 @@ return [
         'array' => [
             'transport' => 'array',
         ],
+
+        'smtp' => [
+        'transport' => 'smtp',
+        'host' => 'smtp.office365.com',
+        'port' => 587,
+        'encryption' => 'tls',
+        'username' => 'admin@optimedevices.com',
+        'password' => '@H520GamingCenter27',
+        // other configuration options...
+    ],
     ],
 
     /*
@@ -96,6 +106,14 @@ return [
 
         'paths' => [
             resource_path('views/vendor/mail'),
+        ],
+    ],
+
+    'stream' => [
+        'ssl' => [
+            'allow_self_signed' => true,
+            'verify_peer' => false,
+            'verify_peer_name' => false,
         ],
     ],
 

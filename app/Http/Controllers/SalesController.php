@@ -811,6 +811,7 @@ class SalesController extends BaseController
             $data['price'] = $detail->price;
             $data['unit_sale'] = $unit->ShortName;
             $data['quantity_receive'] = $detail['quantity_receive'];
+            $data['warranty_year'] = $detail['warranty_year'];
 
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;
@@ -835,6 +836,7 @@ class SalesController extends BaseController
 
             $details[] = $data;
         }
+
 
 
         $company = Setting::where('deleted_at', '=', null)->first();

@@ -683,6 +683,7 @@ class PurchasesController extends BaseController
             $data['name'] = $detail['product']['name'];
             $data['cost'] = $detail->cost;
             $data['unit_purchase'] = $unit->ShortName;
+            $data['warranty_year'] = $detail->warranty_year;
 
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;

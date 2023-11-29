@@ -746,6 +746,7 @@ class SalesReceivedController extends Controller
 
             $details[] = $item;
         }
+
         $setting = Setting::where('deleted_at', '=', null)->first();
 
         $pdf = \PDF::loadView('pdf.picklist_pdf', [

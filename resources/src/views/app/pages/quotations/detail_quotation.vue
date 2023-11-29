@@ -200,7 +200,7 @@ export default {
       NProgress.start();
       NProgress.set(0.1);
       let id = this.$route.params.id;
-     
+
        axios
         .get(`Quote_PDF/${id}`, {
           responseType: "blob", // important
@@ -270,6 +270,7 @@ export default {
       this.email.to = this.quote.client_email;
       this.email.Quote_Ref = this.quote.Ref;
       this.email.client_name = this.quote.client_name;
+      console.log(this.email.to, this.email.Quote_Ref, this.email.client_name );
       this.SendEmail();
     },
     SendEmail() {
@@ -301,7 +302,7 @@ export default {
     },
 
     //---------SMS notification
-     
+
      Quote_SMS() {
       // Start the progress bar.
       NProgress.start();

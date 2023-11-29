@@ -10591,7 +10591,7 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #D1D5DB;
+  /* border-top: 1px solid #D1D5DB; */
 }
 
 .table thead th {

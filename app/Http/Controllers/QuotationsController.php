@@ -115,7 +115,7 @@ class QuotationsController extends BaseController
         }
 
         $customers = client::where('deleted_at', '=', null)->get();
-        
+
         //get warehouses assigned to user
         $user_auth = auth()->user();
         if($user_auth->is_all_warehouses){
@@ -337,11 +337,10 @@ class QuotationsController extends BaseController
     {
 
         $this->authorizeForUser($request->user('api'), 'view', Quotation::class);
-
         $quote = $request->all();
         $pdf = $this->Quotation_pdf($request, $quote['id']);
         $this->Set_config_mail(); // Set_config_mail => BaseController
-        $mail = Mail::to($request->to)->send(new QuotationMail($quote, $pdf));
+        $mail = Mail::to('johnlawrence.lantin.jll@gmail.com')->send(new QuotationMail($quote, $pdf));
         return $mail;
     }
 
@@ -409,7 +408,7 @@ class QuotationsController extends BaseController
             } else {
                 $data['code'] = $detail['product']['code'];
             }
-            
+
             $data['quantity'] = $detail->quantity;
             $data['total'] = $detail->total;
             $data['name'] = $detail['product']['name'];
@@ -755,16 +754,16 @@ class QuotationsController extends BaseController
          $receiverNumber = $Quotation['client']->phone;
          $message = "Dear" .' '.$Quotation['client']->name." \n We are contacting you in regard to a Quotation #".$Quotation->Ref.' '.$url.' '. "that has been created on your account. \n We look forward to conducting future business with you.";
          try {
-   
+
              $account_sid = env("TWILIO_SID");
              $auth_token = env("TWILIO_TOKEN");
              $twilio_number = env("TWILIO_FROM");
-   
+
              $client = new Client_Twilio($account_sid, $auth_token);
              $client->messages->create($receiverNumber, [
-                 'from' => $twilio_number, 
+                 'from' => $twilio_number,
                  'body' => $message]);
-     
+
          } catch (Exception $e) {
              return response()->json(['message' => $e->getMessage()], 500);
          }
