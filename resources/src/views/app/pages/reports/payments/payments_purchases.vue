@@ -5,16 +5,17 @@
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
 
     <b-col md="12" class="text-center" v-if="!isLoading">
-        <date-range-picker 
-          v-model="dateRange" 
-          :startDate="startDate" 
-          :endDate="endDate" 
+        <date-range-picker
+          v-model="dateRange"
+          :startDate="startDate"
+          :endDate="endDate"
            @update="Submit_filter_dateRange"
-          :locale-data="locale" > 
+          :locale-data="locale" >
 
           <template v-slot:input="picker" style="min-width: 350px;">
               {{ picker.startDate.toJSON().slice(0, 10)}} - {{ picker.endDate.toJSON().slice(0, 10)}}
-          </template>        
+
+          </template>
         </date-range-picker>
       </b-col>
 
@@ -170,21 +171,21 @@ export default {
       suppliers: [],
       purchases: [],
       today_mode: true,
-      startDate: "", 
-      endDate: "", 
-      dateRange: { 
-       startDate: "", 
-       endDate: "" 
-      }, 
-      locale:{ 
+      startDate: "",
+      endDate: "",
+      dateRange: {
+       startDate: "",
+       endDate: ""
+      },
+      locale:{
           //separator between the two ranges apply
-          Label: "Apply", 
-          cancelLabel: "Cancel", 
-          weekLabel: "W", 
-          customRangeLabel: "Custom Range", 
-          daysOfWeek: moment.weekdaysMin(), 
-          //array of days - see moment documenations for details 
-          monthNames: moment.monthsShort(), //array of month names - see moment documenations for details 
+          Label: "Apply",
+          cancelLabel: "Cancel",
+          weekLabel: "W",
+          customRangeLabel: "Custom Range",
+          daysOfWeek: moment.weekdaysMin(),
+          //array of days - see moment documenations for details
+          monthNames: moment.monthsShort(), //array of month names - see moment documenations for details
           firstDay: 1 //ISO first day of week - see moment documenations for details
         },
     };
@@ -347,7 +348,7 @@ export default {
         });
     },
 
-    
+
     //----------------------------- Submit Date Picker -------------------\\
     Submit_filter_dateRange() {
       var self = this;
@@ -358,17 +359,23 @@ export default {
 
 
     get_data_loaded() {
-      var self = this;
-      if (self.today_mode) {
-        let today = new Date()
 
-        self.startDate = today.getFullYear();
-        self.endDate = new Date().toJSON().slice(0, 10);
+        const currentDate = new Date();
+        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-        self.dateRange.startDate = today.getFullYear();
-        self.dateRange.endDate = new Date().toJSON().slice(0, 10);
-        
-      }
+        this.dateRange.startDate  = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth(), firstDayOfMonth.getDate() + 1)
+        this.dateRange.endDate = new Date(lastDayOfMonth.getFullYear(), lastDayOfMonth.getMonth(), lastDayOfMonth.getDate() + 1)
+    //   var self = this;
+    //   if (self.today_mode) {
+    //     let today = new Date()
+
+    //     self.startDate = today.getFullYear();
+    //     self.endDate = new Date().toJSON().slice(0, 10);
+    //     self.dateRange.startDate = today.getFullYear();
+    //     self.dateRange.endDate = new Date().toJSON().slice(0, 10);
+
+    //   }
     },
 
     //-------------------------------- Get All Payments Purchases ---------------------\\
@@ -428,6 +435,7 @@ export default {
   //----------------------------- Created function-------------------
   created: function() {
     this.Payments_Purchases(1);
+    this.get_data_loaded();
   }
 };
 </script>

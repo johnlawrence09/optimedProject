@@ -1,0 +1,159 @@
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Roboto", sans-serif;
+}
+.main-container {
+  /* background-color: #fa5252; */
+
+  padding: 10px;
+  width: 750px;
+  margin: 5px auto;
+}
+
+.card {
+  border-bottom: 1px solid #343a40;
+}
+
+/* .main-header-text {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+} */
+
+.header-text {
+  text-align: center;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.address {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sub-adress:first-child {
+  margin-top: 16px;
+}
+
+.sub-adress {
+  display: inline-block;
+  margin: 0;
+  font-weight: 700;
+}
+
+.customer-name {
+  font-size: 14px;
+  float: left;
+}
+
+.text-customer {
+  margin: 1px;
+  font-size: 12px;
+  display: flex;
+  gap: 26px;
+}
+
+.left-text {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.right-text {
+  font-size: 14px;
+  float: right;
+  margin-top: 80px;
+
+}
+
+.color {
+  clear: both;
+}
+
+.so-number {
+  display: flex;
+  gap: 14px;
+  border-bottom: 1px solid #343a40;
+}
+
+.order-date {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #343a40;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 90px;
+}
+
+th:first-child, td:first-child {
+  /* Adjust the width of the first column here */
+  width: -5px;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 12px;
+}
+
+th {
+  background-color: #d0ebff;
+}
+
+th:nth-child(-n + 3),
+td:nth-child(-n + 3) {
+  width: 8%;
+}
+
+.text-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.main-text-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.text-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+.text-header {
+   margin: 1px;
+   font-size: 12px;
+   color: #495057;
+}
+.logo {
+   margin-left: -14px;
+}
+
+.sign{
+  margin-bottom: 18px;
+}
+
+.right-status {
+   margin: 0;
+   font-size: 12px;
+   display: flex;
+   gap: 90px;
+}

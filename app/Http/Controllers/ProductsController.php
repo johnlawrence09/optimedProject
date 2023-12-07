@@ -115,6 +115,7 @@ class ProductsController extends BaseController
             $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
         }
 
+
         $categories = Category::where('deleted_at', null)->get(['id', 'name']);
         $brands = Brand::where('deleted_at', null)->get(['id', 'name']);
         return response()->json([

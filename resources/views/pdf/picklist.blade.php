@@ -1,223 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {{-- <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    /> --}}
-    <style>
-      html {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: "Roboto", sans-serif;
-      }
-      .main-container {
-        /* background-color: #fa5252; */
-
-        padding: 10px;
-        width: 1200px;
-        margin: 20px auto;
-      }
-
-      .card {
-        border-bottom: 1px solid #343a40;
-      }
-
-      .main-header-text {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .header-text {
-        text-align: center;
-        margin: 0;
-        text-transform: uppercase;
-      }
-
-      .text-container {
-        display: flex;
-        gap: 72px;
-      }
-
-      .address {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .sub-adress:first-child {
-        margin-top: 16px;
-      }
-
-      .sub-adress {
-        display: inline-block;
-        margin: 0;
-        font-weight: 700;
-      }
-
-      .customer-name {
-        display: flex;
-        gap: 10px;
-      }
-
-      .number {
-        margin: 0;
-      }
-
-      .left-text {
-        display: flex;
-        flex-direction: column;
-        gap: 50px;
-      }
-
-      .right-text {
-        display: flex;
-        flex-direction: column;
-        margin-top: auto;
-        gap: 20px;
-        margin-left: 105px;
-      }
-
-      .so-number {
-        display: flex;
-        gap: 14px;
-        border-bottom: 1px solid #343a40;
-      }
-
-      .order-date {
-        display: flex;
-        gap: 20px;
-        border-bottom: 1px solid #343a40;
-      }
-
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-        margin-top: 20px;
-      }
-
-      td,
-      th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-
-      th {
-        background-color: #d0ebff;
-      }
+<html lang="en" style="margin: 0; padding: 0; box-sizing: border-box;">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Picklist</title>
+   <style>
+        th {
+            font-family: 'Roboto', sans-serif;s
+        },
 
       th:nth-child(-n + 3),
       td:nth-child(-n + 3) {
-        width: 8%;
-      }
+	   width: 8%;
+      },
 
-      .text-item {
-        display: flex;
-        justify-content: space-between;
+      th:first-child, td:first-child {
+	/* Adjust the width of the first column here */
+	   width: -5px;
       }
+   </style>
+</head>
+<body style="font-family: 'Roboto', sans-serif;">
+   <main style="padding: 10px; width: 550; margin: 5px auto;">
+      <header style="margin-bottom: 75px;" >
+         <img style="width: 200px; margin-left:-15px;" src="images/optimed-logo.jpg" alt="">
 
-      .main-text-footer {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-
-      .text-footer {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin-left: 60px;
-      }
-    </style>
-    <title>Document</title>
-  </head>
-  <body>
-    <main class="main-container">
-      <header>
-        <img class="logo" src="img/optimed-logo.jpg.png" alt="optimed-logo" />
+         <p style="font-size: 12px; margin: 1px; color: #495057;">Optimedevices Medical Equipment and Supplies Trading</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">908-002-441-000</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">#632 TBC Road Angeles Heights Subd. Brgy. Bagong Bayan</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">II-A (POB.) San Pablo City, Laguna 4000</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">Mobile Nos.: 09688866081/09688572308</p>
       </header>
-      <div class="card">
-        <h1 class="header-text">PickList</h1>
-      </div>
-      <div class="main-header-text">
-        <div class="left-text">
-          <div class="text-container">
+      <p style="letter-spacing: 5px; text-transform:uppercase; text-align:center; margin-bottom:32px; ">Picklist</p>
+      <main>
+         <div style="float: left; margin-right: 250px;">
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 30px;">Name:</strong>{{$customer_info['name']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 26px;">Phone:</strong>{{$customer_info['phone']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 16px;">Address:</strong>{{$customer_info['address']}}<</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 32px;">Email:</strong>{{$customer_info['email']}}</p>
+         </div>
+         <div>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 85px;">Date:</strong>{{$sale_receipt_info['date']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 30px;">Reference no.:</strong>{{$sale_receipt_info['number']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 72px;">Status:</strong>{{$sale_receipt_info['status']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 45px;">Warehouse:</strong>{{$sale_receipt_info['warehouse']}}</p>
+         </div>
+      </main>
 
-            <p>SHIP TO :</p>
-            <div class="address">
-              <p class="sub-adress">{{ $shipTo }}</p>
-            </div>
-          </div>
-          <div class="customer-name">
-            <p class="number">Customer name</p>
-            <p class="number"><strong>:{{ $client }} </strong></p>
-          </div>
-        </div>
-        <div class="right-text">
-          <div class="so-number">
-            <p class="number">SO Number</p>
-            <p class="number"><strong>:{{ $ref }}</strong></p>
-          </div>
-          <div class="order-date">
-            <p class="number">Order Date</p>
-            <p class="number"><strong>: {{ $date }}  </strong></p>
-          </div>
-        </div>
-      </div>
-      <table>
+      <table style="margin-top: 32px; font-size: 12px; border-collapse: collapse; width: 100%; ">
+         <tr>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Released</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Qty</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >UoM</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Product Name</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Expiration Date</th>
+           <th style="text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Location</th>
+         </tr>
+         <tr>
+         <tbody>
+            @foreach ($details as $detail)
+             <tr>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;"></td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['quantity']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['unit_purchase']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['code']}} ({{$detail['name']}})</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['expiration']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['location']}}</td>
+             </tr>
+             @endforeach
+         </tbody>
+         </tr>
+       </table>
+       <footer style="margin-top: 32px; margin-left: -2px">
+         <div style="float: left; margin-right: 125px;">
+            <p style="font-size: 12px; color: #495057;">Prepared by:</p>
+            <p style="font-size: 12px; color: #495057; margin-top: 32px;">Signature Over Printed Name</p>
+         </div>
+         <div style="float: left; margin-right: 125px;">
+            <p style="font-size: 12px; color: #495057;">Checked by:</p>
+            <p style="font-size: 12px; color: #495057; margin-top: 32px;">Signature Over Printed Name</p>
+         </div>
+         <div style="float: left;">
+            <p style="font-size: 12px; color: #495057;">Approved by:</p>
+            <p style="font-size: 12px; color: #495057; margin-top: 32px;">Signature Over Printed Name</p>
+         </div>
+       </footer>
 
-        <tr>
-          <th>Released</th>
-          <th>Qty</th>
-          <th>UoM</th>
-          <th>Product Name</th>
-          <th>Expiration Date</th>
-          <th>Location</th>
-        </tr>
-        <tr>
+   </main>
 
-        <tbody>
-          <tr>
-            <td></td>
-            <td>{{ $lists['quantity_receive'] ?? '' }} </td>
-            <td>{{ $lists['unit'] ?? '' }} </td>
-            <td>{{ $lists['name'] ?? '' }} </td>
-            <td>{{ $lists['expiration'] ?? '' }} </td>
-            <td>{{ $lists['warehouse'] ?? '' }} </td>
-        </tr>
-      </tbody>
-
-
-
-        </tr>
-      </table>
-      <footer>
-        <div class="text-item">
-          <p>Date of Print : <strong>05 Jul 2023</strong></p>
-        </div>
-        <div class="main-text-footer">
-          <div class="text-footer">
-            <p>Prepared by:</p>
-            Signature Over Printed Name
-          </div>
-          <div class="text-footer">
-            <p>Checked by:</p>
-            Signature Over Printed Name
-          </div>
-          <div class="text-footer">
-            <p>Approved/Noted by:</p>
-            Signature Over Printed Name
-          </div>
-        </div>
-      </footer>
-    </main>
-  </body>
+</body>
 </html>

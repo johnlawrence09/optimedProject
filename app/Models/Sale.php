@@ -91,7 +91,7 @@ class Sale extends Model
 
     public function shipment()
     {
-        return $this->hasOne('App\Models\Shipment');
+        return $this->hasOne('App\Models\Shipment','sale_id', 'id');
     }
 
 

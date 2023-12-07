@@ -33,7 +33,6 @@ class ShipmentController extends BaseController
         $data = array();
 
         $shipments = Shipment::with('sale','sale.client','sale.warehouse')
-
         // Search With Multiple Param
             ->where(function ($query) use ($request) {
                 return $query->when($request->filled('search'), function ($query) use ($request) {
@@ -69,6 +68,7 @@ class ShipmentController extends BaseController
             ->orderBy($order, $dir)
             ->get();
 
+
         foreach ($shipments_data as $shipment) {
 
             $item['id'] = $shipment['id'];
@@ -82,6 +82,9 @@ class ShipmentController extends BaseController
             $item['sale_id'] = $shipment['sale']['id'];
             $item['warehouse_name'] = $shipment['sale']['warehouse']->name;
             $item['customer_name'] = $shipment['sale']['client']->name;
+            $item['email'] = $shipment['email'];
+            $item['phone_number'] = $shipment['phone_number'];
+            $item['Ref'] = $shipment['Ref'];
 
             $data[] = $item;
         }
@@ -134,33 +137,7 @@ class ShipmentController extends BaseController
 
     public function show($id){
 
-        dd($id);
 
-        // $get_shipment = Shipment::where('sale_id', $id)->first();
-
-        // if($get_shipment){
-
-        //     $shipment_data['Ref'] = $get_shipment->Ref;
-        //     $shipment_data['sale_id'] = $get_shipment->sale_id;
-        //     $shipment_data['delivered_to'] = $get_shipment->delivered_to;
-        //     $shipment_data['shipping_address'] = $get_shipment->shipping_address;
-        //     $shipment_data['status'] = $get_shipment->status;
-        //     $shipment_data['shipping_details'] = $get_shipment->shipping_details;
-
-        // }else{
-
-        //     $shipment_data['Ref'] = $this->getNumberOrder();
-        //     $shipment_data['sale_id'] = $id;
-        //     $shipment_data['delivered_to'] = '';
-        //     $shipment_data['shipping_address'] = '';
-        //     $shipment_data['status'] = '';
-        //     $shipment_data['shipping_details'] = '';
-        // }
-
-
-        // return response()->json([
-        //     'shipment' => $shipment_data,
-        // ]);
 
     }
 
@@ -169,6 +146,7 @@ class ShipmentController extends BaseController
 
     public function update(Request $request, $id)
     {
+
         $this->authorizeForUser($request->user('api'), 'update', Shipment::class);
 
         request()->validate([
@@ -181,8 +159,10 @@ class ShipmentController extends BaseController
 
             $sale = Sale::findOrFail($request['sale_id']);
             $sale->update([
-                'shipping_status' => $request['status'],
+                'statut' => $request['status'],
             ]);
+            $saleReceive = SalesReceive::where('sale_id', '=', $request['sale_id'])
+            ->update(['statut' => $request['status']]);
 
         }, 10);
 

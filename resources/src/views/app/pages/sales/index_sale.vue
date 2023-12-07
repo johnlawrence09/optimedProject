@@ -1,10 +1,12 @@
 <template>
     <div class="main-content">
+        {{ sales[0].statut }}
         <breadcumb :page="$t('ListSales')" :folder="$t('Sales')" />
         <div
             v-if="isLoading"
             class="loading_page spinner spinner-primary mr-3"
         ></div>
+
         <div v-else>
             <vue-good-table
                 mode="remote"
@@ -270,6 +272,12 @@
                         >
 
                         <span
+                            v-else-if="props.row.statut == 'Cancelled'"
+                            class="badge badge-outline-warning"
+                            >{{ $t("Cancel Delivery") }}</span
+                        >
+
+                        <span
                             v-else-if="props.row.statut == 'pending'"
                             class="badge badge-outline-info"
                             >{{ $t("Pending") }}</span
@@ -344,9 +352,9 @@
                         >
 
                         <span
-                            v-else-if="props.row.shipping_status == 'cancelled'"
+                            v-else-if="props.row.shipping_status == 'Cancelled'"
                             class="badge badge-outline-danger"
-                            >{{ $t("Cancelled") }}</span
+                            >{{ $t("Cancel Delivery") }}</span
                         >
                     </div>
                     <div v-else-if="props.column.field == 'Ref'">
@@ -359,6 +367,7 @@
                 </template>
             </vue-good-table>
         </div>
+
 
         <!-- Sidebar Filter -->
         <b-sidebar

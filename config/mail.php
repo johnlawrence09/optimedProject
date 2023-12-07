@@ -65,7 +65,7 @@ return [
         'transport' => 'smtp',
         'host' => 'smtp.office365.com',
         'port' => 587,
-        'encryption' => 'tls',
+        'encryption' => 'tls ',
         'username' => 'admin@optimedevices.com',
         'password' => '@H520GamingCenter27',
         // other configuration options...

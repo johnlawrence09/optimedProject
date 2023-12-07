@@ -1501,7 +1501,7 @@ export default {
         //         result.expiration_date === null
         //             ? ""
         //             : `-- Expiration Date: ${result.expiration_date}`;
-            return result.code;
+            return result.code + " " + "(" + result.name + ")";
         },
 
         //------------------------- Submit Search Product

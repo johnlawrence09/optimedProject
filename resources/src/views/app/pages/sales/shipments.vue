@@ -61,7 +61,7 @@
                                 currentUserPermissions &&
                                 currentUserPermissions.includes('shipment')
                             "
-                            title="Edit"
+                            title="Show"
                             class="cursor-pointer"
                             v-b-tooltip.hover
                         >
@@ -83,32 +83,15 @@
 
                     <div v-else-if="props.column.field == 'status'">
                         <span
-                            v-if="props.row.status == 'ordered'"
-                            class="badge badge-outline-warning"
-                            >{{ $t("Ordered") }}</span
-                        >
-
-                        <span
-                            v-else-if="props.row.status == 'packed'"
-                            class="badge badge-outline-info"
-                            >{{ $t("Packed") }}</span
-                        >
-
-                        <span
-                            v-else-if="props.row.status == 'shipped'"
-                            class="badge badge-outline-secondary"
+                            v-if="props.row.status == 'Shipped'"
+                            class="badge badge-outline-success"
                             >{{ $t("Shipped") }}</span
                         >
-
                         <span
-                            v-else-if="props.row.status == 'delivered'"
-                            class="badge badge-outline-success"
-                            >{{ $t("Delivered") }}</span
+                            v-if="props.row.status == 'Cancelled'"
+                            class="badge badge-outline-danger"
+                            >{{ $t("Cancel Delivery") }}</span
                         >
-
-                        <span v-else class="badge badge-outline-danger">{{
-                            $t("Cancelled")
-                        }}</span>
                     </div>
                 </template>
             </vue-good-table>
@@ -120,8 +103,9 @@
                 hide-footer
                 size="md"
                 id="modal_shipment"
-                :title="$t('Edit')"
+                :title="$t('Shipping Info')"
             >
+
                 <b-form @submit.prevent="Submit_Shipment">
                     <b-row>
                         <!-- Status  -->
@@ -132,9 +116,10 @@
                             >
                                 <b-form-group
                                     slot-scope="{ valid, errors }"
-                                    :label="$t('Status') + ' ' + '*'"
+                                    :label="$t('Status')"
                                 >
-                                    <v-select
+                                <span ><b-badge variant="success">Shipped</b-badge></span>
+                                    <!-- <v-select
                                         :class="{
                                             'is-invalid': !!errors.length,
                                         }"
@@ -150,27 +135,15 @@
                                         :placeholder="$t('Choose_Status')"
                                         :options="[
                                             {
-                                                label: 'Ordered',
-                                                value: 'ordered',
-                                            },
-                                            {
-                                                label: 'Packed',
-                                                value: 'packed',
-                                            },
-                                            {
                                                 label: 'Shipped',
                                                 value: 'shipped',
                                             },
                                             {
-                                                label: 'Delivered',
-                                                value: 'delivered',
-                                            },
-                                            {
                                                 label: 'Cancelled',
-                                                value: 'cancelled',
+                                                value: 'Cancelled',
                                             },
                                         ]"
-                                    ></v-select>
+                                    ></v-select> -->
                                     <b-form-invalid-feedback>{{
                                         errors[0]
                                     }}</b-form-invalid-feedback>
@@ -179,20 +152,44 @@
                         </b-col>
 
                         <b-col md="12">
-                            <b-form-group :label="$t('delivered_to')">
+                            <b-form-group :label="$t('Customer Name')">
                                 <b-form-input
+                                    disabled
                                     label="delivered_to"
-                                    v-model="shipment.delivered_to"
+                                    v-model="shipments[0].customer_name"
                                     :placeholder="$t('delivered_to')"
                                 ></b-form-input>
                             </b-form-group>
                         </b-col>
 
                         <b-col md="12">
-                            <b-form-group :label="$t('Adress')">
+                            <b-form-group :label="$t('Contact Number')">
+                                <b-form-input
+                                    disabled
+                                    label="delivered_to"
+                                    v-model="shipments[0].phone_number"
+                                    :placeholder="$t('Tel no.')"
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
+                        <b-col md="12">
+                            <b-form-group :label="$t('Email Address')">
+                                <b-form-input
+                                    disabled
+                                    label="delivered_to"
+                                    v-model="shipments[0].email"
+                                    :placeholder="$t('Email Address')"
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
+                        <b-col md="12">
+                            <b-form-group :label="$t('Adress (Bldg, Zone, Street, Barangay, Municipality)')">
                                 <textarea
-                                    v-model="shipment.shipping_address"
-                                    rows="4"
+                                    disabled
+                                    v-model="shipments[0].shipping_address"
+                                    rows="3"
                                     class="form-control"
                                     :placeholder="$t('Enter_Address')"
                                 ></textarea>
@@ -204,7 +201,7 @@
                                 :label="$t('Please_provide_any_details')"
                             >
                                 <textarea
-                                    v-model="shipment.shipping_details"
+                                    v-model="shipments[0].shipping_details"
                                     rows="4"
                                     class="form-control"
                                     :placeholder="
@@ -215,12 +212,12 @@
                         </b-col>
 
                         <b-col md="12" class="mt-3">
-                            <b-button
+                            <!-- <b-button
                                 variant="primary"
                                 type="submit"
                                 :disabled="SubmitProcessing"
                                 >{{ $t("submit") }}</b-button
-                            >
+                            > -->
                             <div v-once class="typo__p" v-if="SubmitProcessing">
                                 <div
                                     class="spinner sm spinner-primary mt-3"
@@ -276,12 +273,12 @@ export default {
                     tdClass: "text-left",
                     thClass: "text-left",
                 },
-                {
-                    label: this.$t("shipment_ref"),
-                    field: "shipment_ref",
-                    tdClass: "text-left",
-                    thClass: "text-left",
-                },
+                // {
+                //     label: this.$t("shipment_ref"),
+                //     field: "shipment_ref",
+                //     tdClass: "text-left",
+                //     thClass: "text-left",
+                // },
 
                 {
                     label: this.$t("sale_ref"),
@@ -505,9 +502,13 @@ export default {
                 .put("shipments/" + self.shipment.id, {
                     sale_id: self.shipment.sale_id,
                     shipping_address: self.shipment.shipping_address,
-                    delivered_to: self.shipment.delivered_to,
+                    customer_name: self.shipment.customer_name,
                     shipping_details: self.shipment.shipping_details,
                     status: self.shipment.status,
+                    phone_number: self.shipment.phone_number,
+                    email: self.shipment.email,
+                    Ref: self.shipment.Ref,
+                    id:self.shipment.id
                 })
                 .then((response) => {
                     this.makeToast(

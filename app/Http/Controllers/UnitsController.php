@@ -86,6 +86,7 @@ class UnitsController extends BaseController
         ->where('name', $request['name'])
         ->where('base_unit', $request['base_unit'])
         ->where('operator_value', $request['operator_value'])
+        ->where('operator', $request['operator'])
         ->Where('deleted_at', null)
         ->count();
 

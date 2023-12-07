@@ -54,6 +54,7 @@ class PermissionsController extends BaseController
 
     public function store(Request $request)
     {
+
         $this->authorizeForUser($request->user('api'), 'create', Role::class);
 
         $existingRecord = DB::table('roles')
@@ -66,9 +67,9 @@ class PermissionsController extends BaseController
                 request()->validate([
                     'role.name' => 'required',
                 ]);
-    
+
                 \DB::transaction(function () use ($request) {
-    
+
                     //-- Create New Role
                     $Role = new Role;
                     $Role->name = $request['role']['name'];
@@ -76,25 +77,25 @@ class PermissionsController extends BaseController
                     $Role->status = 0;
                     $Role->description = $request['role']['description'];
                     $Role->save();
-    
+
                     $role = Role::findOrFail($Role->id);
                     $role->permissions()->detach();
                     $permissions = $request->permissions;
-    
+
                     foreach ($permissions as $permission_slug) {
                         //get the permission object by name
                         $perm = Permission::firstOrCreate(['name' => $permission_slug]);
                         $data[] = $perm->id;
                     }
-    
+
                     $role->permissions()->attach($data);
-    
+
                 }, 10);
-    
+
                 return response()->json(['exist' => false]);
-    
+
             } catch (ValidationException $e) {
-    
+
                 return response()->json([
                     'status' => 422,
                     'msg' => 'error',
@@ -105,7 +106,7 @@ class PermissionsController extends BaseController
             return response()->json(['exist' => true]);
         }
 
-        
+
 
     }
 
@@ -113,7 +114,7 @@ class PermissionsController extends BaseController
 
     public function show($id){
         //
-        
+
         }
 
     //----------- Update Role --------------\\
@@ -134,28 +135,28 @@ class PermissionsController extends BaseController
                 request()->validate([
                     'role.name' => 'required',
                 ]);
-    
+
                 \DB::transaction(function () use ($request, $id) {
-    
+
                     Role::whereId($id)->update($request['role']);
-    
+
                     $role = Role::findOrFail($id);
                     $role->permissions()->detach();
                     $permissions = $request->permissions;
-    
+
                     foreach ($permissions as $permission_slug) {
-    
+
                         //get the permission object by name
                         $perm = Permission::firstOrCreate(['name' => $permission_slug]);
                         $data[] = $perm->id;
                     }
-    
+
                     $role->permissions()->attach($data);
-    
+
                 }, 10);
-    
+
                 return response()->json(['exist' => false]);
-    
+
             } catch (ValidationException $e) {
                 return response()->json([
                     'status' => 422,
@@ -163,12 +164,12 @@ class PermissionsController extends BaseController
                     'errors' => $e->errors(),
                 ], 422);
             }
-    
+
         }else {
             return response()->json(['exist' => true]);
         }
 
-      
+
     }
 
     //----------- Delete Role --------------\\

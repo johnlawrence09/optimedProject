@@ -132,7 +132,7 @@ class SalesReceivedController extends Controller
 
 
         $customers = Client::where('deleted_at', '=', null)->get(['id', 'name']);
-
+        $customer = Shipment::where('sale_id','=', $Sale->sale_id)->where('deleted_at','=', null)->first();
          //get warehouses assigned to user
          $user_auth = auth()->user();
          if($user_auth->is_all_warehouses){
@@ -146,6 +146,7 @@ class SalesReceivedController extends Controller
             'sales' => $data,
             'suppliers' => $customers,
             'warehouses' => $warehouses,
+            'customer' => $customer
         ]);
 
     }
@@ -749,7 +750,7 @@ class SalesReceivedController extends Controller
 
         $setting = Setting::where('deleted_at', '=', null)->first();
 
-        $pdf = \PDF::loadView('pdf.picklist_pdf', [
+        $pdf = \PDF::loadView('pdf.picklist', [
             'details' => $details,
             'sale_receipt_info' => $sale_receipt_info,
             'customer_info' => $customer_info,
