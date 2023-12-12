@@ -1963,7 +1963,7 @@ export default {
         },
 
         Edit_Status(status, id) {
-            console.log("test", id);
+
             this.paymentProcessing = true;
             NProgress.start();
             NProgress.set(0.1);
@@ -1980,7 +1980,7 @@ export default {
                         "Sale status edited successfully",
                         "Success"
                     );
-                    Fire.$emit("Edit_Status_Purchase");
+                    Fire.$emit("Edit_Status_Sale");
                 })
                 .catch((error) => {
                     // Complete the animation of the  progress bar.
@@ -2483,6 +2483,14 @@ export default {
             setTimeout(() => {
                 this.Get_Sales(this.serverParams.page);
                 this.$bvModal.hide("modal_shipment");
+            }, 500);
+        });
+
+        Fire.$on("Edit_Status_Sale", () => {
+                setTimeout(() => {
+                this.Get_Sales(this.serverParams.page);
+                // Complete the animation of the  progress bar.
+                NProgress.done();
             }, 500);
         });
     },

@@ -5,7 +5,6 @@
             v-if="isLoading"
             class="loading_page spinner spinner-primary mr-3"
         ></div>
-
         <validation-observer ref="create_sale" v-if="!isLoading">
             <b-form @submit.prevent="Submit_Sale">
                 <b-row>
@@ -206,6 +205,9 @@
                                                         <i
                                                             class="fa fa-trash"
                                                         ></i>
+                                                        <i
+                                                            class="fa fa-trash"
+                                                        ></i>
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -237,7 +239,7 @@
                                                         <i
                                                             @click="
                                                                 Modal_Updat_Detail(
-                                                                    detail
+                                                                    detail, detail.detail_id
                                                                 )
                                                             "
                                                             class="i-Edit"
@@ -257,12 +259,13 @@
                                                     <td>
                                                         <span
                                                             class="badge badge-outline-warning"
-                                                            >{{ detail.stock }}
+                                                            >{{ formatNumber(detail.stock, 0) }}
                                                             {{
                                                                 detail.unitSale
                                                             }}</span
                                                         >
                                                     </td>
+
                                                     <td>
                                                         <div class="quantity">
                                                             <b-input-group>
@@ -344,19 +347,25 @@
                                                         }}
                                                     </td>
                                                     <td>
-                                                        <a
-                                                            @click="
+
+                                                            <i
+                                                                class="i-Close-Window text-25 text-danger" style="cursor: pointer;"
+                                                                @click="
                                                                 delete_Product_Detail(
                                                                     detail.detail_id
                                                                 )
                                                             "
-                                                            class="btn btn-icon btn-sm"
                                                             title="Delete"
-                                                        >
-                                                            <i
-                                                                class="i-Close-Window text-25 text-danger"
                                                             ></i>
-                                                        </a>
+                                                            <i v-show="detail.is_warranty == 1"
+                                                                class="i-Edit text-25 text-success" style="cursor: pointer;"
+                                                                @click="
+                                                               Modal_Updat_Detail(
+                                                                    detail, detail.detail_id
+                                                                )
+                                                            "
+                                                             title="Add Warranty"
+                                                            ></i>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -844,13 +853,15 @@
         </validation-observer>
 
         <!-- Modal Update Detail Product -->
-        <validation-observer ref="Update_Detail_change_sale">
+        <validation-observer ref="Update_Detail_change_sale" >
+
             <b-modal
                 hide-footer
                 size="lg"
                 id="form_Update_Detail"
                 :title="detail.name"
             >
+
                 <b-form @submit.prevent="submit_Update_Detail">
                     <b-row>
                         <!-- Unit Price -->
@@ -1080,6 +1091,21 @@
                             </b-form-group>
                         </b-col>
 
+                        <!-- Warranty Year --> {{ detail.warranty_year }}
+                        <b-col lg="12" md="12" sm="12" v-show="detail.is_warranty">
+                            <b-form-group
+                                :label="$t('Add product Warranty Year')"
+                            >
+                                <b-form-input
+                                    label="Add product Warranty Year"
+                                    v-model="detail.warranty_year"
+                                    :placeholder="
+                                        $t('Add product Warranty Year')
+                                    "
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
                         <b-col md="12">
                             <b-form-group>
                                 <b-button
@@ -1102,6 +1128,8 @@
                     </b-row>
                 </b-form>
             </b-modal>
+
+
         </validation-observer>
     </div>
 </template>
@@ -1128,7 +1156,8 @@ export default {
             clients: [],
             products: [],
             details: [],
-            detail: {},
+            detail: {
+            },
             sales: [],
             payment: {
                 status: "pending",
@@ -1177,6 +1206,8 @@ export default {
                 etat: "",
                 is_imei: "",
                 imei_number: "",
+                warranty_year: "",
+                is_warranty:""
             },
         };
     },
@@ -1196,6 +1227,16 @@ export default {
 
         //--- Submit Validate Create Sale
         Submit_Sale() {
+
+            let isWarranty = false;
+
+                for (let i = 0; i < this.details.length; i++) {
+                    if(this.details[i].is_warranty === 1 && this.details[i].warranty_year === "") {
+                        isWarranty = true;
+                        break; // Exit the loop as soon as a null value is found
+                    }
+                }
+
             this.$refs.create_sale.validate().then((success) => {
                 if (!success) {
                     this.makeToast(
@@ -1219,7 +1260,14 @@ export default {
                         this.$t("Warning")
                     );
                     this.payment.amount = 0;
-                } else {
+                }  else if(isWarranty) {
+                    this.makeToast(
+                        "warning",
+                        this.$t("Please provide warranty year in the product"),
+                        this.$t("Warning")
+                    );
+                }
+                else {
                     this.Create_Sale();
                 }
             });
@@ -1250,41 +1298,52 @@ export default {
 
         //---------------------- Get_sales_units ------------------------------\\
         Get_sales_units(value) {
+
             axios
                 .get("Get_sales_units?id=" + value)
                 .then(({ data }) => (this.units = data));
+
         },
 
         //------ Show Modal Update Detail Product
-        Modal_Updat_Detail(detail) {
-            NProgress.start();
-            NProgress.set(0.1);
-            this.detail = {};
-            this.Get_sales_units(detail.product_id);
-            this.detail.detail_id = detail.detail_id;
-            this.detail.sale_unit_id = detail.sale_unit_id;
-            this.detail.name = detail.name;
-            this.detail.Unit_price = detail.Unit_price;
-            this.detail.fix_price = detail.fix_price;
-            this.detail.fix_stock = detail.fix_stock;
-            this.detail.stock = detail.stock;
-            this.detail.tax_method = detail.tax_method;
-            this.detail.discount_Method = detail.discount_Method;
-            this.detail.discount = detail.discount;
-            this.detail.quantity = detail.quantity;
-            this.detail.tax_percent = detail.tax_percent;
-            this.detail.is_imei = detail.is_imei;
-            this.detail.imei_number = detail.imei_number;
+        Modal_Updat_Detail(detail, id) {
 
-            setTimeout(() => {
-                NProgress.done();
-                this.$bvModal.show("form_Update_Detail");
-            }, 1000);
+                    if(detail.detail_id == id) {
+                        NProgress.start();
+                        NProgress.set(0.1);
+                        this.detail = {};
+                        this.Get_sales_units(detail.product_id);
+                        this.detail.detail_id = detail.detail_id;
+                        this.detail.sale_unit_id = detail.sale_unit_id;
+                        this.detail.name = detail.name;
+                        this.detail.Unit_price = detail.Unit_price;
+                        this.detail.fix_price = detail.fix_price;
+                        this.detail.fix_stock = detail.fix_stock;
+                        this.detail.stock = detail.stock;
+                        this.detail.tax_method = detail.tax_method;
+                        this.detail.discount_Method = detail.discount_Method;
+                        this.detail.discount = detail.discount;
+                        this.detail.quantity = detail.quantity;
+                        this.detail.tax_percent = detail.tax_percent;
+                        this.detail.is_imei = detail.is_imei;
+                        this.detail.imei_number = detail.imei_number;
+                        this.detail.is_warranty = detail.is_warranty;
+                        this.detail.warranty_year = detail.warranty_year;
+
+                        setTimeout(() => {
+                            NProgress.done();
+                            this.$bvModal.show("form_Update_Detail");
+                        }, 1000);
+                    }
+
+
+
         },
 
         //------ Submit Update Detail Product
 
         Update_Detail() {
+            console.log(this.detail);
             NProgress.start();
             NProgress.set(0.1);
             this.Submit_Processing_detail = true;
@@ -1323,6 +1382,7 @@ export default {
                     this.details[i].discount = this.detail.discount;
                     this.details[i].sale_unit_id = this.detail.sale_unit_id;
                     this.details[i].imei_number = this.detail.imei_number;
+                    this.details[i].warranty_year = parseInt(this.detail.warranty_year, 10);
 
                     if (this.details[i].discount_Method == "2") {
                         //Fixed
@@ -1484,8 +1544,8 @@ export default {
         //------------------------- get Result Value Search Product
 
         getResultValue(result) {
-            // return result.code + " " + "(" + result.name + ")";
-            `${result.code} (${result.name} exp: ${result.expiration_date})`;
+            return result.code + " " + "(" + result.name + ")";
+
         },
 
         //------------------------- Submit Search Product
@@ -1512,6 +1572,7 @@ export default {
                 }
                 this.product.product_variant_id = result.product_variant_id;
                 this.Get_Product_Details(result.id);
+
             }
 
             this.search_input = "";
@@ -1536,6 +1597,7 @@ export default {
                 .get("Products/Warehouse/" + id + "?stock=" + 1)
                 .then((response) => {
                     this.products = response.data;
+
                     NProgress.done();
                 })
                 .catch((error) => {});
@@ -1551,10 +1613,12 @@ export default {
 
             this.details.push(this.product);
 
-            if (this.product.is_imei) {
+            if (this.product.is_imei || this.products[0].is_warranty) {
                 this.Modal_Updat_Detail(this.product);
             }
         },
+
+
 
         //-----------------------------------Verified QTY ------------------------------\\
         Verified_Qty(detail, id) {
@@ -1849,6 +1913,7 @@ export default {
                 this.product.etat = "new";
                 this.product.del = 0;
                 this.product.product_id = response.data.id;
+
                 this.product.name = response.data.name;
                 this.product.Net_price = response.data.Net_price;
                 this.product.Unit_price = response.data.Unit_price;
@@ -1859,7 +1924,10 @@ export default {
                 this.product.unitSale = response.data.unitSale;
                 this.product.sale_unit_id = response.data.sale_unit_id;
                 this.product.is_imei = response.data.is_imei;
+
                 this.product.imei_number = "";
+                this.product.is_warranty = response.data.is_warranty;
+                this.product.warranty_year = "";
                 this.add_product();
                 this.Calcul_Total();
             });
@@ -1867,15 +1935,19 @@ export default {
 
         //---------------------------------------Get Elements ------------------------------\\
         GetElements() {
+
             let id = this.$route.params.id;
+
             axios
                 .get(`sales/Change_to_Sale/${id}`)
                 .then((response) => {
                     this.sale = response.data.sale;
                     this.details = response.data.details;
+
                     this.clients = response.data.clients;
                     this.warehouses = response.data.warehouses;
                     this.Get_Products_By_Warehouse(this.sale.warehouse_id);
+                    this.Get_details(this.details);
                     this.Calcul_Total();
                     this.isLoading = false;
                 })
@@ -1884,12 +1956,40 @@ export default {
                         this.isLoading = false;
                     }, 500);
                 });
+
         },
+
+        // Get_details(details) {
+        //     console.log(details);
+        //    for (let i = 0; i < details.length; i++) {
+        //         if(details[i].is_warranty) {
+        //             this.Modal_Updat_Detail(this.details);
+        //             break;
+        //         }
+
+
+        //    }
+
+        // }
+
+
     },
 
     //----------------------------- Created function-------------------
     created() {
         this.GetElements();
     },
+
+
 };
 </script>
+
+
+<style scoped>
+
+.btn .btn-icon .btn-sm {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+</style>

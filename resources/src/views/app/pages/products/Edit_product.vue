@@ -32,37 +32,6 @@
                     </validation-provider>
                   </b-col>
 
-                  <!-- Code Product"-->
-                  <!-- <b-col md="6" class="mb-2">
-                    <validation-provider
-                      name="Code Product"
-                      :rules="{ required: true}"
-                      v-slot="validationContext"
-                    >
-                      <b-form-group :label="$t('CodeProduct') + ' ' + '*'">
-                        <div class="input-group">
-                          <input
-                            :state="getValidationState(validationContext)"
-                            aria-describedby="CodeProduct-feedback"
-                            type="text"
-                            class="form-control"
-                            v-model="product.code"
-                          >
-
-                          <b-form-invalid-feedback
-                            id="CodeProduct-feedback"
-                          >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                        </div>
-                        <span>{{$t('Scan_your_barcode_and_select_the_correct_symbology_below')}}</span>
-                          <b-alert
-                            show
-                            variant="danger"
-                            class="error mt-1"
-                            v-if="code_exist !=''"
-                          >{{code_exist}}</b-alert>
-                      </b-form-group>
-                    </validation-provider>
-                  </b-col> -->
 
                   <!-- Category -->
                   <b-col md="6" class="mb-2">

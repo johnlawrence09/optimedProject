@@ -1370,7 +1370,6 @@ export default {
     },
 
     Edit_Status(status, id) {
-      console.log(status, id);
       this.paymentProcessing = true;
       NProgress.start();
       NProgress.set(0.1);

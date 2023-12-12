@@ -306,6 +306,7 @@ class ProductsController extends BaseController
                                 $Product->is_imei = $request['is_imei'] == 'true' ? 1 : 0;
                                 $Product->is_expire = $request['is_expire'] == 'true' ? 1 : 0;
                                 $Product->mos = $request['is_quotation'] == 'true' ? 1 : 0;
+                                $Product->is_warranty = $request['is_warranty'] == 'true' ? 1 : 0;
 
                                 // Store Variants Product
                                 $oldVariants = ProductVariant::where('product_id', $id)
@@ -1170,6 +1171,7 @@ class ProductsController extends BaseController
 
             $item['id'] = $product_warehouse->product_id;
             $item['name'] = $product_warehouse['product']->name;
+            $item['is_warranty'] = $product_warehouse['product']->is_warranty;
             $item['barcode'] = $product_warehouse['product']->code;
             $item['Type_barcode'] = $product_warehouse['product']->Type_barcode;
             $firstimage = explode(',', $product_warehouse['product']->image);

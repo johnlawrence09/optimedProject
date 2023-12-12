@@ -223,7 +223,6 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     //------------------------------- PRODUCTS --------------------------\\
     //------------------------------------------------------------------\\
-
     Route::resource('Products', 'ProductsController');
     Route::get('Products/export/Excel', 'ProductsController@export_Excel');
     Route::post('Products/import/csv', 'ProductsController@import_products');
@@ -370,6 +369,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('quotations/send/sms', 'QuotationsController@Send_SMS');
     Route::get('quotations/export/Excel', 'QuotationsController@exportExcel');
     Route::post('quotations/delete/by_selection', 'QuotationsController@delete_by_selection');
+    Route::put('quotation/edit/status/{id}', 'QuotationsController@Edit_Status');
 
     //------------------------------- Sales Return --------------------------\\
     //------------------------------------------------------------------\\

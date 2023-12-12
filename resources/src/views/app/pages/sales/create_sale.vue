@@ -1470,37 +1470,6 @@ export default {
         //------------------------- get Result Value Search Product
 
         getResultValue(result) {
-            //current date
-            // const dateNow = new Date();
-
-            // //Convert date in to numeric datatyp
-            // function dateFormat(date) {
-            //     const expDate = new Date(date);
-            //     const year = expDate.getFullYear();
-            //     const month = (expDate.getMonth() + 1)
-            //         .toString()
-            //         .padStart(2, "0");
-            //     const day = expDate.getDate().toString().padStart(2, "0");
-            //     return parseInt(`${year}${month}${day}`, 10);
-            // }
-
-            // const data = [
-            //     result.code,
-            //     result.name,
-            //     dateFormat(result.expiration_date),
-            // ];
-
-            // console.log(data);
-            // const data1 = data.filter(
-            //     (a) =>
-            //         a.dateFormat(result.expiration_date) >= dateFormat(dateNow)
-            // );
-
-            // console.log(data1);
-        //    const exp =
-        //         result.expiration_date === null
-        //             ? ""
-        //             : `-- Expiration Date: ${result.expiration_date}`;
             return result.code + " " + "(" + result.name + ")";
         },
 

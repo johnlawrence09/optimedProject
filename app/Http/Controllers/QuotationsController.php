@@ -768,4 +768,11 @@ class QuotationsController extends BaseController
              return response()->json(['message' => $e->getMessage()], 500);
          }
      }
+
+     public function Edit_Status(Request $request, $id) {
+
+        $status = Quotation::where('id', $id)->update(['statut' => $request->statut]);
+        return $status;
+
+    }
 }

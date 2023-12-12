@@ -1291,6 +1291,7 @@ class SalesController extends BaseController
             ->findOrFail($id);
         $details = array();
         // Check If User Has Permission view All Records
+
         if (!$view_records) {
             // Check If User->id === Quotation->id
             $this->authorizeForUser($request->user('api'), 'check_record', $Quotation);
@@ -1376,16 +1377,19 @@ class SalesController extends BaseController
                     }
                 }
 
+
                 $data['id'] = $id;
                 $data['detail_id'] = $detail_id += 1;
                 $data['quantity'] = $detail->quantity;
                 $data['product_id'] = $detail->product_id;
                 $data['total'] = $detail->total;
                 $data['name'] = $detail['product']['name'];
+                $data['is_warranty'] = $detail['product']['is_warranty'];
                 $data['etat'] = 'current';
                 $data['qte_copy'] = $detail->quantity;
                 $data['unitSale'] = $unit->ShortName;
                 $data['sale_unit_id'] = $unit->id;
+                $data['warranty_year'] = "";
 
                 $data['is_imei'] = $detail['product']['is_imei'];
                 $data['imei_number'] = $detail->imei_number;
@@ -1413,6 +1417,7 @@ class SalesController extends BaseController
                 }
 
                 $details[] = $data;
+
             }
         }
 

@@ -15,9 +15,9 @@
         @on-search="onSearch"
         :search-options="{
         enabled: true,
-        placeholder: $t('Search_this_table'),  
+        placeholder: $t('Search_this_table'),
       }"
-        :select-options="{ 
+        :select-options="{
           enabled: true ,
           clearSelectionText: '',
         }"
@@ -91,7 +91,8 @@
                 <b-dropdown-item
                   title="Create Sale"
                   v-if="currentUserPermissions.includes('Quotations_edit')"
-                  :to="'/app/quotations/Create_sale/'+props.row.id"
+                  :to="'/app/quotations/Create_sale/'+ props.row.id"
+                  @click="set_status('complete', props.row.id)"
                 >
                   <i class="nav-icon i-Add font-weight-bold mr-2"></i>
                   {{$t('CreateSale')}}
@@ -275,7 +276,7 @@ export default {
     ...mapGetters(["currentUserPermissions", "currentUser"]),
     columns() {
       return [
-        
+
         {
           label: this.$t("date"),
           field: "date",
@@ -568,7 +569,7 @@ export default {
         });
     },
 
-   
+
 
     //-------------------------------------------- Delete Quotation -------------------------\\
     Remove_Quotation(id) {
@@ -608,6 +609,38 @@ export default {
         }
       });
     },
+
+    // set_status(status, id) {
+
+    //     this.paymentProcessing = true;
+    //     NProgress.start();
+    //     NProgress.set(0.1);
+    //     axios
+    //     .put("quotation/edit/status/" + id, {
+    //         statut: status,
+    //     })
+    //     .then((response) => {
+    //         // Complete the animation of the  progress bar.
+    //         this.paymentProcessing = false;
+    //         setTimeout(() => NProgress.done(), 500);
+    //         this.makeToast(
+    //             "success",
+    //             "Quotation status edited successfully",
+    //             "Success"
+    //         );
+    //         Fire.$emit("Edit_Status_Quotation");
+    //     })
+    //     .catch((error) => {
+    //         // Complete the animation of the  progress bar.
+    //         this.paymentProcessing = false;
+    //         setTimeout(() => NProgress.done(), 500);
+    //         this.makeToast(
+    //             "danger",
+    //             this.$t("SMTPIncorrect"),
+    //             this.$t("Failed")
+    //         );
+    //     });
+    // },
 
     //---- Delete quotations by selection
 
@@ -658,6 +691,14 @@ export default {
     this.Get_Quotations(1);
 
     Fire.$on("Delete_Quote", () => {
+      setTimeout(() => {
+        this.Get_Quotations(this.serverParams.page);
+        // Complete the animation of the  progress bar.
+        setTimeout(() => NProgress.done(), 500);
+      }, 500);
+    });
+
+    Fire.$on("Edit_Status_Quotation", () => {
       setTimeout(() => {
         this.Get_Quotations(this.serverParams.page);
         // Complete the animation of the  progress bar.
