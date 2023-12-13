@@ -112,7 +112,7 @@
                                 </template>
                                 <b-navbar-nav>
                                     <b-dropdown-item
-                                    v-if="props.row.statut === 'Shipped' || props.row.statut === 'completed' && props.row.statut !== 'Delivered'  "
+                                    v-if="props.row.statut === 'Shipped' || props.row.statut === 'completed' && props.row.statut !== 'delivered'  "
                                     title="Ordered"
                                     @click="Edit_Status('delivered', props.row.id)"
                                 >
@@ -123,7 +123,19 @@
                                     </b-dropdown-item>
 
                                     <b-dropdown-item
-                                    v-if ="props.row.statut !== 'pending' || props.row.statut === 'For delivery' || props.row.statut === 'delivered' || props.row.statut === 'completed' "
+                                    v-if="props.row.statut === 'pending' || props.row.statut !== 'completed' && props.row.statut !== 'delivered' && props.row.statut !== 'cancelled'  "
+                                    title="Ordered"
+                                    @click="Edit_Status('cancelled', props.row.id)"
+                                >
+                                    <i
+                                        class="nav-icon i-Pen-2 font-weight-bold mr-2"
+                                    ></i>
+                                    Cancel Order
+                                    </b-dropdown-item>
+
+
+                                    <b-dropdown-item
+                                    v-if ="props.row.statut !== 'pending' || props.row.statut === 'For delivery' || props.row.statut === 'delivered' || props.row.statut === 'completed' && props.row.statut === 'cancelled' "
                                         title="Show"
                                         :to="
                                             '/app/sales/detail/' + props.row.id
@@ -141,7 +153,7 @@
                                     v-if="
                                         currentUserPermissions.includes(
                                             'Sales_edit'
-                                        ) && props.row.statut !== 'Shipped' && props.row.statut === 'Delivered'
+                                        ) && props.row.statut !== 'Shipped' && props.row.statut === 'Delivered' && props.row.statut !== 'cancelled'
                                     "
                                     :to="'/app/sales/edit/' + props.row.id"
                                 >
@@ -150,12 +162,12 @@
                                     ></i>
                                     {{ $t("EditSale") }}
                                 </b-dropdown-item>
-                                {{ props.row.payment_statut }}
+
                                 <b-dropdown-item
                                     v-if="
                                         currentUserPermissions.includes(
                                             'payment_sales_view'
-                                        ) && props.row.statut !== 'pending'
+                                        ) && props.row.statut !== 'pending' && props.row.statut !== 'cancelled'
                                     "
                                     @click="
                                         Show_Payments(props.row.id, props.row)
@@ -171,7 +183,7 @@
                                     v-if="
                                         currentUserPermissions.includes(
                                             'payment_sales_add'
-                                        ) && props.row.statut !== 'completed' && props.row.payment_statut !== 'paid'
+                                        ) && props.row.statut !== 'completed' && props.row.payment_statut !== 'paid' && props.row.statut !== 'cancelled'
                                     "
                                     @click="New_Payment(props.row)"
                                 >
@@ -185,7 +197,7 @@
                                     v-if="
                                         currentUserPermissions.includes(
                                             'shipment'
-                                        ) && props.row.statut !== 'pending' && props.row.statut !== 'Shipped' && props.row.statut !== 'completed' && props.row.statut !== 'delivered'
+                                        ) && props.row.statut !== 'pending' && props.row.statut !== 'Shipped' && props.row.statut !== 'completed' && props.row.statut !== 'delivered' && props.row.statut !== 'cancelled'
                                     "
                                     @click="Edit_Shipment(props.row.id)"
                                 >
@@ -196,7 +208,7 @@
                                 </b-dropdown-item>
 
                                 <b-dropdown-item
-                                    v-if="props.row.statut !== 'pending'"
+                                    v-if="props.row.statut !== 'pending' && props.row.statut !== 'cancelled'"
                                     title="Invoice"
                                     @click="Invoice_POS(props.row.id)"
                                 >
@@ -272,9 +284,9 @@
                         >
 
                         <span
-                            v-else-if="props.row.statut == 'Cancelled'"
+                            v-else-if="props.row.statut == 'cancelled'"
                             class="badge badge-outline-warning"
-                            >{{ $t("Cancel Delivery") }}</span
+                            >{{ $t("Cancel Order") }}</span
                         >
 
                         <span
@@ -282,12 +294,6 @@
                             class="badge badge-outline-info"
                             >{{ $t("Pending") }}</span
                         >
-                        <!-- <span
-                            v-else-if="props.row.statut == 'delivered'"
-                            class="badge badge-outline-warning"
-                        >
-                            {{ $t("Delivered") }}</span
-                        > -->
 
                         <span
                             v-else-if="props.row.statut == 'delivered'"

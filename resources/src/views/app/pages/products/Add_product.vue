@@ -529,6 +529,7 @@ export default {
           this.categories = response.data.categories;
           this.brands = response.data.brands;
           this.units = response.data.units;
+          console.log(this.units);
           this.isLoading = false;
         })
         .catch(response => {

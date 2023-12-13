@@ -165,6 +165,11 @@
                                     >For delivery</span
                                 >
                                 <span
+                                    v-else-if="sale.statut == 'cancelled'"
+                                    class="badge badge-outline-warning"
+                                    >Cancel Orders</span
+                                >
+                                <span
                                     v-else-if="sale.statut == 'Shipped'"
                                     class="badge badge-outline-warning"
                                     >{{ $t("Shipped") }}</span

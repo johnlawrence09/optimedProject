@@ -199,10 +199,16 @@ class UnitsController extends BaseController
             });
         })->get();
 
-        return response()->json($units);
+        dd($units);
+       foreach($units as $unit) {
+            if($unit->base_unit) {
+
+                $item['base_units'] = $unit->base_unit " + " $unit->operator " of " $unit->operator_value;
+            }
+
     }
 
-
+    return response()->json($units);
 
     //-------------- Get Sales Units ------------------\\
 
