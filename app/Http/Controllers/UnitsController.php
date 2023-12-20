@@ -199,16 +199,28 @@ class UnitsController extends BaseController
             });
         })->get();
 
-        dd($units);
-       foreach($units as $unit) {
-            if($unit->base_unit) {
+    //    foreach($units as $unit) {
+    //         if($unit->base_unit != null) {
+    //             if($unit->operator === '*')
+    //             $item['base_units'] = $unit->base_unit . '  ' . $unit->operator . ' of ' . $unit->operator_value;
+    //         } else {
+    //             $item['base_units'] = $unit->base_unit . '  ' . $unit->operator . ' by ' . $unit->operator_value;
+    //         }
 
-                $item['base_units'] = $unit->base_unit " + " $unit->operator " of " $unit->operator_value;
-            }
+    //         $item['id'] = $unit->id;
+    //         $item['name'] = $unit->name;
+    //         $item['ShortName'] = $unit->ShortName;
+    //         $item['base_unit'] = $unit->base_unit;
+    //         $item['operator'] = $unit->operator;
+    //         $item['operator_value'] = $unit->operator_value;
 
+    //    }
+
+        // $items[] = $item;
+        return response()->json($units);
     }
 
-    return response()->json($units);
+
 
     //-------------- Get Sales Units ------------------\\
 

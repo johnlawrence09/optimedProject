@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\UserWarehouse;
 use App\Exports\ProductsExport;
@@ -187,7 +188,8 @@ class ProductsController extends BaseController
                             $fileData = ImageResize::createFromString(base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file['path'])));
                             $fileData->resize(200, 200);
                             $name = rand(11111111, 99999999) . $file['name'];
-                            $path = public_path() . '/images/products/';
+                            // $path = public_path() . '/images/products/';
+                            $path = Storage::disk('s3')->put($name, file_get_contents($file), 'public');
                             $success = file_put_contents($path . $name, $fileData);
                             $images[] = $name;
                         }
