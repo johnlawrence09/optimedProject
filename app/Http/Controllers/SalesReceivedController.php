@@ -603,7 +603,6 @@ class SalesReceivedController extends Controller
 
             $details[] = $data;
         }
-
         $company = Setting::where('deleted_at', '=', null)->first();
         $customer = Shipment::where('sale_id','=', $sale->sale_id)->where('deleted_at','=', null)->first();
 

@@ -471,7 +471,6 @@ export default {
         //----------------------------------- Get Details Purchase ------------------------------\\
         Get_Details() {
             let id = this.$route.params.id;
-            console.log(id);
             axios
                 .get(`sales_receives/${id}`)
                 .then((response) => {
@@ -479,7 +478,6 @@ export default {
                     this.details = response.data.details;
                     this.company = response.data.company;
                     this.customer = response.data.customer;
-                    console.log(this.customer);
                     this.isLoading = false;
                 })
                 .catch((response) => {

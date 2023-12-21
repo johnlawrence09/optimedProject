@@ -78,7 +78,7 @@
                       Sale Receive Details
                     </b-dropdown-item>
 
-                    <b-dropdown-item title="Show" :to="'/app/sales_receipt/detail/'+props.row.id" v-else>
+                    <b-dropdown-item title="Show"  v-else :to="'/app/sales_receipt/detail/'+props.row.id">
                       <i class="nav-icon i-Eye font-weight-bold mr-2"></i>
                       Sale Receive Details
                     </b-dropdown-item>
@@ -923,7 +923,7 @@
             this.warehouses = response.data.warehouses;
             this.totalRows = response.data.totalRows;
             this.customer =response.data.customer;
-            console.log(this.customer);
+
 
             // Complete the animation of theprogress bar.
             NProgress.done();
@@ -1318,6 +1318,7 @@
       },
 
       saleDetail() {
+        console.log('test');
         this.makeToast(
               "warning",
               this.$t("Please Ship the product"),

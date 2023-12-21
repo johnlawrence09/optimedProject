@@ -6,7 +6,7 @@
    <title>Picklist</title>
    <style>
         th {
-            font-family: 'Roboto', sans-serif;s
+            font-family: 'Roboto', sans-serif;
         },
 
       th:nth-child(-n + 3),

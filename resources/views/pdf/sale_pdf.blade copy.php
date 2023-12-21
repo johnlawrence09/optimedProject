@@ -3,16 +3,16 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Purchase Order</title>
+   <title>Sales Order</title>
    <style>
         th {
             font-family: 'Roboto', sans-serif;
-        },
+        }
 
       th:nth-child(-n + 3),
       td:nth-child(-n + 3) {
 	   width: 8%;
-      },
+      }
 
       /* th:first-child, td:first-child {
 	   width: -5px;
@@ -30,13 +30,13 @@
          <p style="font-size: 12px; margin: 1px; color: #495057;">II-A (POB.) San Pablo City, Laguna 4000</p>
          <p style="font-size: 12px; margin: 1px; color: #495057;">Mobile Nos.: 09688866081/09688572308</p>
       </header>
-      <p style="letter-spacing: 5px; text-transform:uppercase; text-align:center; margin-bottom:32px; ">Purchase{{$purchase['Ref']}} </p>
+      <p style="letter-spacing: 5px; text-transform:uppercase; text-align:center; margin-bottom:32px; ">Sales{{$sale['Ref']}} </p>
       <main>
          <div style="float: left; margin-right: 250px;">
-            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 30px;">Name:</strong>{{$purchase['supplier_name']}}</p>
-            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 26px;">Phone:</strong>{{$purchase['supplier_phone']}}</p>
-            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 16px;">Address:</strong>{{$purchase['supplier_adr']}}<</p>
-            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 32px;">Email:</strong>{{$purchase['supplier_email']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 30px;">Name:</strong>{{$sale['client_name']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 26px;">Phone:</strong>{{$sale['client_phone']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 16px;">Address:</strong>{{$sale['client_adr']}}<</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 32px;">Email:</strong>{{$sale['client_email']}}</p>
          </div>
          <div>
             <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 85px;">Date:</strong>{{$purchase['date']}}</p>
