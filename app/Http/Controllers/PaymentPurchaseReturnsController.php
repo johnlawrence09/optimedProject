@@ -124,7 +124,7 @@ class PaymentPurchaseReturnsController extends BaseController
                 $role = Auth::user()->roles()->first();
                 $view_records = Role::findOrFail($role->id)->inRole('record_view');
                 $PurchaseReturn = PurchaseReturn::findOrFail($request['purchase_return_id']);
-        
+
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === purchase return->id
@@ -168,7 +168,7 @@ class PaymentPurchaseReturnsController extends BaseController
 
     public function show($id){
         //
-        
+
     }
 
     //----------- Update Payment Purchase Return --------------\\
@@ -181,7 +181,7 @@ class PaymentPurchaseReturnsController extends BaseController
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
             $payment = PaymentPurchaseReturns::findOrFail($id);
-    
+
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === payment->id
@@ -200,7 +200,7 @@ class PaymentPurchaseReturnsController extends BaseController
             } else if ($due === $PurchaseReturn->GrandTotal) {
                 $payment_statut = 'unpaid';
             }
-            
+
             $payment->update([
                 'date' => $request['date'],
                 'Reglement' => $request['Reglement'],
@@ -225,12 +225,12 @@ class PaymentPurchaseReturnsController extends BaseController
     {
         $this->authorizeForUser($request->user('api'), 'delete', PaymentPurchaseReturns::class);
 
-        
+
         \DB::transaction(function () use ($id, $request) {
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
             $payment = PaymentPurchaseReturns::findOrFail($id);
-    
+
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === payment->id
@@ -341,21 +341,50 @@ class PaymentPurchaseReturnsController extends BaseController
          $url = url('/api/payment_Return_Purchase_PDF/' . $request->id);
          $receiverNumber = $payment['PurchaseReturn']['provider']->phone;
          $message = "Dear" .' '.$payment['PurchaseReturn']['provider']->name." \n We are contacting you in regard to a Payment #".$payment['PurchaseReturn']->Ref.' '.$url.' '. "that has been created on your account. \n We look forward to conducting future business with you.";
-         
+
          try {
-   
+
              $account_sid = env("TWILIO_SID");
              $auth_token = env("TWILIO_TOKEN");
              $twilio_number = env("TWILIO_FROM");
-   
+
              $client = new Client_Twilio($account_sid, $auth_token);
              $client->messages->create($receiverNumber, [
-                 'from' => $twilio_number, 
+                 'from' => $twilio_number,
                  'body' => $message]);
-     
+
          } catch (Exception $e) {
              return response()->json(['message' => $e->getMessage()], 500);
          }
+     }
+
+     public function purchase_return_pdf($data) {
+
+        $dateRangeArray = explode(',', $data);
+        ['0' => $data_start, '1' => $date_end] = $dateRangeArray;
+
+        $payment_purchase_returns = PaymentPurchaseReturns::with('PurchaseReturn.provider')
+                   ->whereBetween('date', [$data_start, $date_end])->get();
+
+                   foreach ($payment_purchase_returns as $payment_purchase_return) {
+                        $item['date'] = $payment_purchase_return->date;
+                        $item['Ref'] = $payment_purchase_return->Ref;
+                        $item['Return_Ref'] = $payment_purchase_return->PurchaseReturn->Ref;
+                        $item['supplier'] = $payment_purchase_return->PurchaseReturn->provider->name;
+                        $item['paid_by'] = $payment_purchase_return->Reglement;
+                        $item['amount'] = $payment_purchase_return->montant;
+
+                        $details[] = $item;
+                    }
+
+
+        $pdf = \PDF::loadView('pdf.Purchase_Payment_Return', [
+            'details' => $details,
+        ]);
+
+        return $pdf->download('Purchase_Return.pdf');
+
+
      }
 
 

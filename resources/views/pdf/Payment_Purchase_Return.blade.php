@@ -32,7 +32,7 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Name:</strong> {{$payment['supplier_name']}}</div>
+                           <div><strong>Name:</strong> </div>
                            <div><strong>Phone:</strong> {{$payment['supplier_phone']}}</div>
                            <div><strong>Adress:</strong> {{$payment['supplier_adr']}}</div>
                            <div><strong>Email:</strong> {{$payment['supplier_email']}}</div>

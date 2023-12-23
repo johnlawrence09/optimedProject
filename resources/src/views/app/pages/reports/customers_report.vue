@@ -30,7 +30,7 @@
         placeholder: $t('Search_this_table'),
         enabled: true,
       }"
-      
+
         :pagination-options="{
         enabled: true,
         mode: 'records',
@@ -88,7 +88,7 @@ export default {
     ...mapGetters(["currentUser"]),
     columns() {
       return [
-       
+
         {
           label: this.$t("CustomerName"),
           field: "name",
@@ -160,7 +160,7 @@ export default {
       // Start the progress bar.
       NProgress.start();
       NProgress.set(0.1);
-     
+
        axios
         .get("report/client_pdf/" + id, {
           responseType: "blob", // important
@@ -279,7 +279,7 @@ export default {
 
   created: function() {
     this.Get_Client_Report(1);
-    
+
   }
 };
 </script>

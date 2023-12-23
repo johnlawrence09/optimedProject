@@ -1601,22 +1601,53 @@ export default {
         //----------------------------------- Sales PDF ------------------------------\\
         Sales_PDF() {
             var self = this;
-            let pdf = new jsPDF("p", "pt");
-            let columns = [
-                { title: "Ref", dataKey: "Ref" },
-                { title: "Client", dataKey: "client_name" },
-                { title: "Warehouse", dataKey: "warehouse_name" },
-                { title: "Created_by", dataKey: "created_by" },
-                { title: "Status", dataKey: "statut" },
-                { title: "Total", dataKey: "GrandTotal" },
-                { title: "Paid", dataKey: "paid_amount" },
-                { title: "Due", dataKey: "due" },
-                { title: "Status Payment", dataKey: "payment_status" },
-                { title: "Shipping Status", dataKey: "shipping_status" },
-            ];
-            pdf.autoTable(columns, self.sales);
-            pdf.text("Sale List", 40, 25);
-            pdf.save("Sale_List.pdf");
+                let pdf = new jsPDF("p", "pt");
+
+                // Function to add a customized header
+                function addHeader() {
+                    // Add your custom text
+                    pdf.setFontSize(16);
+                    pdf.text("Optimed", 40, 30); // Customize the company name and position
+
+                    // Add a horizontal line under the text
+                    pdf.setLineWidth(1);
+                    pdf.line(40, 45, 550, 45);
+                }
+
+                let columns = [
+                    { title: "Ref", dataKey: "Ref" },
+                    { title: "Client", dataKey: "client_name" },
+                    { title: "Warehouse", dataKey: "warehouse_name" },
+                    { title: "Created_by", dataKey: "created_by" },
+                    { title: "Status", dataKey: "statut" },
+                    { title: "Total", dataKey: "GrandTotal" },
+                    { title: "Paid", dataKey: "paid_amount" },
+                    { title: "Due", dataKey: "due" },
+                    { title: "Status Payment", dataKey: "payment_status" },
+
+                ];
+
+                // Define column styles to adjust width
+                let columnStyles = {
+                    Ref: { columnWidth: 50 }, // Adjust the width for the 'Ref' column
+                    client_name: { columnWidth: 100 }, // Adjust the width for the 'Client' column
+                    // ... Adjust other columns as needed
+                };
+
+                // Add the first page with the custom header
+                addHeader();
+                pdf.text("Sale List", 40, 60); // Adjust the position of the "Sale List" text
+                pdf.autoTable(columns, self.sales, { columnStyles: columnStyles });
+
+                // Add subsequent pages with the custom header
+                for (let i = 1; i < pdf.internal.getNumberOfPages(); i++) {
+                    pdf.setPage(i);
+                    addHeader();
+                    pdf.autoTable(columns, self.sales, { columnStyles: columnStyles });
+                }
+
+                pdf.save("Sale_List.pdf");
+
         },
         //-------------------------------- Invoice POS ------------------------------\\
         Invoice_POS(id) {

@@ -1,130 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta charset="utf-8">
-      <title>Sale _{{$sale['Ref']}}</title>
-      <link rel="stylesheet" href="{{asset('/css/pdf_style.css')}}" media="all" />
-   </head>
+<html lang="en" style="margin: 0; padding: 0; box-sizing: border-box;">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Sales Order</title>
+   <style>
+        th {
+            font-family: 'Roboto', sans-serif;
+        }
 
-   <body>
-      <header class="clearfix">
-         <div id="logo">
-         <img src="{{asset('/images/'.$setting['logo'])}}">
-         </div>
-         <div id="company">
-            <div><strong> Date: </strong>{{$sale['date']}}</div>
-            <div><strong> Number: </strong> {{$sale['Ref']}}</div>
-            <div><strong> Status: </strong> {{$sale['statut']}}</div>
-            <div><strong> Payment Status: </strong> {{$sale['payment_status']}}</div>
-         </div>
-         <div id="Title-heading">
-            Sale  {{$sale['Ref']}}
-         </div>
-         </div>
+      th:nth-child(-n + 3),
+      td:nth-child(-n + 3) {
+	   width: 8%;
+      }
+
+      /* th:first-child, td:first-child {
+	   width: -5px;
+      } */
+   </style>
+</head>
+<body style="font-family: 'Roboto', sans-serif;">
+   <main style="padding: 10px; width: 550; margin: 5px auto;">
+      <header style="margin-bottom: 75px;" >
+         <img style="width: 200px; margin-left:-15px;" src="images/optimed-logo.jpg" alt="">
+
+         <p style="font-size: 12px; margin: 1px; color: #495057;">Optimedevices Medical Equipment and Supplies Trading</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">908-002-441-000</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">#632 TBC Road Angeles Heights Subd. Brgy. Bagong Bayan</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">II-A (POB.) San Pablo City, Laguna 4000</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">Mobile Nos.: 09688866081/09688572308</p>
       </header>
+      <p style="letter-spacing: 5px; text-transform:uppercase; text-align:center; margin-bottom:32px; ">{{$sale['Ref']}} </p>
       <main>
-         <div id="details" class="clearfix">
-            <div id="client">
-               <table class="table-sm">
-                  <thead>
-                     <tr>
-                        <th class="desc">Customer Info</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <div><strong>Name:</strong> {{$sale['client_name']}}</div>
-                           <div><strong>Phone:</strong> {{$sale['client_phone']}}</div>
-                           <div><strong>Address:</strong>   {{$sale['client_adr']}}</div>
-                           <div><strong>Email:</strong>  {{$sale['client_email']}}</div>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-            <div id="invoice">
-               <table class="table-sm">
-                  <thead>
-                     <tr>
-                        <th class="desc">Company Info</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <div id="comp">{{$setting['CompanyName']}}</div>
-                           <div><strong>Address:</strong>  {{$setting['CompanyAdress']}}</div>
-                           <div><strong>Phone:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>Email:</strong>  {{$setting['email']}}</div>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
+         <div style="float: left; margin-right: 250px;">
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 30px;">Name:</strong>{{$sale['client_name']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 26px;">Phone:</strong>{{$sale['client_phone']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 16px;">Address:</strong>{{$sale['client_adr']}}<</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 32px;">Email:</strong>{{$sale['client_email']}}</p>
          </div>
-         <div id="details_inv">
-            <table  class="table-sm">
-               <thead>
-                  <tr>
-                     <th>PRODUCT</th>
-                     <th>UNIT PRICE</th>
-                     <th>QUANTITY</th>
-                     <th>DISCOUNT</th>
-                     <th>TAX</th>
-                     <th>TOTAL</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  @foreach ($details as $detail)
-                  <tr>
-                     <td>
-                        <span>{{$detail['code']}} ({{$detail['name']}})</span>
+         <div>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 85px;">Date:</strong>{{$sale['date']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 30px;">Reference no.:</strong>{{$sale['Ref']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 72px;">Status:</strong>{{$sale['statut']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 20px;">Payment Status:</strong>{{$sale['payment_status']}}</p>
+         </div>
+      </main>
+
+      <table style="margin-top: 32px; font-size: 12px; border-collapse: collapse; width: 100%; ">
+         <tr>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >PRODUCT</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >UNIT COST</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >QUANTITY</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >DISCOUNT</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >TAX</th>
+           <th style="text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >TOTAL</th>
+         </tr>
+         <tr>
+         <tbody>
+            @foreach ($details as $detail)
+             <tr>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;"><span>{{$detail['code']}} ({{$detail['name']}})</span>
                            @if($detail['is_imei'] && $detail['imei_number'] !==null)
                               <p>IMEI/SN : {{$detail['imei_number']}}</p>
                            @endif
-                     </td>
-                     <td>{{$detail['price']}} </td>
-                     <td>{{$detail['quantity']}}/{{$detail['unitSale']}}</td>
-                     <td>{{$detail['DiscountNet']}} </td>
-                     <td>{{$detail['taxe']}} </td>
-                     <td>{{$detail['total']}} </td>
-                  </tr>
-                  @endforeach
-               </tbody>
-            </table>
-         </div>
-         <div id="total">
-            <table>
-               <tr>
-                  <td>Order Tax</td>
-                  <td>{{$sale['TaxNet']}} </td>
-               </tr>
-               <tr>
-                  <td>Discount</td>
-                  <td>{{$sale['discount']}} </td>
-               </tr>
-               <tr>
-                  <td>Shipping</td>
-                  <td>{{$sale['shipping']}} </td>
-               </tr>
-               <tr>
-                  <td>Total</td>
-                  <td>{{$symbol}} {{$sale['GrandTotal']}} </td>
-               </tr>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['price']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['quantity']}}/{{$detail['unitSale']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['DiscountNet']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['taxe']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$detail['total']}}</td>
+             </tr>
+             @endforeach
+         </tbody>
+         </tr>
+       </table>
+       <main style="width: 550; margin: 0 10px auto auto;" >
+        <table style="margin-top: 32px; font-size: 12px; border-collapse: collapse; width: 30%; float:right">
+            <tr>
+                <td style="border: 1px solid #343a40; text-align: left; padding: 5px; font-size: 12px;">Order Tax</td>
+                <td style="border: 1px solid #343a40; text-align: left; padding: 5px; font-size: 12px;">{{$sale['TaxNet']}}  </td>
+             </tr>
+             <tr>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">Discount</td>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">{{$sale['discount']}}</td>
+             </tr>
+             <tr>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">Shipping</td>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">{{$sale['shipping']}} </td>
+             </tr>
+             <tr>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">Total</td>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">{{$symbol}} {{$sale['GrandTotal']}}  </td>
+             </tr>
 
-               <tr>
-                  <td>Paid Amount</td>
-                  <td>{{$symbol}} {{$sale['paid_amount']}} </td>
-               </tr>
+             <tr>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">Paid Amount</td>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">{{$symbol}} {{$sale['paid_amount']}}</td>
+             </tr>
 
-               <tr>
-                  <td>Due</td>
-                  <td>{{$symbol}} {{$sale['due']}} </td>
-               </tr>
-            </table>
-         </div>
-         <div id="signature">Signature</div>
-      </main>
-   </body>
+             <tr>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">Due</td>
+                <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 5px; font-size: 12px;">{{$symbol}} {{$sale['due']}} </td>
+             </tr>
+        </table>
+   </main>
+   </main>
+
+
+</body>
 </html>

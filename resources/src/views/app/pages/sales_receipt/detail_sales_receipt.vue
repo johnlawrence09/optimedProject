@@ -427,7 +427,6 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
         let id = this.$route.params.id;
-        console.log(id);
         axios
             .get(`print_picklist/${id}`, {
             responseType: "blob", // important

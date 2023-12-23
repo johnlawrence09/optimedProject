@@ -409,6 +409,11 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('payment/returns_purchase/send/email', 'PaymentPurchaseReturnsController@SendEmail');
     Route::post('payment/returns_purchase/send/sms', 'PaymentPurchaseReturnsController@Send_SMS');
 
+
+    Route::get('pdf/{dateRange}', 'PaymentPurchaseReturnsController@purchase_return_pdf');
+
+
+
     //------------------------------- Adjustments --------------------------\\
     //------------------------------------------------------------------\\
 
