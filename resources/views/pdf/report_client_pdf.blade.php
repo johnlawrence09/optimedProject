@@ -1,92 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta charset="utf-8">
-      <title>Client  : {{$client['client_name']}}</title>
-      <link rel="stylesheet" href="{{asset('/css/pdf_style.css')}}" media="all" />
-   </head>
+<html lang="en" style="margin: 0; padding: 0; box-sizing: border-box;">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Client  : {{$client['client_name']}}</title>
+   <style>
+        th {
+            font-family: 'Roboto', sans-serif;
+        },
 
-   <body>
-      <header class="clearfix">
-         <div id="logo">
-         <img src="{{asset('/images/'.$setting['logo'])}}">
-         </div>
-        
-         <div id="Title-heading">
-               Client  : {{$client['client_name']}}
-         </div>
-         </div>
+      th:nth-child(-n + 3),
+      td:nth-child(-n + 3) {
+	   width: 10%;
+      },
+
+   </style>
+</head>
+<body style="font-family: 'Roboto', sans-serif;">
+   <main style="padding: 10px; width: 550; margin: 5px auto;">
+      <header style="margin-bottom: 75px;" >
+         <img style="width: 200px; margin-left:-15px;" src="images/optimed-logo.jpg" alt="">
+
+         <p style="font-size: 12px; margin: 1px; color: #495057;">Optimedevices Medical Equipment and Supplies Trading</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">908-002-441-000</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">#632 TBC Road Angeles Heights Subd. Brgy. Bagong Bayan</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">II-A (POB.) San Pablo City, Laguna 4000</p>
+         <p style="font-size: 12px; margin: 1px; color: #495057;">Mobile Nos.: 09688866081/09688572308</p>
       </header>
+      <p style="letter-spacing: 5px; text-transform:uppercase; text-align:center; margin-bottom:32px; ">CLIENT: {{$client['client_name']}}</p>
       <main>
-         <div id="details" class="clearfix">
-            <div id="client">
-               <table class="table-sm">
-                  <thead>
-                     <tr>
-                        <th class="desc">Customer Details</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <div><strong>Name:</strong> {{$client['client_name']}}</div>
-                           <div><strong>Phone:</strong> {{$client['phone']}}</div>
-                           <div><strong>Total Sales:</strong> {{$client['total_sales']}}</div>
-                           <div><strong>Total Amount:</strong> {{$symbol}} {{$client['total_amount']}}</div>
-                           <div><strong>Total Paid:</strong> {{$symbol}} {{$client['total_paid']}}</div>
-                           <div><strong>Due:</strong> {{$symbol}} {{$client['due']}}</div>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-            <div id="invoice">
-               <table class="table-sm">
-                  <thead>
-                     <tr>
-                        <th class="desc">Company Info</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <div id="comp">{{$setting['CompanyName']}}</div>
-                           <div><strong>Address:</strong>  {{$setting['CompanyAdress']}}</div>
-                           <div><strong>Phone:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>Email:</strong>  {{$setting['email']}}</div>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
-         <div id="details_inv">
-            <h3 style="margin-bottom:10px">
-                  All Sales ( Unpaid/Partial )
-            </h3>
-            <table  class="table-sm">
-               <thead>
-                  <tr>
-                     <th>DATE</th>
-                     <th>REF</th>
-                     <th>PAID</th>
-                     <th>DUE</th>
-                     <th>PAYMENT STATUS</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  @foreach ($sales as $sale)
-                  <tr>
-                     <td>{{$sale['date']}} </td>
-                     <td>{{$sale['Ref']}}</td>
-                     <td>{{$symbol}} {{$sale['paid_amount']}} </td>
-                     <td>{{$symbol}} {{$sale['due']}} </td>
-                     <td>{{$sale['payment_status']}} </td>
-                  </tr>
-                  @endforeach
-               </tbody>
-            </table>
+         <div style="margin-right: 250px;">
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 70px;">Name:</strong>{{$client['client_name']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 65px;">Phone:</strong>{{$client['phone']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 37px;">Total Sales:</strong>{{$client['total_sales']}}<</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 23px;">Total Amount:</strong>{{$symbol}} {{$client['total_amount']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 43px;">Total Paid:</strong>{{$symbol}} {{$client['total_paid']}}</p>
+            <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 78px;">Due:</strong>{{$symbol}} {{$client['due']}}</p>
          </div>
       </main>
-   </body>
+      <div style="margin-top: 10px; display:inline-block; ">
+        <p style="color:#252626; font-size:18px;">All Sales ( Unpaid/Partial)</p>
+      </div>
+      <table style="font-size: 12px; border-collapse: collapse; width: 100%; ">
+         <tr>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Date</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Referrence</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Paid</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Due</th>
+           <th style="border-right:1px solid #343a40; text-align: left; padding: 8px; font-size: 12px; background-color: #4dabf7; color: black; text-transform:uppercase" >Payment Status</th>
+         </tr>
+         <tr>
+         <tbody>
+             @foreach ($sales as $sale)
+             <tr>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$sale['date']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$sale['Ref']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$symbol}} {{$sale['paid_amount']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$symbol}} {{$sale['due']}}</td>
+                 <td style="border: 1px solid #343a40; border-top:none; text-align: left; padding: 8px; font-size: 12px;">{{$sale['payment_status']}}</td>
+             </tr>
+             @endforeach
+         </tbody>
+         </tr>
+       </table>
+   </main>
+
+</body>
 </html>
