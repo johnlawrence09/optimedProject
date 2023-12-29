@@ -40,9 +40,10 @@
     36 => 'App\\Providers\\AuthServiceProvider',
     37 => 'App\\Providers\\EventServiceProvider',
     38 => 'App\\Providers\\RouteServiceProvider',
-    39 => 'Barryvdh\\DomPDF\\ServiceProvider',
-    40 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    41 => 'Intervention\\Image\\ImageServiceProvider',
+    39 => 'App\\Providers\\S3ServiceProvider',
+    40 => 'Barryvdh\\DomPDF\\ServiceProvider',
+    41 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    42 => 'Intervention\\Image\\ImageServiceProvider',
   ),
   'eager' => 
   array (
@@ -72,9 +73,10 @@
     23 => 'App\\Providers\\AuthServiceProvider',
     24 => 'App\\Providers\\EventServiceProvider',
     25 => 'App\\Providers\\RouteServiceProvider',
-    26 => 'Barryvdh\\DomPDF\\ServiceProvider',
-    27 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    28 => 'Intervention\\Image\\ImageServiceProvider',
+    26 => 'App\\Providers\\S3ServiceProvider',
+    27 => 'Barryvdh\\DomPDF\\ServiceProvider',
+    28 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    29 => 'Intervention\\Image\\ImageServiceProvider',
   ),
   'deferred' => 
   array (

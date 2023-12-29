@@ -25,6 +25,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\File;
 use \Gumlet\ImageResize;
 
 
@@ -182,23 +183,51 @@ class ProductsController extends BaseController
                     $Product->mos = $request['is_quotation'] == 'true' ? 1 : 0;
                     $Product->is_warranty = $request['is_warranty'] == 'true' ? 1 : 0;
 
-                    if ($request['images']) {
-                        $files = $request['images'];
-                        foreach ($files as $file) {
-                            $fileData = ImageResize::createFromString(base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file['path'])));
-                            $fileData->resize(200, 200);
-                            $name = rand(11111111, 99999999) . $file['name'];
-                            // $path = public_path() . '/images/products/';
-                            $path = Storage::disk('s3')->put($name, file_get_contents($file), 'public');
-                            $success = file_put_contents($path . $name, $fileData);
-                            $images[] = $name;
-                        }
-                        $filename = implode(",", $images);
-                    } else {
-                        $filename = 'no-image.png';
+
+                    $images = $request['images'];
+                    $s3 = app('s3');
+                    $bucket = config('services.aws.bucket');
+
+                    $imageLinks = [];
+
+                    foreach ($images as $imageData) {
+                        // Decode base64 data and create an instance of UploadedFile
+                        $imageBinary = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData['path']));
+                        $tempPath = tempnam(sys_get_temp_dir(), 'uploaded_image');
+                        file_put_contents($tempPath, $imageBinary);
+
+                        $imageFile = new File($tempPath);
+                        $imageName = $imageData['name'];
+
+                        // Upload to S3
+                        $path = "images/$imageName";
+                        $s3->putObject([
+                            'Bucket' => $bucket,
+                            'Key' => $path,
+                            'Body' => $imageBinary,
+                            'ACL' => 'public-read',
+                        ]);
+
+                        $imageLinks[] = $s3->getObjectUrl($bucket, $path);
                     }
 
-                    $Product->image = $filename;
+
+                    // if ($request['images']) {
+                    //     $files = $request['images'];
+                    //     foreach ($files as $file) {
+                    //         $fileData = ImageResize::createFromString(base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file['path'])));
+                    //         $fileData->resize(200, 200);
+                    //         $name = rand(11111111, 99999999) . $file['name'];
+                    //         $path = public_path() . '/images/products/';
+                    //         $success = file_put_contents($path . $name, $fileData);
+                    //         $images[] = $name;
+                    //     }
+                    //     $filename = implode(",", $images);
+                    // } else {
+                    //     $filename = 'no-image.png';
+                    // }
+
+                    $Product->image = json_encode($imageLinks);
                     $Product->save();
 
                     // Store Variants Product
