@@ -93,7 +93,7 @@
                 <b-carousel-slide
                   v-for="(image, index) in product.images"
                   :key="index"
-                  :img-src="'/images/products/'+image"
+                  :img-src="image"
                 ></b-carousel-slide>
               </b-carousel>
             </div>

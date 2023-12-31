@@ -558,8 +558,8 @@ export default {
     //------------------------------ Create new Product ------------------------------\\
     Create_Product() {
       // Start the progress bar.
-      NProgress.start();
-      NProgress.set(0.1);
+    //   NProgress.start();
+    //   NProgress.set(0.1);
       var self = this;
       self.SubmitProcessing = true;
 

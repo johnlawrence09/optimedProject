@@ -27,6 +27,8 @@ use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\File;
 use \Gumlet\ImageResize;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Log;
 
 
 class ProductsController extends BaseController
@@ -193,6 +195,9 @@ class ProductsController extends BaseController
                     foreach ($images as $imageData) {
                         // Decode base64 data and create an instance of UploadedFile
                         $imageBinary = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData['path']));
+                        $image = Image::make($imageBinary);
+                        $image->resize(200, 200);
+
                         $tempPath = tempnam(sys_get_temp_dir(), 'uploaded_image');
                         file_put_contents($tempPath, $imageBinary);
 
@@ -200,7 +205,7 @@ class ProductsController extends BaseController
                         $imageName = $imageData['name'];
 
                         // Upload to S3
-                        $path = "images/$imageName";
+                        $path = "images/products/$imageName";
                         $s3->putObject([
                             'Bucket' => $bucket,
                             'Key' => $path,
@@ -209,25 +214,10 @@ class ProductsController extends BaseController
                         ]);
 
                         $imageLinks[] = $s3->getObjectUrl($bucket, $path);
+                        $imageUrl = $imageLinks[0];
                     }
 
-
-                    // if ($request['images']) {
-                    //     $files = $request['images'];
-                    //     foreach ($files as $file) {
-                    //         $fileData = ImageResize::createFromString(base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file['path'])));
-                    //         $fileData->resize(200, 200);
-                    //         $name = rand(11111111, 99999999) . $file['name'];
-                    //         $path = public_path() . '/images/products/';
-                    //         $success = file_put_contents($path . $name, $fileData);
-                    //         $images[] = $name;
-                    //     }
-                    //     $filename = implode(",", $images);
-                    // } else {
-                    //     $filename = 'no-image.png';
-                    // }
-
-                    $Product->image = json_encode($imageLinks);
+                    $Product->image = $imageUrl;
                     $Product->save();
 
                     // Store Variants Product
@@ -269,7 +259,7 @@ class ProductsController extends BaseController
 
                         product_warehouse::insert($product_warehouse);
                     }
-                    // dd($product_warehouse);
+
 
                 }, 10);
 
