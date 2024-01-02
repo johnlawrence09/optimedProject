@@ -33,7 +33,7 @@
       </header>
       <p style="letter-spacing: 5px; text-transform:uppercase; text-align:center; margin-bottom:32px; ">Picklist</p>
       <main>
-         <div style="float: left; margin-right: 250px;">
+         <div style="float: left; margin-right: 150px;">
             <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 30px;">Name:</strong>{{$customer_info['name']}}</p>
             <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 26px;">Phone:</strong>{{$customer_info['phone']}}</p>
             <p style="font-size: 12px; margin:0; font-weight: 400;"><strong style="margin-right: 16px;">Address:</strong>{{$customer_info['address']}}<</p>
