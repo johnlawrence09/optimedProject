@@ -2,6 +2,7 @@
   <div class="main-content">
     <breadcumb :page="$t('AddQuote')" :folder="$t('ListQuotations')"/>
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
+    {{ details }}
     <validation-observer ref="create_quote" v-if="!isLoading">
       <b-form @submit.prevent="Submit_Quotation">
         <b-row>
@@ -67,11 +68,11 @@
                  <!-- Product -->
                 <b-col md="12" class="mb-5">
                   <h6>{{$t('ProductName')}}</h6>
-                 
+
                   <div id="autocomplete" class="autocomplete">
-                    <input 
+                    <input
                      :placeholder="$t('Scan_Search_Product_by_Code_Name')"
-                       @input='e => search_input = e.target.value' 
+                       @input='e => search_input = e.target.value'
                       @keyup="search(search_input)"
                       @focus="handleFocus"
                       @blur="handleBlur"
@@ -288,6 +289,17 @@
                   </validation-provider>
                 </b-col>
 
+                <!-- <b-col lg="4" md="4" sm="12" class="mb-3">
+                  <validation-provider name="Status" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('Attachement') + ' ' + '*'">
+                        <input type="file" @change="handleFileChange" />
+                        <img v-if="imageUrl" :src="imageUrl" alt="Preview" style="max-width: 300px; max-height: 300px;" />
+                    </b-form-group>
+                  </validation-provider>
+                </b-col> -->
+
+
+
                 <b-col md="12">
                   <b-form-group :label="$t('Note')">
                     <textarea
@@ -447,6 +459,15 @@
                 </b-form-group>
             </b-col>
 
+            <b-col lg="4" md="4" sm="12" class="mb-3">
+                  <validation-provider name="Status" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('Attachement') + ' ' + '*'">
+                        <input type="file"  ref="fileInput" @change="handleFileChange" />
+                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="Preview" style="max-width: 300px; max-height: 300px;" /> -->
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
 
             <b-col md="12">
               <b-form-group>
@@ -526,6 +547,8 @@ export default {
         product_variant_id: "",
         is_imei: "",
         imei_number:"",
+        imageUrl: null,
+        file: null,
       },
       symbol: ""
     };
@@ -544,7 +567,7 @@ export default {
       this.focused = false
     },
 
-    
+
     //--- Submit Validate Create Quotation
     Submit_Quotation() {
       this.$refs.create_quote.validate().then(success => {
@@ -610,6 +633,8 @@ export default {
       this.detail.tax_percent = detail.tax_percent;
       this.detail.is_imei = detail.is_imei;
       this.detail.imei_number = detail.imei_number;
+      this.detail.imageUrl = detail.imageUrl;
+      this.detail.file = detail.file;
 
       setTimeout(() => {
         NProgress.done();
@@ -619,7 +644,7 @@ export default {
     },
 
 
-   
+
     //------ Submit Update Detail Product
 
     Update_Detail() {
@@ -642,14 +667,14 @@ export default {
                 }
               }
             }
-         
+
 
             if (this.details[i].stock < this.details[i].quantity) {
               this.details[i].quantity = this.details[i].stock;
             } else {
               this.details[i].quantity =1;
             }
-          
+
           this.details[i].Unit_price = this.detail.Unit_price;
           this.details[i].tax_percent = this.detail.tax_percent;
           this.details[i].tax_method = this.detail.tax_method;
@@ -657,6 +682,8 @@ export default {
           this.details[i].discount = this.detail.discount;
           this.details[i].sale_unit_id = this.detail.sale_unit_id;
           this.details[i].imei_number = this.detail.imei_number;
+          this.details[i].imageUrl = this.detail.imageUrl;
+          this.details[i].file = this.detail.file;
 
           if (this.details[i].discount_Method == "2") {
             //Fixed
@@ -748,6 +775,23 @@ export default {
 
     getResultValue(result) {
       return result.code + " " + "(" + result.name + ")";
+    },
+
+    handleFileChange() {
+      this.file = this.$refs.fileInput.files[0];
+      if (this.file) {
+        const formData = new FormData();
+        formData.append('file', this.file);
+      }
+    },
+    previewImage() {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        this.imageUrl = e.target.result;
+      };
+
+      reader.readAsDataURL(this.file);
     },
 
     //------------- Submit Search Product ----------------------\\
@@ -1057,6 +1101,8 @@ export default {
         this.product.sale_unit_id = response.data.sale_unit_id;
         this.product.is_imei = response.data.is_imei;
         this.product.imei_number = '';
+        this.product.imageUrl = null,
+        this.product.file = null,
         this.add_product();
         this.Calcul_Total();
       });
@@ -1082,6 +1128,8 @@ export default {
   //----------------------------- Created function-------------------
   created() {
     this.GetElements();
-  }
+  },
+
+
 };
 </script>

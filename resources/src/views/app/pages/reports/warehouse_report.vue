@@ -145,7 +145,11 @@
                       v-else-if="props.row.statut == 'pending'"
                       class="badge badge-outline-info"
                     >{{$t('Pending')}}</span>
-                    <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
+                    <span
+                      v-else-if="props.row.statut == 'pending'"
+                      class="badge badge-outline-info"
+                    >{{$t('Pending')}}</span>
+                    <!-- <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span> -->
                   </div>
                   <div v-else-if="props.column.field == 'payment_status'">
                     <span
@@ -158,7 +162,7 @@
                     >{{$t('partial')}}</span>
                     <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
                   </div>
-                   <div v-else-if="props.column.field == 'shipping_status'">
+                   <!-- <div v-else-if="props.column.field == 'shipping_status'">
                   <span
                     v-if="props.row.shipping_status == 'ordered'"
                     class="badge badge-outline-warning"
@@ -180,7 +184,7 @@
                   >{{$t('Delivered')}}</span>
 
                   <span v-else-if="props.row.shipping_status == 'cancelled'" class="badge badge-outline-danger">{{$t('Cancelled')}}</span>
-                </div>
+                </div> -->
                    <div v-else-if="props.column.field == 'Ref'">
                     <router-link
                       :to="'/app/sales/detail/'+props.row.id"
