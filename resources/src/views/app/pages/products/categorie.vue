@@ -15,9 +15,9 @@
         @on-search="onSearch"
         :search-options="{
         enabled: true,
-        placeholder: $t('Search_this_table'),  
+        placeholder: $t('Search_this_table'),
       }"
-        :select-options="{ 
+        :select-options="{
           enabled: true ,
           clearSelectionText: '',
         }"
@@ -101,6 +101,13 @@
               </validation-provider>
             </b-col>
 
+            <!-- File Upload -->
+            <b-col md="12" class="mt-3">
+                <!-- <input type="file" @change="onChange"> -->
+                <b-form-file id="file-small" size="sm" @change="onChange" ></b-form-file>
+            </b-col>
+
+
              <b-col md="12" class="mt-3">
                 <b-button variant="primary" type="submit"  :disabled="SubmitProcessing">{{$t('submit')}}</b-button>
                   <div v-once class="typo__p" v-if="SubmitProcessing">
@@ -141,6 +148,7 @@ export default {
       search: "",
       limit: "10",
       categories: [],
+      image:null,
       editmode: false,
 
       category: {
@@ -178,6 +186,11 @@ export default {
   },
 
   methods: {
+
+    onChange(e) {
+        console.log("Selected file", e.target.files[0]);
+        this.image = e.target.files[0];
+    },
     //---- update Params Table
     updateParams(newProps) {
       this.serverParams = Object.assign({}, this.serverParams, newProps);
@@ -315,16 +328,17 @@ export default {
     //----------------------------------Create new Category ----------------\\
     Create_Category() {
       // this.SubmitProcessing = true;
+
+      let formData = new FormData();
+      formData.append('img', this.image);
+      formData.append('name', this.category.name)
       axios
-        .post("categories", {
-          name: this.category.name,
-          code: this.category.code
-        })
+        .post("categories", formData )
         .then(response => {
           if(response.data.exist == true) {
               NProgress.done();
               self.SubmitProcessing = false;
-                
+
               this.makeToast(
               "danger",
               this.$t("Data has already exist"),
@@ -368,7 +382,7 @@ export default {
           if(response.data.exist == true) {
               NProgress.done();
               self.SubmitProcessing = false;
-                
+
               this.makeToast(
               "danger",
               this.$t("Data has already exist"),

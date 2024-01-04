@@ -2,7 +2,6 @@
   <div class="main-content">
     <breadcumb :page="$t('AddQuote')" :folder="$t('ListQuotations')"/>
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
-    {{ details }}
     <validation-observer ref="create_quote" v-if="!isLoading">
       <b-form @submit.prevent="Submit_Quotation">
         <b-row>
@@ -100,7 +99,7 @@
                           <th scope="col">{{$t('Tax')}}</th>
                           <th scope="col">{{$t('SubTotal')}}</th>
                           <th scope="col" class="text-center">
-                            <i class="fa fa-trash"></i>
+                            Action
                           </th>
                         </tr>
                       </thead>
@@ -289,16 +288,6 @@
                   </validation-provider>
                 </b-col>
 
-                <!-- <b-col lg="4" md="4" sm="12" class="mb-3">
-                  <validation-provider name="Status" :rules="{ required: true}">
-                    <b-form-group slot-scope="{ valid, errors }" :label="$t('Attachement') + ' ' + '*'">
-                        <input type="file" @change="handleFileChange" />
-                        <img v-if="imageUrl" :src="imageUrl" alt="Preview" style="max-width: 300px; max-height: 300px;" />
-                    </b-form-group>
-                  </validation-provider>
-                </b-col> -->
-
-
 
                 <b-col md="12">
                   <b-form-group :label="$t('Note')">
@@ -459,16 +448,6 @@
                 </b-form-group>
             </b-col>
 
-            <b-col lg="4" md="4" sm="12" class="mb-3">
-                  <validation-provider name="Status" :rules="{ required: true}">
-                    <b-form-group slot-scope="{ valid, errors }" :label="$t('Attachement') + ' ' + '*'">
-                        <input type="file"  ref="fileInput" @change="handleFileChange" />
-                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="Preview" style="max-width: 300px; max-height: 300px;" /> -->
-                    </b-form-group>
-                  </validation-provider>
-                </b-col>
-
-
             <b-col md="12">
               <b-form-group>
                 <b-button variant="primary" type="submit" :disabled="Submit_Processing_detail">{{$t('submit')}}</b-button>
@@ -547,8 +526,6 @@ export default {
         product_variant_id: "",
         is_imei: "",
         imei_number:"",
-        imageUrl: null,
-        file: null,
       },
       symbol: ""
     };
@@ -558,6 +535,33 @@ export default {
   },
 
   methods: {
+
+    handleFileChange() {
+      // Handle file change event if needed
+      // You can access the file input using this.$refs.fileInput
+    },
+    uploadFile() {
+      const fileInput = this.$refs.fileInput;
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+
+        // Perform file upload logic here
+        // You can use libraries like Axios to send the file to a server
+        // Example using Axios:
+        // const formData = new FormData();
+        // formData.append('file', file);
+        // axios.post('/upload', formData)
+        //   .then(response => {
+        //     console.log('File uploaded successfully', response);
+        //   })
+        //   .catch(error => {
+        //     console.error('Error uploading file', error);
+        //   });
+      } else {
+        console.warn('No file selected');
+      }
+    },
 
      handleFocus() {
       this.focused = true
@@ -775,23 +779,6 @@ export default {
 
     getResultValue(result) {
       return result.code + " " + "(" + result.name + ")";
-    },
-
-    handleFileChange() {
-      this.file = this.$refs.fileInput.files[0];
-      if (this.file) {
-        const formData = new FormData();
-        formData.append('file', this.file);
-      }
-    },
-    previewImage() {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        this.imageUrl = e.target.result;
-      };
-
-      reader.readAsDataURL(this.file);
     },
 
     //------------- Submit Search Product ----------------------\\

@@ -64,15 +64,15 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col>
-               
+
                  <!-- Product -->
                 <b-col md="12" class="mb-5">
                   <h6>{{$t('ProductName')}}</h6>
-                 
+
                   <div id="autocomplete" class="autocomplete">
-                    <input 
+                    <input
                      :placeholder="$t('Scan_Search_Product_by_Code_Name')"
-                       @input='e => search_input = e.target.value' 
+                       @input='e => search_input = e.target.value'
                       @keyup="search(search_input)"
                       @focus="handleFocus"
                       @blur="handleBlur"
@@ -294,6 +294,15 @@
                   </validation-provider>
                 </b-col>
 
+                <b-col lg="4" md="4" sm="12" class="mb-3">
+                  <validation-provider name="Status" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('Attachement') + ' ' + '*' + '(pdf or image only)'">
+                        <b-button variant="outline-primary" @click="Show_Modal_Attachement()" >Please provide attachement</b-button>
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
                 <b-col md="12">
                   <b-form-group :label="$t('Note')">
                     <textarea
@@ -318,6 +327,44 @@
         </b-row>
       </b-form>
     </validation-observer>
+
+     <!-- Modal Attachement -->
+    <validation-observer ref="Update_Detail_quote">
+      <b-modal hide-footer id="Show_Modal_Attachement">
+        <b-col md="15">
+            <!-- upload-multiple-image -->
+            <b-card>
+                <b-row class="form-group">
+                  <b-col md="12 mb-5">
+                    <div
+                      id="my-strictly-unique-vue-upload-multiple-image"
+                      class="d-flex justify-content-center"
+                    >
+                    <vue-upload-multiple-image
+                        @upload-success="uploadFileSuccess"
+                        @before-remove="beforeRemove"
+                        dragText="Drag & Drop Image or PDF"
+                        dropText="Drag & Drop file"
+                        browseText="(or) Select"
+                        accept="image/*,application/pdf"
+                        max="1"
+                        primaryText="success"
+                        markIsPrimaryText="success"
+                        popupText="has been successfully uploaded"
+                        :data-images="files"
+                        idUpload="myIdUpload"
+                        :showEdit="false"
+                      />
+                    </div>
+                  </b-col>
+                </b-row>
+            </b-card>
+          </b-col>
+      </b-modal>
+
+    </validation-observer>
+
+
 
     <!-- Modal Update Detail Product -->
     <validation-observer ref="Update_Detail_quote">
@@ -455,6 +502,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import NProgress from "nprogress";
+import VueUploadMultipleImage from "vue-upload-multiple-image";
+import Compressor from 'compressorjs';
 
 export default {
   metaInfo: {
@@ -475,6 +524,8 @@ export default {
       details: [],
       detail: {},
       quotations: [],
+      images: [],
+      data: new FormData(),
       quote: {
         id: "",
         statut: "",
@@ -517,6 +568,11 @@ export default {
       }
     };
   },
+
+  components: {
+    VueUploadMultipleImage
+  },
+
   computed: {
     ...mapGetters(["currentUser"])
   },
@@ -531,7 +587,7 @@ export default {
       this.focused = false
     },
 
-    
+
     //--- Submit Validate Edit Quotation
     Submit_Quotation() {
       this.$refs.edit_quote.validate().then(success => {
@@ -556,6 +612,31 @@ export default {
         }
       });
     },
+
+    Show_Modal_Attachement() {
+      NProgress.start();
+      NProgress.set(0.1);
+
+      setTimeout(() => {
+        NProgress.done();
+        this.$bvModal.show("Show_Modal_Attachement");
+      }, 1000);
+    },
+
+    uploadFileSuccess(formData, index, fileList, imageArray) {
+      this.images = fileList;
+      console.log(this.images);
+    },
+
+    beforeRemove(index, done, fileList) {
+      var remove = confirm("remove image");
+      if (remove == true) {
+        this.images = fileList;
+        done();
+      } else {
+      }
+    },
+
 
     //---Validate State Fields
     getValidationState({ dirty, validated, valid = null }) {
@@ -964,15 +1045,17 @@ export default {
 
     //--------------------------------- Update Quotation -------------------------\\
     Update_Quotation() {
-      if (this.verifiedForm()) {
+        if (this.verifiedForm()) {
         this.SubmitProcessing = true;
         // Start the progress bar.
         NProgress.start();
         NProgress.set(0.1);
+
         let id = this.$route.params.id;
         axios
           .put(`quotations/${id}`, {
             client_id: this.quote.client_id,
+            attachement: this.images,
             GrandTotal: this.GrandTotal,
             warehouse_id: this.quote.warehouse_id,
             statut: this.quote.statut,
@@ -1004,6 +1087,7 @@ export default {
           });
       }
     },
+
 
     //-------------------------------- Get Last Detail Id -------------------------\\
     Last_Detail_id() {

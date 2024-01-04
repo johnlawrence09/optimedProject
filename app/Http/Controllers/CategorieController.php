@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\utils\helpers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use DB;
 
 class CategorieController extends BaseController
@@ -53,6 +54,7 @@ class CategorieController extends BaseController
 
     public function store(Request $request)
     {
+
         $this->authorizeForUser($request->user('api'), 'create', Category::class);
 
         $existingRecord = DB::table('categories')
@@ -64,29 +66,38 @@ class CategorieController extends BaseController
             request()->validate([
                 'name' => 'required'
             ]);
-    
+
+            $url = '';
+            if($request->file('img')) {
+                $file           = $request->file('img');
+                $file_folder    = 'Images/Category';
+                $file_path      = Storage::disk('s3')->put($file_folder, $file);
+                $url            = Storage::disk('s3')->url($file_path);
+            }
+
             Category::create([
                 'name' => $request['name'],
+                'image' => $url
             ]);
             return response()->json(['exist' => false]);
         } else {
             return response()->json(['exist' => true]);
         }
-        
+
     }
 
      //------------ function show -----------\\
 
     public function show($id){
         //
-    
+
     }
 
     //-------------- Update Category ---------------\\
 
     public function update(Request $request, $id)
-    {   
-        
+    {
+
         $this->authorizeForUser($request->user('api'), 'update', Category::class);
 
         $existingRecord = DB::table('categories')
@@ -99,7 +110,7 @@ class CategorieController extends BaseController
             request()->validate([
                 'name' => 'required',
             ]);
-    
+
             Category::whereId($id)->update([
                 'name' => $request['name'],
             ]);
@@ -108,7 +119,7 @@ class CategorieController extends BaseController
             return response()->json(['exist' => true]);
         }
 
-        
+
 
     }
 

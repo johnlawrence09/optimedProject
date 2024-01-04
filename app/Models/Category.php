@@ -9,7 +9,7 @@ class Category extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'code', 'name',
+        'code', 'name', 'image'
     ];
 
     protected static function boot()

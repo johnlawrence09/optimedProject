@@ -509,6 +509,7 @@ export default {
     //------ Event upload Image Success
     uploadImageSuccess(formData, index, fileList, imageArray) {
       this.images = fileList;
+      console.log(this.images);
     },
 
     //------ Event before Remove Image
@@ -557,9 +558,9 @@ export default {
 
     //------------------------------ Create new Product ------------------------------\\
     Create_Product() {
-      // Start the progress bar.
-    //   NProgress.start();
-    //   NProgress.set(0.1);
+    //   Start the progress bar.
+      NProgress.start();
+      NProgress.set(0.1);
       var self = this;
       self.SubmitProcessing = true;
 

@@ -3,6 +3,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import Auth from './auth/index.js';
+import '@fortawesome/fontawesome-free/css/all.css';
+
 window.auth = new Auth();
 import { ValidationObserver, ValidationProvider, extend, localize } from 'vee-validate';
 import * as rules from "vee-validate/dist/rules";

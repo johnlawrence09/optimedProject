@@ -192,6 +192,7 @@ class QuotationsController extends BaseController
 
     public function update(Request $request, $id)
     {
+        dd($request);
         $this->authorizeForUser($request->user('api'), 'update', Quotation::class);
 
         request()->validate([
