@@ -188,7 +188,6 @@ export default {
   methods: {
 
     onChange(e) {
-        console.log("Selected file", e.target.files[0]);
         this.image = e.target.files[0];
     },
     //---- update Params Table
@@ -332,6 +331,8 @@ export default {
       let formData = new FormData();
       formData.append('img', this.image);
       formData.append('name', this.category.name)
+
+      console.log(formData);
       axios
         .post("categories", formData )
         .then(response => {

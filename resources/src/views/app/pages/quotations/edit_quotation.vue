@@ -295,12 +295,12 @@
                 </b-col>
 
                 <b-col lg="4" md="4" sm="12" class="mb-3">
-                  <validation-provider name="Status" :rules="{ required: true}">
-                    <b-form-group slot-scope="{ valid, errors }" :label="$t('Attachement') + ' ' + '*' + '(pdf or image only)'">
-                        <b-button variant="outline-primary" @click="Show_Modal_Attachement()" >Please provide attachement</b-button>
-                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
-                    </b-form-group>
-                  </validation-provider>
+
+
+                        <b-form-file id="file-small" size="sm" @change="checkFile"></b-form-file>
+
+
+
                 </b-col>
 
                 <b-col md="12">
@@ -327,44 +327,6 @@
         </b-row>
       </b-form>
     </validation-observer>
-
-     <!-- Modal Attachement -->
-    <validation-observer ref="Update_Detail_quote">
-      <b-modal hide-footer id="Show_Modal_Attachement">
-        <b-col md="15">
-            <!-- upload-multiple-image -->
-            <b-card>
-                <b-row class="form-group">
-                  <b-col md="12 mb-5">
-                    <div
-                      id="my-strictly-unique-vue-upload-multiple-image"
-                      class="d-flex justify-content-center"
-                    >
-                    <vue-upload-multiple-image
-                        @upload-success="uploadFileSuccess"
-                        @before-remove="beforeRemove"
-                        dragText="Drag & Drop Image or PDF"
-                        dropText="Drag & Drop file"
-                        browseText="(or) Select"
-                        accept="image/*,application/pdf"
-                        max="1"
-                        primaryText="success"
-                        markIsPrimaryText="success"
-                        popupText="has been successfully uploaded"
-                        :data-images="files"
-                        idUpload="myIdUpload"
-                        :showEdit="false"
-                      />
-                    </div>
-                  </b-col>
-                </b-row>
-            </b-card>
-          </b-col>
-      </b-modal>
-
-    </validation-observer>
-
-
 
     <!-- Modal Update Detail Product -->
     <validation-observer ref="Update_Detail_quote">
@@ -502,7 +464,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import NProgress from "nprogress";
-import VueUploadMultipleImage from "vue-upload-multiple-image";
 import Compressor from 'compressorjs';
 
 export default {
@@ -524,8 +485,7 @@ export default {
       details: [],
       detail: {},
       quotations: [],
-      images: [],
-      data: new FormData(),
+      image: null,
       quote: {
         id: "",
         statut: "",
@@ -569,10 +529,6 @@ export default {
     };
   },
 
-  components: {
-    VueUploadMultipleImage
-  },
-
   computed: {
     ...mapGetters(["currentUser"])
   },
@@ -586,6 +542,25 @@ export default {
     handleBlur() {
       this.focused = false
     },
+
+    checkFile(event) {
+            const allowedFormats = ['jpg', 'jpeg', 'pdf'];
+            const fileInput = event.target;
+            this.image = fileInput.files[0];
+            if (this.image.length > 0) {
+                const fileName = this.image[0].name;
+                const fileExtension = fileName.split('.').pop().toLowerCase();
+
+                if (!allowedFormats.includes(fileExtension)) {
+                    fileInput.value = ''; // Clear the file input
+                    this.makeToast(
+                        "danger",
+                        this.$t("Invalid file format. Please upload a PDF or image."),
+                        this.$t("Failed")
+                    );
+                }
+            }
+        },
 
 
     //--- Submit Validate Edit Quotation
@@ -611,30 +586,6 @@ export default {
           this.Update_Detail();
         }
       });
-    },
-
-    Show_Modal_Attachement() {
-      NProgress.start();
-      NProgress.set(0.1);
-
-      setTimeout(() => {
-        NProgress.done();
-        this.$bvModal.show("Show_Modal_Attachement");
-      }, 1000);
-    },
-
-    uploadFileSuccess(formData, index, fileList, imageArray) {
-      this.images = fileList;
-      console.log(this.images);
-    },
-
-    beforeRemove(index, done, fileList) {
-      var remove = confirm("remove image");
-      if (remove == true) {
-        this.images = fileList;
-        done();
-      } else {
-      }
     },
 
 
@@ -1051,21 +1002,30 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
 
+        console.log(this.image);
+        let formData = new FormData();
+
+        formData.append('img', this.image);
+        formData.append('client_id', this.quote.client_id);
+        formData.append('GrandTotal', this.GrandTotal);
+        formData.append('warehouse_id', this.quote.warehouse_id);
+        formData.append('statut', this.quote.statut);
+        formData.append('notes', this.quote.notes);
+        formData.append('date', this.quote.date);
+        formData.append('tax_rate', this.quote.tax_rate?this.quote.tax_rate:0);
+        formData.append('TaxNet', this.quote.TaxNet?this.quote.TaxNet:0);
+        formData.append('discount', this.quote.discount?this.quote.discount:0);
+        formData.append('shipping', this.quote.shipping?this.quote.shipping:0);
+        formData.append('details', JSON.stringify(this.details));
+
+
         let id = this.$route.params.id;
         axios
-          .put(`quotations/${id}`, {
-            client_id: this.quote.client_id,
-            attachement: this.images,
-            GrandTotal: this.GrandTotal,
-            warehouse_id: this.quote.warehouse_id,
-            statut: this.quote.statut,
-            notes: this.quote.notes,
-            date: this.quote.date,
-            tax_rate: this.quote.tax_rate?this.quote.tax_rate:0,
-            TaxNet: this.quote.TaxNet?this.quote.TaxNet:0,
-            discount: this.quote.discount?this.quote.discount:0,
-            shipping: this.quote.shipping?this.quote.shipping:0,
-            details: this.details
+          .post(`quotations/${id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
           })
           .then(response => {
             // Complete the animation of theprogress bar.

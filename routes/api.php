@@ -365,6 +365,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------- Quotations --------------------------\\
     //------------------------------------------------------------------\\
     Route::resource('quotations', 'QuotationsController');
+    Route::post('quotations/{id}', 'QuotationsController@Update');
     Route::post('quotations/sendQuote/email', 'QuotationsController@SendEmail');
     Route::post('quotations/send/sms', 'QuotationsController@Send_SMS');
     Route::get('quotations/export/Excel', 'QuotationsController@exportExcel');

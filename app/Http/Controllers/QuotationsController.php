@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 use DB;
 use PDF;
 
@@ -190,9 +191,11 @@ class QuotationsController extends BaseController
 
     //------------ Update Quotation -------------\\
 
-    public function update(Request $request, $id)
+    public function Update(Request $request, $id)
     {
-        dd($request);
+
+        $details = json_decode($request['details']);
+
         $this->authorizeForUser($request->user('api'), 'update', Quotation::class);
 
         request()->validate([
@@ -200,7 +203,7 @@ class QuotationsController extends BaseController
             'client_id' => 'required',
         ]);
 
-        \DB::transaction(function () use ($request, $id) {
+        \DB::transaction(function () use ($request, $id, $details) {
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
             $current_Quotation = Quotation::findOrFail($id);
@@ -212,15 +215,14 @@ class QuotationsController extends BaseController
             }
 
             $old_quotation_details = QuotationDetail::where('quotation_id', $id)->get();
-            $new_quotation_details = $request['details'];
+            $new_quotation_details = $details;
             $length = sizeof($new_quotation_details);
 
             // Get Ids details
             $new_details_id = [];
             foreach ($new_quotation_details as $new_detail) {
-                $new_details_id[] = $new_detail['id'];
+                $new_details_id[] = $new_detail->id;
             }
-
             // Init quotation with old Parametre
             $old_detail_id = [];
             foreach ($old_quotation_details as $key => $value) {
@@ -238,23 +240,32 @@ class QuotationsController extends BaseController
             foreach ($new_quotation_details as $key => $product_detail) {
 
                 $QuoteDetail['quotation_id'] = $id;
-                $QuoteDetail['quantity'] = $product_detail['quantity'];
-                $QuoteDetail['sale_unit_id'] = $product_detail['sale_unit_id'];
-                $QuoteDetail['product_id'] = $product_detail['product_id'];
-                $QuoteDetail['product_variant_id'] = $product_detail['product_variant_id'];
-                $QuoteDetail['price'] = $product_detail['Unit_price'];
-                $QuoteDetail['TaxNet'] = $product_detail['tax_percent'];
-                $QuoteDetail['tax_method'] = $product_detail['tax_method'];
-                $QuoteDetail['discount'] = $product_detail['discount'];
-                $QuoteDetail['discount_method'] = $product_detail['discount_Method'];
-                $QuoteDetail['total'] = $product_detail['subtotal'];
-                $QuoteDetail['imei_number'] = $product_detail['imei_number'];
+                $QuoteDetail['quantity'] = $product_detail->quantity;
+                $QuoteDetail['sale_unit_id'] = $product_detail->sale_unit_id;
+                $QuoteDetail['product_id'] = $product_detail->product_id;
+                $QuoteDetail['product_variant_id'] = $product_detail->product_variant_id;
+                $QuoteDetail['price'] = $product_detail->Unit_price;
+                $QuoteDetail['TaxNet'] = $product_detail->tax_percent;
+                $QuoteDetail['tax_method'] = $product_detail->tax_method;
+                $QuoteDetail['discount'] = $product_detail->discount;
+                $QuoteDetail['discount_method'] = $product_detail->discount_Method;
+                $QuoteDetail['total'] = $product_detail->subtotal;
+                $QuoteDetail['imei_number'] = $product_detail->imei_number;
 
-                if (!in_array($product_detail['id'], $old_detail_id)) {
+                if (!in_array($product_detail->id, $old_detail_id)) {
                     QuotationDetail::Create($QuoteDetail);
                 } else {
-                    QuotationDetail::where('id', $product_detail['id'])->update($QuoteDetail);
+                    QuotationDetail::where('id', $product_detail->id)->update($QuoteDetail);
                 }
+            }
+            $client_id = $request['client_id'];
+            $url = '';
+            if($request->file('img')) {
+                $encryptedFilename = encrypt($request->file('img')->getClientOriginalName());
+                $file           = $request->file('img');
+                $file_folder    = 'quotations/'. $client_id . '/' .$encryptedFilename;
+                $file_path      = Storage::disk('s3')->put($file_folder, $file);
+                $url            = Storage::disk('s3')->url($file_path);
             }
 
             $current_Quotation->update([
@@ -268,6 +279,7 @@ class QuotationsController extends BaseController
                 'discount' => $request['discount'],
                 'shipping' => $request['shipping'],
                 'GrandTotal' => $request['GrandTotal'],
+                'url' => $url,
             ]);
 
         }, 10);

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddImageToCategories extends Migration
+class AddUrlToQuotations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddImageToCategories extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->text('image')->nullable();
+        Schema::table('quotations', function (Blueprint $table) {
+            $table->text('url')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AddImageToCategories extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
+        Schema::table('quotations', function (Blueprint $table) {
             //
         });
     }
