@@ -1313,7 +1313,7 @@ export default {
         // Submit Search Products
 
         SearchProduct(result) {
-            
+
             this.product = {};
             if (result.quantity_balance === 0) {
                 this.makeToast(
@@ -1321,7 +1321,7 @@ export default {
                     "This Product has already been received",
                     this.$t("Warning")
                 );
-            } 
+            }
             else if (
                 this.details.length > 0 &&
                 this.details.some((detail) => detail.code === result.code)
@@ -1347,7 +1347,7 @@ export default {
                     this.product.purchase_detail_id = result.purchase_detail_id;
                     this.Get_Product_Details(result.id);
                 }
-            } 
+            }
             else {
                 this.product.code = result.code;
                 this.product.quantity = 1;
@@ -1443,7 +1443,7 @@ export default {
                                 this.$t("Warning")
                             );
                             this.details[i].quantity = 1;
-                        } 
+                        }
                     }
                     this.Calcul_Total();
                     this.$forceUpdate();
@@ -1655,7 +1655,7 @@ export default {
                         );
 
                         this.SubmitProcessing = false;
-                        this.$router.push({ name: "index_purchase_receives" });
+                        this.$router.push({ name: "index_purchases" });
                     })
                     .catch((error) => {
                         // Complete the animation of theprogress bar.

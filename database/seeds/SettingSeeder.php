@@ -26,7 +26,7 @@ class SettingSeeder extends Seeder
                 'developed_by' => 'Stocky',
                 'logo' => 'logo-default.png',
             )
-            
+
         );
     }
 }

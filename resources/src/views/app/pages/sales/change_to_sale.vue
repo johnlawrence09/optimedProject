@@ -202,12 +202,6 @@
                                                         scope="col"
                                                         class="text-center"
                                                     >
-                                                        <i
-                                                            class="fa fa-trash"
-                                                        ></i>
-                                                        <i
-                                                            class="fa fa-trash"
-                                                        ></i>
                                                     </th>
                                                 </tr>
                                             </thead>

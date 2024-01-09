@@ -12,16 +12,16 @@ class ServerSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('SET IDENTITY_INSERT servers ON');
+        // DB::statement('SET IDENTITY_INSERT servers ON');
        // Insert some stuff
         DB::table('servers')->insert([
-            'host' => 'mailtrap.io',
-            'port' => '2525',
-            'username' => 'test',
-            'password' => 'test',
+            'host' => 'smtp.office365.com',
+            'port' => '587',
+            'username' => 'admin@optimedevices.com',
+            'password' => '@H520GamingCenter27',
             'encryption' => 'tls',
         ]);
 
-        DB::statement('SET IDENTITY_INSERT servers OFF');
+        // DB::statement('SET IDENTITY_INSERT servers OFF');
     }
 }

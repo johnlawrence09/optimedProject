@@ -509,7 +509,6 @@ export default {
         .then(response => {
 
           this.product = response.data.product;
-          console.log(this.product);
           this.variants = response.data.product.ProductVariant;
           this.images = response.data.product.images;
           this.categories = response.data.categories;
@@ -531,7 +530,10 @@ export default {
     Get_Units_SubBase(value) {
       axios
         .get("Get_Units_SubBase?id=" + value)
-        .then(({ data }) => (this.units_sub = data));
+        .then((response) => {
+            this.units_sub = response.data.items;
+
+    })
     },
 
     //---------------------- Event Select Unit Product ------------------------------\\

@@ -251,18 +251,12 @@
                                             <span v-show="detail.warranty_year > 0">
                                                 <td v-if="detail.warranty_year == 1">
                                                     {{
-                                                        formatNumber(
-                                                            detail.warranty_year,
-                                                            0
-                                                        )
+                                                            detail.warranty_year
                                                     }} year
                                                 </td>
                                                 <td v-else>
                                                     {{
-                                                        formatNumber(
-                                                            detail.warranty_year,
-                                                            0
-                                                        )
+                                                            detail.warranty_year
                                                     }} years
                                                 </td>
                                             </span>
@@ -619,6 +613,7 @@ export default {
                     this.sale = response.data.sale;
                     this.customer = response.data.customer;
                     this.details = response.data.details;
+                    console.log(this.details);
                     this.company = response.data.company;
                     this.isLoading = false;
                 })

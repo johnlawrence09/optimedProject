@@ -1,6 +1,5 @@
 <template>
     <div class="main-content">
-        {{ sales[0].statut }}
         <breadcumb :page="$t('ListSales')" :folder="$t('Sales')" />
         <div
             v-if="isLoading"
@@ -364,11 +363,17 @@
                         >
                     </div>
                     <div v-else-if="props.column.field == 'Ref'">
-                        <router-link :to="'/app/sales/detail/' + props.row.id">
+                        <div v-show="props.row.statut == 'For delivery' ">
+                            <router-link :to="'/app/sales/detail/' + props.row.id">
                             <span class="ul-btn__text ml-1">{{
                                 props.row.Ref
                             }}</span>
                         </router-link>
+                        </div>
+                        <div>
+                            <span>{{props.row.Ref}}</span>
+                        </div>
+
                     </div>
                 </template>
             </vue-good-table>
@@ -2000,7 +2005,7 @@ export default {
         },
 
         Edit_Status(status, id) {
-
+            console.log('test');
             this.paymentProcessing = true;
             NProgress.start();
             NProgress.set(0.1);

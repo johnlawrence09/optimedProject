@@ -195,16 +195,18 @@ class UnitsController extends BaseController
         $units = Unit::where(function ($query) use ($request) {
             return $query->when($request->filled('id'), function ($query) use ($request) {
                 return $query->where('id', $request->id)
+                              ->Where('deleted_at', null)
                               ->orWhere('base_unit', $request->id);
+
             });
         })->get();
-
     //    foreach($units as $unit) {
-    //         if($unit->base_unit != null) {
-    //             if($unit->operator === '*')
-    //             $item['base_units'] = $unit->base_unit . '  ' . $unit->operator . ' of ' . $unit->operator_value;
-    //         } else {
-    //             $item['base_units'] = $unit->base_unit . '  ' . $unit->operator . ' by ' . $unit->operator_value;
+
+    //         if($unit->operator === '*') {
+    //                 $item['base_units'] = $unit->name . ' ' . $unit->operator . ' ' . $unit->operator_value;
+    //         }
+    //         if($unit->operator === '/') {
+    //                 $item['base_units'] = $unit->name . ' ' . $unit->operator . ' ' . $unit->operator_value;
     //         }
 
     //         $item['id'] = $unit->id;
@@ -214,10 +216,11 @@ class UnitsController extends BaseController
     //         $item['operator'] = $unit->operator;
     //         $item['operator_value'] = $unit->operator_value;
 
-    //    }
+    //         $items[] = $item;
+    //         }
 
-        // $items[] = $item;
-        return response()->json($units);
+       $items = $units;
+        return response()->json(['items' =>$items]);
     }
 
 

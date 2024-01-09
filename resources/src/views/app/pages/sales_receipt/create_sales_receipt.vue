@@ -1638,7 +1638,7 @@ export default {
                         );
 
                         this.SubmitProcessing = false;
-                        this.$router.push({ name: "index_sales_receipt" });
+                        this.$router.push({ name: "index_sales" });
                     })
                     .catch((error) => {
                         // Complete the animation of theprogress bar.

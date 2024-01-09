@@ -1875,6 +1875,7 @@ export default {
                 this.product.unitSale = response.data.unitSale;
                 this.product.fix_price = response.data.fix_price;
                 this.product.sale_unit_id = response.data.sale_unit_id;
+                console.log(this.product.sale_unit_id);
                 this.product.is_imei = response.data.is_imei;
                 this.product.imei_number = "";
                 this.product.is_warranty = response.data.is_warranty;

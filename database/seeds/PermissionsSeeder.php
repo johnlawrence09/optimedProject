@@ -348,7 +348,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'Quotations_view',
 			'label' => null,
 			'description' => null,
@@ -627,7 +627,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'setting_system',
 			'label' => null,
 			'description' => null,
@@ -780,7 +780,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'product_import',
 			'label' => null,
 			'description' => null,
@@ -789,7 +789,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'customers_import',
 			'label' => null,
 			'description' => null,
@@ -798,7 +798,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'Suppliers_import',
 			'label' => null,
 			'description' => null,
@@ -809,7 +809,7 @@ class PermissionsSeeder extends Seeder
 
 		//hrm
 		[
-		
+
 			'name'  => 'view_employee',
 			'label' => null,
 			'description' => null,
@@ -818,7 +818,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'add_employee',
 			'label' => null,
 			'description' => null,
@@ -827,7 +827,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'edit_employee',
 			'label' => null,
 			'description' => null,
@@ -836,7 +836,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'delete_employee',
 			'label' => null,
 			'description' => null,
@@ -845,7 +845,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'company',
 			'label' => null,
 			'description' => null,
@@ -854,7 +854,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'department',
 			'label' => null,
 			'description' => null,
@@ -863,7 +863,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'designation',
 			'label' => null,
 			'description' => null,
@@ -872,7 +872,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'office_shift',
 			'label' => null,
 			'description' => null,
@@ -881,7 +881,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'attendance',
 			'label' => null,
 			'description' => null,
@@ -890,7 +890,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-		
+
 			'name'  => 'leave',
 			'label' => null,
 			'description' => null,
@@ -899,7 +899,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'holiday',
 			'label' => null,
 			'description' => null,
@@ -908,7 +908,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'Top_products',
 			'label' => null,
 			'description' => null,
@@ -917,7 +917,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'Top_customers',
 			'label' => null,
 			'description' => null,
@@ -926,7 +926,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'shipment',
 			'label' => null,
 			'description' => null,
@@ -935,7 +935,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'users_report',
 			'label' => null,
 			'description' => null,
@@ -944,7 +944,7 @@ class PermissionsSeeder extends Seeder
 			'deleted_at' => null
 		],
 		[
-			
+
 			'name'  => 'stock_report',
 			'label' => null,
 			'description' => null,
@@ -969,12 +969,40 @@ class PermissionsSeeder extends Seeder
 			'created_at' => null,
 			'updated_at' => null,
 			'deleted_at' => null
-		]
-		
+        ],
+        [
+
+			'name'  => 'warehouse_location',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
+		],
+        [
+
+			'name'  => 'Sales_Receipt_view',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
+		],
+        [
+
+			'name'  => 'Sales_Receipt_add',
+			'label' => null,
+			'description' => null,
+			'created_at' => null,
+			'updated_at' => null,
+			'deleted_at' => null
+		],
+
+
 		)
 	);
 	}
-	
 
-	
+
+
 }

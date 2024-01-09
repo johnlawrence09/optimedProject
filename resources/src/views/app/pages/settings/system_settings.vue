@@ -115,7 +115,7 @@
                       :rules="{ required: true}"
                       v-slot="validationContext"
                     >
-                      <b-form-group :label="$t('Powered by') + ' ' + '*'">
+                      <b-form-group :label="$t('Develop by') + ' ' + '*'">
                          <b-form-input
                           :state="getValidationState(validationContext)"
                           aria-describedby="developed_by-feedback"
@@ -629,6 +629,138 @@
         </b-row>
       </b-form>
     </validation-observer>
+
+        <!-- Server SMTP -->
+        <validation-observer ref="form_smtp" v-if="!isLoading">
+      <b-form @submit.prevent="Submit_SMTP">
+        <b-row class="mt-5">
+          <b-col lg="12" md="12" sm="12">
+            <b-card no-body :header="$t('SMTPConfiguration')">
+              <b-card-body>
+                <b-row>
+                  <!-- HOST  -->
+                  <b-col lg="4" md="4" sm="12">
+                    <validation-provider
+                      name="HOST"
+                      :rules="{ required: true}"
+                      v-slot="validationContext"
+                    >
+                      <b-form-group :label="$t('HOST') + ' ' + '*'">
+                        <b-form-input
+                          :state="getValidationState(validationContext)"
+                          aria-describedby="HOST-feedback"
+                          label="HOST"
+                          :placeholder="$t('HOST')"
+                          v-model="server.host"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="HOST-feedback"
+                        >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                      </b-form-group>
+                    </validation-provider>
+                  </b-col>
+
+                  <!-- PORT  -->
+                  <b-col lg="4" md="4" sm="12">
+                    <validation-provider
+                      name="PORT"
+                      :rules="{ required: true}"
+                      v-slot="validationContext"
+                    >
+                      <b-form-group :label="$t('PORT') + ' ' + '*'">
+                        <b-form-input
+                          :state="getValidationState(validationContext)"
+                          aria-describedby="PORT-feedback"
+                          label="PORT"
+                          :placeholder="$t('PORT')"
+                          v-model="server.port"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="PORT-feedback"
+                        >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                      </b-form-group>
+                    </validation-provider>
+                  </b-col>
+
+                  <!-- Username  -->
+                  <b-col lg="4" md="4" sm="12">
+                    <validation-provider
+                      name="Username"
+                      :rules="{ required: true}"
+                      v-slot="validationContext"
+                    >
+                      <b-form-group :label="$t('username') + ' ' + '*'">
+                        <b-form-input
+                          :state="getValidationState(validationContext)"
+                          aria-describedby="Username-feedback"
+                          label="Username"
+                          :placeholder="$t('username')"
+                          v-model="server.username"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="Username-feedback"
+                        >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                      </b-form-group>
+                    </validation-provider>
+                  </b-col>
+
+                  <!-- Password  -->
+                  <b-col lg="4" md="4" sm="12">
+                    <validation-provider
+                      name="Password"
+                      :rules="{ required: true}"
+                      v-slot="validationContext"
+                    >
+                      <b-form-group :label="$t('password') + ' ' + '*'">
+                        <b-form-input
+                          :state="getValidationState(validationContext)"
+                          aria-describedby="Password-feedback"
+                          label="Password"
+                          :placeholder="$t('password')"
+                          v-model="server.password"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="Password-feedback"
+                        >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                      </b-form-group>
+                    </validation-provider>
+                  </b-col>
+
+                  <!-- encryption  -->
+                  <b-col lg="4" md="4" sm="12">
+                    <validation-provider
+                      name="encryption"
+                      :rules="{ required: true}"
+                      v-slot="validationContext"
+                    >
+                      <b-form-group :label="$t('encryption') + ' ' + '*'">
+                        <b-form-input
+                          :state="getValidationState(validationContext)"
+                          aria-describedby="encryption-feedback"
+                          label="encryption"
+                          :placeholder="$t('encryption')"
+                          v-model="server.encryption"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="encryption-feedback"
+                        >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                      </b-form-group>
+                    </validation-provider>
+                  </b-col>
+
+                  <b-col md="12">
+                    <b-form-group>
+                      <b-button variant="primary" type="submit">{{$t('submit')}}</b-button>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-card-body>
+            </b-card>
+          </b-col>
+        </b-row>
+      </b-form>
+    </validation-observer>
+
 
     <!-- Clear Cache -->
       <b-form @submit.prevent="Clear_Cache" v-if="!isLoading">

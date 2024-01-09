@@ -70,8 +70,10 @@ class CategorieController extends BaseController
             $url = '';
             if($request->file('img')) {
                 $file           = $request->file('img');
-                $file_folder    = 'Images/Category';
+                $file_folder    = 'images/Category';
                 $file_path      = Storage::disk('s3')->put($file_folder, $file);
+
+                Storage::disk('s3')->setVisibility($file_path, 'public');
                 $url            = Storage::disk('s3')->url($file_path);
             }
 

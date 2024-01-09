@@ -530,7 +530,6 @@ export default {
           this.categories = response.data.categories;
           this.brands = response.data.brands;
           this.units = response.data.units;
-          console.log(this.units);
           this.isLoading = false;
         })
         .catch(response => {
@@ -545,9 +544,11 @@ export default {
     Get_Units_SubBase(value) {
       axios
         .get("Get_Units_SubBase?id=" + value)
-        .then(({ data }) => (this.units_sub = data));
+        .then((response) => {
+            this.units_sub = response.data.items;
+            console.log(this.units_sub);
+    })
     },
-
     //---------------------- Event Select Unit Product ------------------------------\\
     Selected_Unit(value) {
       this.units_sub = [];

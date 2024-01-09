@@ -262,10 +262,14 @@ class QuotationsController extends BaseController
             $url = '';
             if($request->file('img')) {
                 $encryptedFilename = encrypt($request->file('img')->getClientOriginalName());
+                $hashedFilename = md5($encryptedFilename);
                 $file           = $request->file('img');
-                $file_folder    = 'quotations/'. $client_id . '/' .$encryptedFilename;
+                $file_folder    = '/quotations/'. $client_id . '/' .$hashedFilename;
                 $file_path      = Storage::disk('s3')->put($file_folder, $file);
+
+                Storage::disk('s3')->setVisibility($file_path, 'public');
                 $url            = Storage::disk('s3')->url($file_path);
+
             }
 
             $current_Quotation->update([

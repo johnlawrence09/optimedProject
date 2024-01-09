@@ -28,10 +28,10 @@
             <i class="i-Envelope-2"></i>
             {{$t('Email')}}
           </button>
-          <button @click="Quote_SMS()" class="btn btn-secondary btn-icon ripple btn-sm">
+          <!-- <button @click="Quote_SMS()" class="btn btn-secondary btn-icon ripple btn-sm">
             <i class="i-Speach-Bubble"></i>
             SMS
-          </button>
+          </button> -->
           <button @click="Quote_PDF()" class="btn-sm btn btn-light ripple btn-icon m-1">
             <i class="i-File-TXT"></i> PDF
           </button>

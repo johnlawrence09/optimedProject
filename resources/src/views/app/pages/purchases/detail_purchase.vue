@@ -33,14 +33,14 @@
                         <i class="i-Envelope-2"></i>
                         {{ $t("Email") }}
                     </button>
-                    <button
+                    <!-- <button
                         @click="Purchase_SMS()"
                         class="btn btn-secondary btn-icon ripple btn-sm"
                         v-if="purchase.statut !== 'pending'"
                     >
                         <i class="i-Speach-Bubble"></i>
                         SMS
-                    </button>
+                    </button> -->
                     <button
                         @click="Print_Purchase_PDF()"
                         class="btn btn-primary btn-icon ripple btn-sm"
@@ -243,21 +243,15 @@
                                                     {{ detail.imei_number }}
                                                 </p>
                                             </td>
-                                            <span v-show="detail.warranty_year > 0">
+                                            <span v-show="detail.warranty_year > 0 ">
                                                 <td v-if="detail.warranty_year == 1">
                                                     {{
-                                                        formatNumber(
-                                                            detail.warranty_year,
-                                                            0
-                                                        )
+                                                            detail.warranty_year
                                                     }} year
                                                 </td>
                                                 <td v-else>
                                                     {{
-                                                        formatNumber(
-                                                            detail.warranty_year,
-                                                            0
-                                                        )
+                                                            detail.warranty_year
                                                     }} years
                                                 </td>
                                             </span>

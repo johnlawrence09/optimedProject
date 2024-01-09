@@ -295,12 +295,8 @@
                 </b-col>
 
                 <b-col lg="4" md="4" sm="12" class="mb-3">
-
-
-                        <b-form-file id="file-small" size="sm" @change="checkFile"></b-form-file>
-
-
-
+                    <label for="file-small">Attachement (PDF or JPEG only)</label>
+                    <b-form-file id="file-small" size="sm" @change="checkFile"></b-form-file>
                 </b-col>
 
                 <b-col md="12">
@@ -547,18 +543,17 @@ export default {
             const allowedFormats = ['jpg', 'jpeg', 'pdf'];
             const fileInput = event.target;
             this.image = fileInput.files[0];
-            if (this.image.length > 0) {
-                const fileName = this.image[0].name;
-                const fileExtension = fileName.split('.').pop().toLowerCase();
 
-                if (!allowedFormats.includes(fileExtension)) {
+            const fileName = this.image.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            if (!allowedFormats.includes(fileExtension)) {
                     fileInput.value = ''; // Clear the file input
                     this.makeToast(
                         "danger",
                         this.$t("Invalid file format. Please upload a PDF or image."),
                         this.$t("Failed")
-                    );
-                }
+            );
+
             }
         },
 
@@ -1002,7 +997,6 @@ export default {
         NProgress.start();
         NProgress.set(0.1);
 
-        console.log(this.image);
         let formData = new FormData();
 
         formData.append('img', this.image);
