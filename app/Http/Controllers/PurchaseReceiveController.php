@@ -698,6 +698,7 @@ class PurchaseReceiveController extends Controller
 
     public function Purchase_Receive_pdf(Request $request, $id)
     {
+
         $details = array();
         $helpers = new helpers();
         $Purchase_data = PurchaseReceive::with('details.product.unitPurchase')
@@ -768,22 +769,24 @@ class PurchaseReceiveController extends Controller
                 $data['taxe'] = number_format($detail->cost - $data['Net_cost'] - $data['DiscountNet'], 2, '.', '');
             }
 
+            $data['expiration_date'] = $detail->expiration_date == null ? "" : $detail->expiration_date;
             $data['is_imei'] = $detail['product']['is_imei'];
             $data['imei_number'] = $detail->imei_number;
 
             $details[] = $data;
         }
 
+
         $settings = Setting::where('deleted_at', '=', null)->first();
         $symbol = $helpers->Get_Currency_Code();
 
-        $pdf = \PDF::loadView('pdf.purchase_pdf', [
+        $pdf = \PDF::loadView('pdf.purchaseReceive_pdf', [
             'symbol' => $symbol,
             'setting' => $settings,
             'purchase' => $purchase,
             'details' => $details,
         ]);
-        return $pdf->download('Purchase.pdf');
+        return $pdf->download('Purchase_received.pdf');
 
     }
 

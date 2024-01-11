@@ -17,7 +17,7 @@ export default {
     };
   },
   computed: {
-    
+
     ...mapGetters(["getThemeMode","isAuthenticated"]),
     themeName() {
       return this.getThemeMode.dark ? "dark-theme" : " ";
@@ -30,7 +30,7 @@ export default {
   metaInfo() {
     return {
       // if no subcomponents specify a metaInfo.title, this title will be used
-      title: "Stocky",
+      title: "Optimed",
       // all titles will be injected into this template
       titleTemplate: "%s | Ultimate Inventory With POS",
       bodyAttrs: {
@@ -39,14 +39,14 @@ export default {
       htmlAttrs: {
         dir: this.rtl
       },
-      
+
     };
   },
 methods:{
     ...mapActions([
       "refreshUserPermissions",
     ]),
-    
+
 },
 
  beforeMount() {

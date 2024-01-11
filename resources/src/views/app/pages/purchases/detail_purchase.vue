@@ -528,8 +528,8 @@ export default {
                 .get(`purchases/${id}`)
                 .then((response) => {
                     this.purchase = response.data.purchase;
+                    console.log(this.purchase);
                     this.details = response.data.details;
-                    console.log(this.details);
                     this.company = response.data.company;
                     this.isLoading = false;
                 })

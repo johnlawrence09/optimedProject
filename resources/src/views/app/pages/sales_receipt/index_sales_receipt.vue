@@ -73,12 +73,7 @@
                     <span class="_dot _r_block-dot bg-dark"></span>
                   </template>
                   <b-navbar-nav>
-                    <b-dropdown-item title="Show" v-if="customer == null" @click="saleDetail()">
-                      <i class="nav-icon i-Eye font-weight-bold mr-2"></i>
-                      Sale Receive Details
-                    </b-dropdown-item>
-
-                    <b-dropdown-item title="Show"  v-else :to="'/app/sales_receipt/detail/'+props.row.id">
+                    <b-dropdown-item title="Show" :to="'/app/sales_receipt/detail/'+props.row.id">
                       <i class="nav-icon i-Eye font-weight-bold mr-2"></i>
                       Sale Receive Details
                     </b-dropdown-item>
@@ -154,16 +149,11 @@
               <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
             </div> -->
             <div v-else-if="props.column.field == 'Ref'">
-                <div v-if="customer == null">
-                    <span class="ul-btn__text ml-1">{{props.row.Ref}}</span>
-                </div>
-                <div v-else>
                 <router-link
                 :to="'/app/sales_receipt/detail/'+props.row.id"
                 >
                 <span class="ul-btn__text ml-1">{{props.row.Ref}}</span>
                 </router-link>
-                </div>
             </div>
             <div v-else-if="props.column.field == 'purchase_ref'">
                 <router-link
@@ -171,8 +161,6 @@
                 >
                     <span class="ul-btn__text ml-1">{{props.row.sales_ref}}</span>
                 </router-link>
-
-
             </div>
           </template>
         </vue-good-table>

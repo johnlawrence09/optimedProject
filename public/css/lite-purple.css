@@ -37986,7 +37986,7 @@ table {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-size: cover;
+  /* background-size: cover; */
   /* background: url(/images/photo-wide-4.jpg?2e142cde64f1b8e128390567fc4bded6); */
 }
 

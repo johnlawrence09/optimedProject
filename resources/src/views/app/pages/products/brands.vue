@@ -15,9 +15,9 @@
         @on-search="onSearch"
         :search-options="{
         enabled: true,
-        placeholder: $t('Search_this_table'),  
+        placeholder: $t('Search_this_table'),
       }"
-        :select-options="{ 
+        :select-options="{
           enabled: true ,
           clearSelectionText: '',
         }"
@@ -55,7 +55,7 @@
               height="50"
               width="50"
               fluid
-              :src="'/images/brands/' + props.row.image"
+              :src="props.row.image"
               alt="image"
             ></b-img>
           </span>
@@ -338,6 +338,7 @@ export default {
         )
         .then(response => {
           this.brands = response.data.brands;
+            console.log(this.brands);
           this.totalRows = response.data.totalRows;
 
           // Complete the animation of theprogress bar.
@@ -366,7 +367,7 @@ export default {
           if(response.data.exist == true) {
               NProgress.done();
               self.SubmitProcessing = false;
-                
+
               this.makeToast(
               "danger",
               this.$t("Data has already exist"),
@@ -405,7 +406,7 @@ export default {
           if(response.data.exist == true) {
             NProgress.done();
               self.SubmitProcessing = false;
-                
+
               this.makeToast(
               "danger",
               this.$t("Data has already exist"),
@@ -421,7 +422,7 @@ export default {
             this.$t("Success")
             );
           }
-           
+
         })
         .catch(error => {
            self.SubmitProcessing = false;

@@ -70,10 +70,20 @@
                             <h5 class="font-weight-bold">
                                 {{ $t("Customer_Info") }}
                             </h5>
-                            <div>{{ customer.customer_name }}</div>
-                            <div>{{ customer.email }}</div>
-                            <div>{{ customer.phone_number }}</div>
-                            <div>{{ customer.shipping_address }}</div>
+                            <div v-if="customer === null">
+                                <div>{{ purchase.client_name }}</div>
+                                <div>{{ purchase.client_email }}</div>
+                                <div>{{ purchase.client_phone }}</div>
+                                <div>{{ purchase.client_adr }}</div>
+                            </div>
+                            <div v-else>
+                                <div>{{ customer.customer_name }}</div>
+                                <div>{{ customer.email }}</div>
+                                <div>{{ customer.phone_number }}</div>
+                                <div>{{ customer.shipping_address }}</div>
+                            </div>
+
+
                         </b-col>
                         <b-col lg="4" md="4" sm="12" class="mb-4">
                             <h5 class="font-weight-bold">
@@ -477,6 +487,7 @@ export default {
                     this.details = response.data.details;
                     this.company = response.data.company;
                     this.customer = response.data.customer;
+                    console.log(this.customer);
                     this.isLoading = false;
                 })
                 .catch((response) => {

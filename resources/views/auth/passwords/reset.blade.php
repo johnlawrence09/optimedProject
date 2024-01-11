@@ -8,13 +8,13 @@
     <link rel=icon href=/images/favicon.ico>
     <link rel="stylesheet" href="/css/master.css">
 
-    <title>Stocky | Ultimate Inventory With POS</title>
+    <title>Optimed Inventory System</title>
   </head>
 
   <body class="text-left">
     <noscript>
       <strong>
-        We're sorry but Stocky doesn't work properly without JavaScript
+        We're sorry but Inventory doesn't work properly without JavaScript
         enabled. Please enable it to continue.</strong
       >
     </noscript>
@@ -36,4 +36,3 @@
   </body>
 </html>
 
-    

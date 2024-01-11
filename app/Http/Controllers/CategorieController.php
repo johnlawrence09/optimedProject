@@ -75,6 +75,8 @@ class CategorieController extends BaseController
 
                 Storage::disk('s3')->setVisibility($file_path, 'public');
                 $url            = Storage::disk('s3')->url($file_path);
+            } else {
+                $url = 'no-image.png';
             }
 
             Category::create([

@@ -232,13 +232,13 @@ export default {
       NProgress.set(0.1);
       let id = this.$route.params.id;
       axios
-        .get(`Purchase_PDF/${id}`, {
+        .get(`Purchase_Receive_PDF/${id}`, {
           responseType: "blob", // important
           headers: {
             "Content-Type": "application/json"
           }
         })
-     
+
         .then(response => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
@@ -333,7 +333,7 @@ export default {
     },
 
      //---------SMS notification
-     
+
      Purchase_SMS() {
       // Start the progress bar.
       NProgress.start();

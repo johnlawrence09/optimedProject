@@ -1465,11 +1465,12 @@ class SalesController extends BaseController
     }
 
     public function Edit_Status(Request $request, $id) {
+
         $status = Sale::find($id);
         $status->statut = $request->statut;
         $status->save();
 
-        $status = SalesReceive::where('sale_id', '=', $id)->update(['statut' => $request->statut]);
+        // $status = SalesReceive::where('sale_id', '=', $id)->update(['statut' => $request->statut]);
 
         return $status;
     }

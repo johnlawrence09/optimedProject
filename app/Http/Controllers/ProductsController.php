@@ -480,42 +480,90 @@ class ProductsController extends BaseController
 
                                 if ($request['images'] === null) {
 
-                                    if ($Product->image !== null) {
-                                        foreach (explode(',', $Product->image) as $img) {
-                                            $pathIMG = public_path() . '/images/products/' . $img;
-                                            if (file_exists($pathIMG)) {
-                                                if ($img != 'no-image.png') {
-                                                    @unlink($pathIMG);
-                                                }
-                                            }
+                                    if($request['images']) {
+                                        $images = $request['images'];
+                                        $s3 = app('s3');
+                                        $bucket = config('services.aws.bucket');
+
+                                        $imageLinks = [];
+
+                                        foreach ($images as $imageData) {
+                                            // Decode base64 data and create an instance of UploadedFile
+                                            $imageBinary = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData['path']));
+                                            $image = Image::make($imageBinary);
+                                            $image->resize(200, 200);
+
+                                            $tempPath = tempnam(sys_get_temp_dir(), 'uploaded_image');
+                                            file_put_contents($tempPath, $imageBinary);
+
+                                            $imageFile = new File($tempPath);
+                                            $imageName = $imageData['name'];
+
+                                            // Upload to S3
+                                            $path = "images/products/$imageName";
+                                            $s3->putObject([
+                                                'Bucket' => $bucket,
+                                                'Key' => $path,
+                                                'Body' => $imageBinary,
+                                                'ACL' => 'public-read',
+                                            ]);
+
+                                            $imageLinks[] = $s3->getObjectUrl($bucket, $path);
+                                            $imageUrl = $imageLinks[0];
                                         }
+                                    // if ($Product->image !== null) {
+                                    //     foreach (explode(',', $Product->image) as $img) {
+                                    //         $pathIMG = public_path() . '/images/products/' . $img;
+                                    //         if (file_exists($pathIMG)) {
+                                    //             if ($img != 'no-image.png') {
+                                    //                 @unlink($pathIMG);
+                                    //             }
+                                    //         }
+                                    //     }
                                     }
-                                    $filename = 'no-image.png';
+                                    // $filename = 'no-image.png';
                                 } else {
                                     if ($Product->image !== null) {
-                                        foreach (explode(',', $Product->image) as $img) {
-                                            $pathIMG = public_path() . '/images/products/' . $img;
-                                            if (file_exists($pathIMG)) {
-                                                if ($img != 'no-image.png') {
-                                                    @unlink($pathIMG);
-                                                }
+
+                                        if($request['images']) {
+                                            $images = $request['images'];
+                                            $s3 = app('s3');
+                                            $bucket = config('services.aws.bucket');
+
+                                            $imageLinks = [];
+
+                                            foreach ($images as $imageData) {
+                                                // Decode base64 data and create an instance of UploadedFile
+                                                $imageBinary = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData['path']));
+                                                $image = Image::make($imageBinary);
+                                                $image->resize(200, 200);
+
+                                                $tempPath = tempnam(sys_get_temp_dir(), 'uploaded_image');
+                                                file_put_contents($tempPath, $imageBinary);
+
+                                                $imageFile = new File($tempPath);
+                                                $imageName = $imageData['name'];
+
+                                                // Upload to S3
+                                                $path = "images/products/$imageName";
+                                                $s3->putObject([
+                                                    'Bucket' => $bucket,
+                                                    'Key' => $path,
+                                                    'Body' => $imageBinary,
+                                                    'ACL' => 'public-read',
+                                                ]);
+
+                                                $imageLinks[] = $s3->getObjectUrl($bucket, $path);
+                                                $imageUrl = $imageLinks[0];
                                             }
-                                        }
+
+
                                     }
-                                    $files = $request['images'];
-                                    foreach ($files as $file) {
-                                        $fileData = ImageResize::createFromString(base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file['path'])));
-                                        $fileData->resize(200, 200);
-                                        $name = rand(11111111, 99999999) . $file['name'];
-                                        $path = public_path() . '/images/products/';
-                                        $success = file_put_contents($path . $name, $fileData);
-                                        $images[] = $name;
-                                    }
-                                    $filename = implode(",", $images);
+                                    // $files = $request['images'];
+
                                 }
 
-                                $Product->image = $filename;
-                                $Product->save();
+                            }
 
                             }, 10);
 
