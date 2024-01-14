@@ -32,14 +32,14 @@
                         <i class="i-Envelope-2"></i>
                         {{ $t("Email") }}
                     </button>
-                    <button
+                    <!-- <button
                         @click="Sale_SMS()"
                         class="btn btn-secondary btn-icon ripple btn-sm"
                         v-if="sale.statut !== 'pending'"
                     >
                         <i class="i-Speach-Bubble"></i>
                         SMS
-                    </button>
+                    </button> -->
                     <button
                         @click="Sale_PDF()"
                         class="btn btn-primary btn-icon ripple btn-sm"
@@ -103,6 +103,7 @@
                             <div>{{ sale.client_email }}</div>
                             <div>{{ sale.client_phone }}</div>
                             <div>{{ sale.client_adr }}</div>
+
                         </b-col>
                         <b-col lg="4" md="4" sm="12" class="mb-4">
                             <h5 class="font-weight-bold">
@@ -154,6 +155,13 @@
                                 >
 
                                 <span
+                                    v-else-if="sale.statut == 'partial'"
+                                    class="badge badge-outline-info"
+                                    >{{ $t("Partial Delivery") }}</span
+                                >
+
+
+                                <span
                                     v-else-if="sale.statut == 'completed'"
                                     class="badge badge-outline-warning"
                                     >Completed</span
@@ -179,10 +187,7 @@
                                 v-for="(item, i) in sale.receipts"
                                 :key="item.id"
                             >
-                                <div v-if="customer == null">
-                                    DR Reference# : {{ sale.receipts[0].Ref }}
-                                </div>
-                                <div v-else>
+
                                     DR Reference#{{ i + 1 }} :
                                     <router-link
                                         :to="
@@ -192,7 +197,6 @@
                                     >
                                         {{ item.Ref }}
                                     </router-link>
-                                </div>
                             </div>
                         </b-col>
                     </b-row>
@@ -611,9 +615,9 @@ export default {
                 .get(`sales/${id}`)
                 .then((response) => {
                     this.sale = response.data.sale;
-                    this.customer = response.data.customer;
+                    this.customer = response.data.Shipment_address;
+                    console.log(this.customer);
                     this.details = response.data.details;
-                    console.log(this.details);
                     this.company = response.data.company;
                     this.isLoading = false;
                 })
@@ -660,7 +664,6 @@ export default {
         },
 
         Edit_Status(status, id) {
-            console.log('test');
             NProgress.start();
             NProgress.set(0.1);
             axios

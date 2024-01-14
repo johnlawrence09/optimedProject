@@ -511,17 +511,11 @@ class ProductsController extends BaseController
                                             $imageLinks[] = $s3->getObjectUrl($bucket, $path);
                                             $imageUrl = $imageLinks[0];
                                         }
-                                    // if ($Product->image !== null) {
-                                    //     foreach (explode(',', $Product->image) as $img) {
-                                    //         $pathIMG = public_path() . '/images/products/' . $img;
-                                    //         if (file_exists($pathIMG)) {
-                                    //             if ($img != 'no-image.png') {
-                                    //                 @unlink($pathIMG);
-                                    //             }
-                                    //         }
-                                    //     }
+                                        $Product->image = $imageUrl;
+                                        $Product->save();
+
                                     }
-                                    // $filename = 'no-image.png';
+
                                 } else {
                                     if ($Product->image !== null) {
 
@@ -557,6 +551,8 @@ class ProductsController extends BaseController
                                                 $imageUrl = $imageLinks[0];
                                             }
 
+                                            $Product->image = $imageUrl;
+                                            $Product->save();
 
                                     }
                                     // $files = $request['images'];

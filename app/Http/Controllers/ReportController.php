@@ -72,8 +72,9 @@ class ReportController extends BaseController
                 DB::raw('SUM(GrandTotal) AS count'),
             ])
             ->pluck('count', 'date');
-
         // Merge the two collections;
+
+
         $dates = $dates->merge($sales);
 
         $data = [];

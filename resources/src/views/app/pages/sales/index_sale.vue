@@ -1999,7 +1999,6 @@ export default {
         },
 
         Edit_Status(status, id) {
-            console.log(status, id);
             this.paymentProcessing = true;
             NProgress.start();
             NProgress.set(0.1);
@@ -2376,7 +2375,6 @@ export default {
 
         //------------------------------ Show Modal (Edit shipment) -------------------------------\\
         Edit_Shipment(sale_id) {
-        console.log(sale_id);
             NProgress.start();
             NProgress.set(0.1);
             // this.reset_Form_shipment();

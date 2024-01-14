@@ -480,6 +480,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------------------------------------------\\
 
     Route::get('Sale_PDF/{id}', 'SalesController@Sale_PDF');
+    Route::get('Sales_receive_PDF/{id}', 'SalesReceivedController@Sales_Receive_pdf');
     Route::get('Quote_PDF/{id}', 'QuotationsController@Quotation_pdf');
     Route::get('Purchase_PDF/{id}', 'PurchasesController@Purchase_pdf');
     Route::get('Purchase_Receive_PDF/{id}', 'PurchaseReceiveController@Purchase_Receive_pdf');

@@ -181,14 +181,14 @@
                     class="badge badge-outline-info"
                   >{{$t('Pending')}}</span>
                   <span
-                    v-else-if="props.row.statut == 'Fo delivery'"
-                    class="badge badge-outline-info"
+                    v-else-if="props.row.statut == 'For delivery'"
+                    class="badge badge-outline-warning"
                   >{{$t('For delivery')}}</span>
                    <span
                     v-else-if="props.row.statut == 'Shipped'"
                     class="badge badge-outline-info"
                   >{{$t('Shipped')}}</span>
-                  <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
+                  <!-- <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span> -->
                 </div>
 
                 <div v-else-if="props.column.field == 'payment_status'">
@@ -383,7 +383,6 @@ export default {
         .get(`chart/report_with_echart`)
         .then(response => {
           const responseData = response.data;
-            console.log(responseData);
           this.report_today = response.data.report_dashboard.original.report;
           this.stock_alerts =
             response.data.report_dashboard.original.stock_alert;

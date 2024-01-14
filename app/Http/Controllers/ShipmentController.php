@@ -63,6 +63,7 @@ class ShipmentController extends BaseController
         if($perPage == "-1"){
             $perPage = $totalRows;
         }
+
         $shipments_data = $shipments->offset($offSet)
             ->limit($perPage)
             ->orderBy($order, $dir)
@@ -102,6 +103,7 @@ class ShipmentController extends BaseController
 
     public function store(Request $request)
     {
+
         $this->authorizeForUser($request->user('api'), 'create', Shipment::class);
 
         request()->validate([
@@ -109,8 +111,9 @@ class ShipmentController extends BaseController
         ]);
 
         \DB::transaction(function () use ($request) {
-            $shipment = Shipment::firstOrNew([ 'Ref' => $request['Ref']]);
 
+
+            $shipment = Shipment::firstOrNew([ 'Ref' => $request['Ref']]);
             $shipment->user_id = Auth::user()->id;
             $shipment->sale_id = $request['sale_id'];
             $shipment->customer_name = $request['customer_name'];
@@ -120,6 +123,8 @@ class ShipmentController extends BaseController
             $shipment->phone_number = $request['phone_number'];
             $shipment->email = $request['email'];
             $shipment->save();
+
+            // $updateClient = Client::where('')
 
             $sale = Sale::findOrFail($request['sale_id']);
             $sale->update([
@@ -161,6 +166,7 @@ class ShipmentController extends BaseController
             $sale->update([
                 'statut' => $request['status'],
             ]);
+
             $saleReceive = SalesReceive::where('sale_id', '=', $request['sale_id'])
             ->update(['statut' => $request['status']]);
 

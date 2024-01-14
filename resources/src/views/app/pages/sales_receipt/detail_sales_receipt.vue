@@ -9,26 +9,8 @@
         <b-card v-if="!isLoading">
             <b-row>
                 <b-col md="12" class="mb-2">
-                    <!-- <router-link
-              v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_edit')"
-              title="Edit"
-              class="btn btn-success btn-icon ripple btn-sm"
-              :to="{ name:'edit_purchase', params: { id: $route.params.id } }"
-            >
-              <i class="i-Edit"></i>
-              <span>{{$t('EditPurchase')}}</span>
-            </router-link> -->
-                    <!-- <button @click="purchase_Email()" class="btn btn-info btn-icon ripple btn-sm">
-              <i class="i-Envelope-2"></i>
-              {{$t('Email')}}
-            </button>
-             <button @click="Purchase_SMS()" class="btn btn-secondary btn-icon ripple btn-sm">
-              <i class="i-Speach-Bubble"></i>
-              SMS
-
-            </button> -->
                     <button
-                        @click="Print_Purchase_PDF()"
+                        @click="Print_Sales_PDF()"
                         class="btn btn-primary btn-icon ripple btn-sm"
                     >
                         <i class="i-File-TXT"></i> PDF
@@ -47,14 +29,6 @@
                         <i class="i-Billing"></i>
                         {{ $t("Print Picklist") }}
                     </button>
-                    <!-- <button
-              v-if="currentUserPermissions && currentUserPermissions.includes('Purchases_delete')"
-              @click="Delete_Purchase()"
-              class="btn btn-danger btn-icon ripple btn-sm"
-            >
-              <i class="i-Close-Window"></i>
-              {{$t('Del')}}
-            </button> -->
                 </b-col>
             </b-row>
             <div class="invoice mt-5" id="print_Invoice">
@@ -70,20 +44,17 @@
                             <h5 class="font-weight-bold">
                                 {{ $t("Customer_Info") }}
                             </h5>
-                            <div v-if="customer === null">
                                 <div>{{ purchase.client_name }}</div>
                                 <div>{{ purchase.client_email }}</div>
                                 <div>{{ purchase.client_phone }}</div>
                                 <div>{{ purchase.client_adr }}</div>
-                            </div>
-                            <div v-else>
-                                <div>{{ customer.customer_name }}</div>
-                                <div>{{ customer.email }}</div>
-                                <div>{{ customer.phone_number }}</div>
-                                <div>{{ customer.shipping_address }}</div>
-                            </div>
 
-
+                            <h5 class="font-weight-bold mt-4">
+                                {{ $t("Ship to: ") }}
+                            </h5>
+                                <div>{{ Shipping_address.shipping_address }}</div>
+                                <div>{{ Shipping_address.phone_number }}</div>
+                                <div>{{ Shipping_address.shipping_details }}</div>
                         </b-col>
                         <b-col lg="4" md="4" sm="12" class="mb-4">
                             <h5 class="font-weight-bold">
@@ -371,7 +342,7 @@ export default {
             details: [],
             variants: [],
             company: {},
-            customer: {},
+            Shipping_address: {},
             email: {
                 to: "",
                 subject: "",
@@ -384,13 +355,14 @@ export default {
 
     methods: {
         //----------------------------------- print Purchase -------------------------\\
-        Print_Purchase_PDF() {
+        Print_Sales_PDF() {
+
             // Start the progress bar.
             NProgress.start();
             NProgress.set(0.1);
             let id = this.$route.params.id;
             axios
-                .get(`Purchase_PDF/${id}`, {
+                .get(`Sales_receive_PDF/${id}`, {
                     responseType: "blob", // important
                     headers: {
                         "Content-Type": "application/json",
@@ -486,8 +458,7 @@ export default {
                     this.purchase = response.data.sale;
                     this.details = response.data.details;
                     this.company = response.data.company;
-                    this.customer = response.data.customer;
-                    console.log(this.customer);
+                    this.Shipping_address = response.data.Shipping_add;
                     this.isLoading = false;
                 })
                 .catch((response) => {

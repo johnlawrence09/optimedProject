@@ -604,52 +604,58 @@ class SalesReceivedController extends Controller
             $details[] = $data;
         }
         $company = Setting::where('deleted_at', '=', null)->first();
-        $customer = Shipment::where('sale_id','=', $sale->sale_id)->where('deleted_at','=', null)->first();
+        $Shipping_add = Shipment::where('sale_id','=', $sale->sale_id)->where('deleted_at','=', null)->first();
+
+        if($Shipping_add) {
+            $customer = Shipment::where('sale_id','=', $sale->sale_id)->where('deleted_at','=', null)->first();
+        } else {
+            $Shipping_add = "";
+        }
 
         return response()->json([
             'details' => $details,
             'sale' => $sale_data,
             'company' => $company,
-            'customer' => $customer
+            'Shipping_add' => $Shipping_add
         ]);
 
     }
 
-    public function Purchase_Receive_pdf(Request $request, $id)
+    public function Sales_Receive_pdf(Request $request, $id)
     {
+
         $details = array();
         $helpers = new helpers();
-        $Purchase_data = PurchaseReceive::with('details.product.unitPurchase
-        ')
+        $Sales_data = SalesReceive::with('details.product.unitSale')
             ->where('deleted_at', '=', null)
             ->findOrFail($id);
 
-        $purchase['supplier_name'] = $Purchase_data['provider']->name;
-        $purchase['supplier_phone'] = $Purchase_data['provider']->phone;
-        $purchase['supplier_adr'] = $Purchase_data['provider']->adresse;
-        $purchase['supplier_email'] = $Purchase_data['provider']->email;
-        $purchase['TaxNet'] = number_format($Purchase_data->TaxNet, 2, '.', '');
-        $purchase['discount'] = number_format($Purchase_data->discount, 2, '.', '');
-        $purchase['shipping'] = number_format($Purchase_data->shipping, 2, '.', '');
-        $purchase['statut'] = $Purchase_data->statut;
-        $purchase['Ref'] = $Purchase_data->Ref;
-        $purchase['date'] = $Purchase_data->date;
-        $purchase['GrandTotal'] = number_format($Purchase_data->GrandTotal, 2, '.', '');
-        $purchase['paid_amount'] = number_format($Purchase_data->paid_amount, 2, '.', '');
-        $purchase['due'] = number_format($purchase['GrandTotal'] - $purchase['paid_amount'], 2, '.', '');
-        $purchase['payment_status'] = $Purchase_data->payment_statut;
+        $Sales['client_name'] = $Sales_data['client']->name;
+        $Sales['client_phone'] = $Sales_data['client']->phone;
+        $Sales['client_adr'] = $Sales_data['client']->adresse;
+        $Sales['client_email'] = $Sales_data['client']->email;
+        $Sales['TaxNet'] = number_format($Sales_data->TaxNet, 2, '.', '');
+        $Sales['discount'] = number_format($Sales_data->discount, 2, '.', '');
+        $Sales['shipping'] = number_format($Sales_data->shipping, 2, '.', '');
+        $Sales['statut'] = $Sales_data->statut;
+        $Sales['Ref'] = $Sales_data->Ref;
+        $Sales['date'] = $Sales_data->date;
+        $Sales['GrandTotal'] = number_format($Sales_data->GrandTotal, 2, '.', '');
+        $Sales['paid_amount'] = number_format($Sales_data->paid_amount, 2, '.', '');
+        $Sales['due'] = number_format($Sales['GrandTotal'] - $Sales['paid_amount'], 2, '.', '');
+        $Sales['payment_status'] = $Sales_data->payment_statut;
 
         $detail_id = 0;
-        foreach ($Purchase_data['details'] as $detail) {
+        foreach ($Sales_data['details'] as $detail) {
 
             //-------check if detail has purchase_unit_id Or Null
-            if($detail->purchase_unit_id !== null){
-                $unit = Unit::where('id', $detail->purchase_unit_id)->first();
+            if($detail->sale_unit_id !== null){
+                $unit = Unit::where('id', $detail->sale_unit_id)->first();
             }else{
-                $product_unit_purchase_id = Product::with('unitPurchase')
+                $product_unit_sale_id = Product::with('unitSale')
                 ->where('id', $detail->product_id)
                 ->first();
-                $unit = Unit::where('id', $product_unit_purchase_id['unitPurchase']->id)->first();
+                $unit = Unit::where('id', $product_unit_sale_id['unitSale']->id)->first();
             }
 
             if ($detail->product_variant_id) {
@@ -688,27 +694,37 @@ class SalesReceivedController extends Controller
                 $data['taxe'] = number_format($detail->cost - $data['Net_cost'] - $data['DiscountNet'], 2, '.', '');
             }
 
+            $data['expiration_date'] = $detail->expiration_date == null ? "" : $detail->expiration_date;
             $data['is_imei'] = $detail['product']['is_imei'];
             $data['imei_number'] = $detail->imei_number;
 
             $details[] = $data;
         }
 
+        $shipping = Shipment::where('sale_id', $Sales_data->sale_id )
+                            ->where('deleted_at', null)
+                            ->first();
+
         $settings = Setting::where('deleted_at', '=', null)->first();
         $symbol = $helpers->Get_Currency_Code();
 
-        $pdf = \PDF::loadView('pdf.purchase_pdf', [
+        $pdf = \PDF::loadView('pdf.saleReceive_pdf', [
             'symbol' => $symbol,
             'setting' => $settings,
-            'purchase' => $purchase,
+            'Sales' => $Sales,
             'details' => $details,
+            'shipping' => $shipping
         ]);
-        return $pdf->download('Purchase.pdf');
+        return $pdf->download('Sale_Receive.pdf');
 
     }
 
     public function picklist (Request $request, $id)
      {
+
+        $role = Auth::user()->roles()->first();
+
+        $view_records = Role::findOrFail($role->id)->inRole('record_view');
 
         $sale_receipt_data = SalesReceive::with('detailsRecieved.product.unitPurchase', 'detailsRecieved.product.ProductMapping.warehouse_location', 'warehouse', 'client', 'sale.shipment')
             ->where('deleted_at', '=', null)
@@ -725,7 +741,7 @@ class SalesReceivedController extends Controller
         $customer_info = [
             'name' => $sale_receipt_data['client']['name'],
             'phone' => $sale_receipt_data['client']['phone'],
-            'address' => $sale_receipt_data['sale']['shipment']['shipping_address'] ?? null,
+            'address' => $sale_receipt_data['client']['adresse'] ?? null,
             'email' => $sale_receipt_data['client']['email'],
         ];
 
@@ -757,55 +773,6 @@ class SalesReceivedController extends Controller
         ]);
 
         return $pdf->download('Picklist.pdf');
-
-        // $role = Auth::user()->roles()->first();
-
-        // $view_records = Role::findOrFail($role->id)->inRole('record_view');
-
-
-        // $sale_receipt_data = SalesReceive::with('detailsRecieved.product.unit','warehouse','client','sale.shipment')
-        // ->where('deleted_at','=', null)->findOrFail($id);
-
-        // $shipTo = $sale_receipt_data['sale']['shipment']->shipping_address;
-        // $client = $sale_receipt_data['client']->name;
-        // $ref = $sale_receipt_data->Ref;
-        // $date = $sale_receipt_data->date;
-
-        // foreach($sale_receipt_data['detailsRecieved'] as $data) {
-        //     $list['quantity_receive'] = $data['quantity'];
-        //     $list['unit'] = $data['product']['unit']->ShortName;
-        //     $list['name'] = $data['product']->name;
-        //     $list['expiration'] = $data->expiration_date == null?'n/a':$data->expiration_date;
-
-        // }
-        //     $list['warehouse'] =  $sale_receipt_data['warehouse']->name;
-
-        //     $pdf = \PDF::loadView('pdf.picklist', [
-        //     'lists' => $list,
-        //     'shipTo' => $shipTo,
-        //     'client' => $client,
-        //     'ref' => $ref,
-        //     'date' => $date,
-
-        // ]);
-
-        // return $pdf->download('salereceipt.pdf');
-        // $pdf = \PDF::loadView('pdf.purchase_pdf', [
-        //     'symbol' => $symbol,
-        //     'setting' => $settings,
-        //     'purchase' => $purchase,
-        //     'details' => $details,
-        // ]);
-
-
-
-        // $pdf = PDF::loadView('pdf.picklist')->setOptions(['defaultFont' => 'sans-serif']);
-
-
-
-        //   return $pdf->download('picklist.pdf');
-
-
 
     }
 

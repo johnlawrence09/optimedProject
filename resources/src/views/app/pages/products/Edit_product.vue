@@ -604,14 +604,7 @@ export default {
                 this.$t("Success")
               );
           }
-          // NProgress.done();
-          // self.SubmitProcessing = false;
-          // this.$router.push({ name: "index_products" });
-          // this.makeToast(
-          //   "success",
-          //   this.$t("Successfully_Updated"),
-          //   this.$t("Success")
-          // );
+
         })
         .catch(error => {
           if (error.errors.code.length > 0) {

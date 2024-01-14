@@ -1633,7 +1633,7 @@ export default {
 
                         this.makeToast(
                             "success",
-                            this.$t("Create.TitlePurchase"),
+                            this.$t("Create.TitleSale"),
                             this.$t("Success")
                         );
 
