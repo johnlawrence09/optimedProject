@@ -106,8 +106,6 @@ class PermissionsController extends BaseController
             return response()->json(['exist' => true]);
         }
 
-
-
     }
 
     //------------ function show -----------\\

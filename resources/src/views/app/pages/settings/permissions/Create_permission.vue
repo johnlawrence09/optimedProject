@@ -1847,7 +1847,7 @@
                                 <span class="checkmark"></span>
                               </label>
                             </b-col>
-                          
+
                           </b-row>
                         </b-card-text>
                       </b-card-body>
@@ -1931,7 +1931,7 @@
                 </b-col>
               </b-row>
               <!-- End row -->
-              
+
                <b-col md="12">
                 <b-button variant="primary" type="submit"  :disabled="SubmitProcessing">{{$t('submit')}}</b-button>
                   <div v-once class="typo__p" v-if="SubmitProcessing">
@@ -2024,7 +2024,7 @@ export default {
           if(response.data.exist == true) {
             // NProgress.done();
               self.SubmitProcessing = false;
-                
+
               this.makeToast(
               "danger",
               this.$t("Duplicate permission key"),
@@ -2044,17 +2044,7 @@ export default {
             name: "groupPermission"
           });
           }
-          // this.SubmitProcessing = false;
-          // NProgress.done();
-          // this.makeToast(
-          //   "success",
-          //   this.$t("Create.TitleRole"),
-          //   this.$t("Success")
-          // );
 
-          // this.$router.push({
-          //   name: "groupPermission"
-          // });
         })
         .catch(error => {
           this.SubmitProcessing = false;
